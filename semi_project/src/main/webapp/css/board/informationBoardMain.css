@@ -1,0 +1,160 @@
+@charset "UTF-8";
+
+
+#boardHeader{
+   width:100vw;
+   margin-top:2%;
+   display:flex;
+   justify-content: center;
+   overflow: hidden;
+}
+#boardHeader h2{
+   font-weight:900;
+   overflow: hidden;
+}
+#boardmenu{
+   display:flex;
+   justify-content: center;
+   margin-top:10px;
+}
+#boardmenu a{
+   text-decoration: none;
+   color:gray;
+   font-size:15px;
+   font-weight:bolder;
+   padding-right:2%;
+   padding-left:2%;
+}
+#boardmenu>a:nth-child(2){
+   color:black;
+   font-weight:900;
+   font-size:18px;
+   text-decoration-line:underline;
+   text-decoration-color:rgb(255,237,164);
+   text-decoration-thickness:3px;
+}
+#boardmenu>a:not(a:nth-child(2)):hover{
+	font-size:16px;
+	opacity: 70%;
+}
+/*=====================================================================================================*/
+.board{
+	width:80%;
+	height:600px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:50px;	
+	margin-bottom:20px;
+	box-sizing: border-box;
+}
+.board ul{
+	display:flex;	
+	align-items: center;
+	text-align: center;
+	padding:0;
+	margin:0;
+}
+
+.board-header{
+	background-color:rgb(255,237,164);
+	height:6.3%;
+	font-size:16px;
+	font-weight:600;
+	border-top: 2px solid lightgray;
+	border-bottom:2px solid lightgray;
+}
+.board-body{
+	height:8.5%;
+	font-size:15px;
+	border-bottom:2px solid lightgray;
+}
+.board-num{
+	width:10%;
+}
+.board-header-title{
+	width:60%;
+}
+.board-body-title{
+	width:60%;
+	text-align: left;
+}
+.board-writer{
+	width:10%;
+}
+.board-date{
+	width:10%;
+}
+.board-read{
+	width:10%;
+}
+/*=====================================================================================================*/
+#freeboardFooter1{
+   margin-top:1%;
+   display:flex;
+   width:100vw;
+   justify-content: center;
+}
+#freeboardSearch{
+   position:relative;
+   display: flex;
+   justify-content: center;
+   border:1px solid gray;
+   border-radius: 5px;
+}
+#freeboardSearch *{
+   border: 0px;
+}
+#freeboardInsert{
+   position: relative;
+}
+#freeboardFooter2{
+   margin-top:1%;
+   margin-bottom:2%;
+   display:flex;
+   justify-content: center;
+}
+#freeboardFooter2 a{
+   text-decoration: none;
+   color:gray;
+   text-align: center;
+}
+.page1{
+   width:50px;
+}
+.page2 {
+   font-size:16px;
+   width:30px;
+   height:30px;
+   background-color:lightgray;
+   margin-left:5px;
+   margin-right:5px;
+   border-radius: 6px;
+   align-content: center;
+}
+.visible-box{
+   position:relative;
+   left:40%;
+   top: 10px;
+   width: 65px;
+   height:60px;
+   border:1px solid gray;
+   border-radius:5px;
+   font-size:15px;
+   font-weight: 400;
+}
+.visible-box p{
+   margin:0;
+   width: 100%;
+   height:40%;
+   text-align: center;
+   cursor: pointer;
+}
+.visible-box p:hover{
+	background-color: lightgray;
+	opacity: 50%;
+}
+
+
+
+
+#map {width:500px; height:400px;}

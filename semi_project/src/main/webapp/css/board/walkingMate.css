@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+.mateHeader {
+	width:100vw;
+   margin-top:2%;
+   display:flex;
+   justify-content: center;
+   overflow: hidden;
+}
+
+.mateHeader>h3 {
+	font-weight: 900;
+	overflow: hidden;
+}

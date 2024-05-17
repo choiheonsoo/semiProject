@@ -1,0 +1,176 @@
+@charset "UTF-8";
+#boardHeader{
+   width:100vw;
+   margin-top:2%;
+   display:flex;
+   justify-content: center;
+   overflow: hidden;
+}
+#boardHeader h2{
+   font-weight:900;
+   overflow: hidden;
+}
+#boardmenu{
+   display:flex;
+   justify-content: center;
+   margin-top:10px;
+}
+#boardmenu a{
+   text-decoration: none;
+   color:gray;
+   font-size:15px;
+   font-weight:bolder;
+   padding-right:2%;
+   padding-left:2%;
+}
+#boardmenu>a:nth-child(3){
+   color:black;
+   font-weight:900;
+   font-size:18px;
+   text-decoration-line:underline;
+   text-decoration-color:rgb(255,237,164);
+   text-decoration-thickness:3px;
+}
+#boardmenu>a:not(a:nth-child(3)):hover{
+	font-size:16px;
+	opacity: 70%;
+}
+.mainview{
+	width:70vw;
+	height:600px;
+	margin-top:20px;
+	margin-left:auto;
+	margin-right:auto;
+	display:flex;
+	flex-wrap: wrap;
+}
+.mainview>.post{
+	width:20%;
+	height:45%;
+	margin-top:5px;
+	margin-right:20px;
+	margin-left:30px;
+	display:flex;
+	flex-direction: column;
+	font-size:13px;
+	border-radius: 5px;
+	border:1px solid gray;
+}
+.mainview>.post:hover{
+	cursor: pointer;
+}
+.mainview>.post>.postHeader{
+	display:flex;
+	justify-content: space-between;
+	align-content:center;
+	align-items:center;
+	width:100%;
+	height:10%;
+}
+.mainview>.post>.postHeader *{
+	margin:0;
+}
+.mainview>.post>.postHeader>div{
+	display:flex;
+}
+.mainview>.post>.postHeader img{
+	width:20px;
+	height:20px;
+}
+.mainview>.post>.postBody{
+	width:100%;
+	height:70%;
+}
+.mainview>.post>.postBody img{
+	width:100%;
+	height:100%;
+}
+.mainview>.post>.postFooter{
+	display:flex;
+	flex-direction: column;
+	height:20%;
+	font-size:12px;
+	background-color:lightgray;
+}
+.mainview>.post>.postFooter>div:first-child{
+	width:100%;
+	height:60%;
+	display:flex;
+	justify-content: space-around;
+	margin-top:3px;
+}
+.mainview>.post>.postFooter>div:last-child{
+	width:100%;
+	height:40%;
+}
+.mainview>.post>.postFooter img{
+	width:20px;
+	height:20px;
+}
+.mainview>.post>.postFooter>div:last-child>p{
+	width:100%;
+	height:100%;
+	padding-left:8px;
+}
+.mainview>.post>.postFooter *{
+	margin:0;
+}
+
+.sectionFooter{
+	width:100vw;
+	overflow-y:hidden;
+	display:flex;
+	bottom:0;
+}
+#freeboardFooter2{
+   margin-top:1%;
+   margin-bottom:2%;
+   display:flex;
+   justify-content: center;
+   margin-left:auto;
+   margin-right:auto;
+   position: relative;
+   left:25px;
+}
+#freeboardFooter2 a{
+   text-decoration: none;
+   color:gray;
+   text-align: center;
+}
+.page1{
+   width:50px;
+}
+.page2 {
+   font-size:16px;
+   width:30px;
+   height:30px;
+   background-color:lightgray;
+   margin-left:5px;
+   margin-right:5px;
+   border-radius: 6px;
+   align-content: center;
+}
+#freeboardInsert{
+	position: relative;
+	right:100px;
+	top:15px;
+}
+#freeboardInsert>input[type=button]{
+	background-color:gray;
+	color:white;
+	border-style:none;
+	border-radius:5px;
+	font-size:13px;
+	width:65px;
+	height:25px;
+}
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    z-index: 9999;
+    display: none; /* 초기에는 숨겨둠 */
+}
