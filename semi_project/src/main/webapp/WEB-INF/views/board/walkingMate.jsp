@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board/walkingMate.css">
 <section class="content">
 	<div class="mateHeader">
-		<h3>산책메이트</h3>
+		<h3>커뮤니티</h3>
 	</div>
 	<div class="table">
 		<div class="theader">

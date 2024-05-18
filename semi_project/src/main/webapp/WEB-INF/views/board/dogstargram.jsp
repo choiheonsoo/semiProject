@@ -4,11 +4,11 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board/dogstargram.css">
 <section class="content">
 	<div id="boardHeader">
-      <h2>멍스타그램</h2>
+      <h2>커뮤니티</h2>
    </div>
    <div id="boardmenu">
       <a href="<%=request.getContextPath() %>/board/freeboard.do">자유게시판</a>
-      <a href="<%=request.getContextPath() %>/board/informationboard.do">정보게시판</a>
+      <a href="<%=request.getContextPath() %>/board/informationboard.do">공지게시판</a>
       <a href="<%=request.getContextPath() %>/board/dogstargram.do">멍스타그램</a>
    </div>
    <div class="mainview">
@@ -56,9 +56,7 @@
 	      <a class="page1" href="">></a>
 	      <a class="page1" href="">>></a>
 	   </div>
-	   <div id="freeboardInsert">
-	         <input type="button" value="글 작성" onclick="location.href='<%=request.getContextPath()%>/freeboardInsert.do';">
-	   </div>   
+	      
    </div>
 </section>
 <script>
