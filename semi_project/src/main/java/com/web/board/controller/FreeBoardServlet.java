@@ -35,14 +35,40 @@ public class FreeBoardServlet extends HttpServlet {
 		}catch(NumberFormatException e) {
 			System.out.println("cPage 불러올 때 오류 발생");
 		}
-		int numPerpage=5;
-		try {
-			numPerpage=Integer.parseInt(request.getParameter("numPerpage"));
-		}catch(NumberFormatException e) {
-			System.out.println("numPerpage 불러올 때 오류 발생");
-		}
-//		
+		int numPerpage=10;
 		List<Bulletin> bulletins = getService().selectBoardAll(cPage,numPerpage);
+		
+		int totalData = getService().selectBoardCount();
+		int totalPage = (int)Math.ceil((double)totalData/numPerpage);
+		int pageBarSize = 5;
+		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
+		int pageEnd=pageNo+pageBarSize-1;
+		
+		String pageBar="<div id='freeboardFooter2'>";
+		if(pageNo==1) {
+			pageBar+="<p class='page1'><<</p>";
+			pageBar+="<p class='page1'><</p>";
+		}else {
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage=1'><<</a>";
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo-1)+"'><</a>";
+		}
+		while(!(pageNo>pageEnd||pageNo>totalPage)) {
+			if(pageNo==cPage) {
+				pageBar+="<p class='page2'>"+pageNo+"</p>";
+			}else {
+				pageBar+="<a class='page2' href='"+request.getRequestURI()+"?cPage="+pageNo+"'>"+pageNo+"</a>";
+			}
+			pageNo++;
+		}
+		if(pageNo>totalPage) {
+			pageBar+="<p class='page1'>></p>";
+			pageBar+="<p class='page1'>>></p>";
+		}else {
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo)+"'>></a>";
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(totalPage)+"'>>></a>";
+		}
+		pageBar+="</div>";
+		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("bulletins",bulletins);
 		request.getRequestDispatcher("/WEB-INF/views/board/freeboard.jsp").forward(request, response);
 	}

@@ -47,13 +47,14 @@
 		</form>
 		<button class="insert_board" onclick="location.assign('<%=request.getContextPath()%>/board/freeboardInsert.do');">글 작성</button>
 	</div>
-	<div id="freeboardFooter2">
+	<%=request.getAttribute("pageBar") %>
+	<!-- <div id="freeboardFooter2">
 		<a class="page1" href=""><<</a> <a class="page1" href=""><</a> <a
 			class="page2" href="">1</a> <a class="page2" href="">2</a> <a
 			class="page2" href="">3</a> <a class="page2" href="">4</a> <a
 			class="page2" href="">5</a> <a class="page1" href="">></a> <a
 			class="page1" href="">>></a>
-	</div>
+	</div> -->
 	
 </section>
 
