@@ -38,11 +38,13 @@ public class BoardDao {
 			pstmt = conn.prepareStatement(sql.getProperty("selectBoardCount"));
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
-				result = rs.getInt(0);
-				System.out.println("selectBoardCount_result 결과 : "+result);
+				result = rs.getInt(1);
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
 		}
 		return result;
 	}
@@ -54,8 +56,8 @@ public class BoardDao {
 		List<Bulletin> bulletins = new ArrayList<>();
 		try {
 			pstmt = conn.prepareStatement(sql.getProperty("selectBoardAll"));
-			pstmt.setInt(1,cPage);
-			pstmt.setInt(2, numPerpage);
+			pstmt.setInt(1,(cPage-1)*numPerpage+1);
+			pstmt.setInt(2, numPerpage*cPage);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				bulletins.add(getBulletin(rs));

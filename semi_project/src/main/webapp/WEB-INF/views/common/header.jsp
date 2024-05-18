@@ -43,7 +43,7 @@
                 <%if(loginUser==null){ %>
                 	<p style="font-weight:600">로그인 후 <br>이용할 수 있습니다.</p>
                 <%}else{ %>
-                	<p><strong><%=loginUser.getUserId() %></strong>님 환영합니다.</p>                
+                	<p><strong><%=loginUser.getUserId() %></strong><button>로그아웃</button></p>                
                 <%} %>
                 
             </div>
