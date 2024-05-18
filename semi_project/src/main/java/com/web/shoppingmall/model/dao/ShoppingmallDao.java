@@ -75,6 +75,7 @@ public class ShoppingmallDao {
 						.rateDiscount(rs.getInt("RATE_DISCOUNT"))
 						.totalReviewCount(rs.getInt("R_COUNT"))
 						.avgRating(rs.getDouble("AVG_RATING"))
+						.productImg(rs.getString("PRODUCT_IMG"))
 						.build());
 			}
 		}catch(SQLException e) {

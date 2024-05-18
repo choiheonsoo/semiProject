@@ -84,6 +84,7 @@ public class ShoppingMallListServlet extends HttpServlet {
 		products.stream().forEach(System.out::println);
 		request.setAttribute("products", products);
 		request.setAttribute("pagebar", pageBar);
+		request.setAttribute("category", category);
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalllist.jsp")
 		.forward(request, response);
 	}

@@ -29,4 +29,6 @@ public class Product {
 	private int totalReviewCount;
 	//평균 별점
 	private double avgRating;
+	//이미지
+	private String productImg;
 }
