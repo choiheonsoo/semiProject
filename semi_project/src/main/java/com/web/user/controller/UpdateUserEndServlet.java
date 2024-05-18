@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.web.dog.model.dto.Dog;
 import com.web.dog.service.DogService;
 import com.web.user.model.dto.User;
+import com.web.user.model.service.UserService;
 
 /**
  * Servlet implementation class UpdateUserEndServlet
@@ -34,8 +35,8 @@ public class UpdateUserEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-		String dateString = request.getParameter("birthDay");
+		response.setContentType("application/json;charset=utf-8");
+		String dateString = request.getParameter("birthday");
 		SimpleDateFormat birthSdf = new SimpleDateFormat("yyyy-MM-dd");
 		java.sql.Date sqlDate = null;
 		try {
@@ -44,15 +45,18 @@ public class UpdateUserEndServlet extends HttpServlet {
 		}catch(ParseException e) {
 			e.printStackTrace();
 		}
-		User.builder().userId(request.getParameter("userId"))
-					  .userName(request.getParameter("userName"))
-					  .phone(request.getParameter("phone"))
-					  .email(request.getParameter("email"))
-					  .address(request.getParameter("address"))
-					  .password(request.getParameter("password"))
-					  .birthDay(sqlDate)
-					  .build();
-		
+		User user = User.builder().userId(request.getParameter("userId").trim())
+					   	 	 	  .userName(request.getParameter("name"))
+					   	 	 	  .phone(request.getParameter("phone"))
+					   	 	 	  .email(request.getParameter("email"))
+					   	 	 	  .address(request.getParameter("address"))
+					   	 	 	  .password(request.getParameter("password"))
+					   	 	 	  .birthDay(sqlDate)
+					   	 	 	  .build();
+		int result = UserService.getUserService().updateUser(user);
+		boolean flag = (result!=0);
+		request.setAttribute("flag", flag);
+		request.getRequestDispatcher("/WEB-INF/views/user/myPage.jsp").forward(request, response);
 	}
 
 	/**
