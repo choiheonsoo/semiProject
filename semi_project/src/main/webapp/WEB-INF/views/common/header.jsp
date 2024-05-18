@@ -33,8 +33,15 @@
             </div>
             <div id="menu3">
                 <a href=""><img src="<%=request.getContextPath() %>/images/alram.png" alt="알람" width="30" height="30"></a>
-                <a href="<%=request.getContextPath()%>/user/login.do"><img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30"
-                        height="30"></a>
+                <%if(loginUser==null){ %>
+                	<a href="<%=request.getContextPath()%>/user/login.do">
+                		<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30">
+                	</a>
+                <%} else { %>
+               		<a href="<%=request.getContextPath()%>/user/myPage.do">
+               			<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30">
+               		</a>
+                <%} %>
             </div>
             <!-- 로그인 안했을 때 class에 noLogin 추가 / 했을땐 Login 추가 안에 내용은 jsp로 구현 -->
             <div class="menu4 noLogin">
@@ -43,7 +50,7 @@
                 <%if(loginUser==null){ %>
                 	<p style="font-weight:600">로그인 후 <br>이용할 수 있습니다.</p>
                 <%}else{ %>
-                	<p><strong><%=loginUser.getUserId() %></strong><button>로그아웃</button></p>                
+                	<p><strong><%=loginUser.getUserId() %></strong>님 환영합니다.</p>                
                 <%} %>
                 
             </div>
@@ -54,9 +61,9 @@
 		<div class="menubar-container">
 			<ul>
 				<li>커뮤니티</li>
-				<a href="<%=request.getContextPath() %>/board/freeboard.do"><li>자유게시판</li></a>
-				<a href="<%=request.getContextPath() %>/board/informationboard.do">공지게시판</li></a>
-				<a href="<%=request.getContextPath() %>/board/dogstargram.do"><li>멍스타그램</li></a>
+				<a href=""><li>자유게시판</li></a>
+				<a href=""><li>정보게시판</li></a>
+				<a href=""><li>멍스타그램</li></a>
 			</ul>
 			<ul>
 				<li>쇼핑하개</li>

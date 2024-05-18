@@ -1,8 +1,10 @@
+<%@ page import="com.web.user.model.dto.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/header.jsp"%>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+
 <style>
-	section#enrollContainer{
+	section#updateContainer{
 		font-family: Arial, sans-serif;
 	    justify-content: center;
 	    align-items: center;
@@ -13,7 +15,7 @@
 		box-shadow: 0 0 20px 10px rgba(0,0,0,0.1);
 		border-radius: 5px;
 		width: 500px;
-		margin-top: 5%;
+		margin-top: 4%;
 	}
 	
 	div.container>h1{
@@ -84,15 +86,15 @@
 	}
 </style>
 
-<section id="enrollContainer">
+<section id="updateContainer">
 	 <div class="container">
-        <h1>회원가입</h1>
+        <h1>회원수정</h1>
         <p> * 표시는 필수 입력 값 입니다.</p>
-        <form id="signupForm" action="<%=request.getContextPath() %>/user/enrollend.do" method="POST">
+        <form id="signupForm" action="<%=request.getContextPath() %>/user/updateend.do" method="POST">
         	<div class="enrollTab">
 	        	<div id="personInfo">
 		            <label for="userId">회원 아이디 *</label>
-		            <input type="text" id="userId" name="userId" placeholder=" 6글자 이상" minlength="6" required>
+		            <input type="text" id="userId" name="userId" value=" <%=loginUser.getUserId() %>" readOnly style="background-color: #DCDCDC">
 		
 		            <label for="password">비밀번호 *</label>
 		            <input type="password" id="password" name="password" placeholder=" 특수기호 포함 8글자 이상" minlength="8" required>
@@ -111,70 +113,13 @@
 		
 		            <label for="birthday">생일</label>
 		            <input type="date" id="birthday" name="birthday">
-		                        
-		            <label for="ishavingdog">반려견 유무<br>
-		            	<input type="radio" name="ishavingdog" value="Y"><span> 예</span>
-		            	<input type="radio" name="ishavingdog" value="N" checked><span> 아니오</span>
-		            </label>
 	            </div>	            
-	            <div id="dogInfo">
-	            	<label for="dogName">반려견 이름 *</label>
-	            	<input type="text" name="dogName">
-	            	<label for="dogBreed">반려견 견종 *</label>
-	            	<select name="dogBreedKey" id="dogBreed">
-	            		<option value="진도">진도</option>
-	            		<option value="믹스">세상에 하나뿐인 믹스</option>
-	            		<option value="치와와">치와와</option>
-	            	</select>
-	            	<label for="dogWeight">반려견 몸무게 *</label>
-	            	<input type="text" name="dogWeight">
-	            	<label for="dogImg">대표 반려견 사진 *</label>
-	            	<input type="file" name="dogImg" accept="image/*">
-	            	<div id="dogPrev">
-	            	</div>
-	            </div>
             </div>
             <div class="enrollTab">
-           		<button type="submit">가입하기</button>
+           		<button type="submit">수정하기</button>
             </div>
         </form>
     </div>
 </section>
 
-<script>
-	$("input[name='dogImg']").change(e => {
-	    $("#dogPrev").html('');
-	    $.each(e.target.files,(i,file)=>{
-		    const fileReader = new FileReader();
-		    fileReader.readAsDataURL(file);
-		    fileReader.onload = (event) => {
-		        const path = event.target.result;
-		        const img = $("<img>").attr({
-		            src: path,
-		            width: "200",
-		            height: "200"
-		        });
-	        	$("#dogPrev").append(img);
-	    	};
-	    });
-	});
-
-	document.querySelector("label[for=ishavingdog]").addEventListener("change",e=>{
-		const $inputs = document.querySelectorAll("label[for=ishavingdog]>input");
-		if($inputs[0].checked){
-			document.querySelectorAll("div#dogInfo *").forEach(e=>{
-				console.log(e);
-				e.style.display="block";
-			})
-		} else {
-			document.querySelectorAll("div#dogInfo *").forEach(e=>{
-				console.log(e);
-				e.style.display="none";
-			})
-		}
-	})
-</script>
-
-
-
-<%@ include file="/WEB-INF/views/common/footer.jsp"%>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

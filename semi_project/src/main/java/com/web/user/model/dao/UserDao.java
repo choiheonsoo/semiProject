@@ -1,5 +1,7 @@
 package com.web.user.model.dao;
 
+import static com.web.common.JDBCTemplate.close;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
-import static com.web.common.JDBCTemplate.close;
+
 import com.web.user.model.dto.User;
 
 public class UserDao {
@@ -48,20 +50,38 @@ public class UserDao {
 		return user;
 	}
 	
+	public int enrollUser(Connection con, User user) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("insertUser"));
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, user.getPassword());
+			pstmt.setString(3, user.getUserName());
+			pstmt.setString(4, user.getEmail());
+			pstmt.setString(5, user.getPhone());
+			pstmt.setString(6, user.getAddress());
+			pstmt.setDate(7, user.getBirthDay());
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		} return result;
+	}
+	
 	private User getUser(ResultSet rs) throws SQLException{
 		return User.builder()
 				.userId(rs.getString("user_id"))
 				.userName(rs.getString("user_name"))
-				.age(rs.getInt("age"))
 				.phone(rs.getString("phone"))
 				.email(rs.getString("email"))
-				.nickName(rs.getString("nickname"))
+				.address(rs.getString("address"))
 				.password(rs.getString("password"))
 				.mateCount(rs.getInt("mate_count"))
 				.point(rs.getInt("point"))
 				.status(rs.getBoolean("status"))
 				.birthDay(rs.getDate("birth_day"))
-				.gender(rs.getString("gender").charAt(0))
 				.build();
 	}
 }
