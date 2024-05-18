@@ -43,7 +43,7 @@
                 <%if(loginUser==null){ %>
                 	<p style="font-weight:600">로그인 후 <br>이용할 수 있습니다.</p>
                 <%}else{ %>
-                	<p><strong><%=loginUser.getUserId() %></strong>님 환영합니다.</p>                
+                	<p><strong><%=loginUser.getUserId() %></strong><button>로그아웃</button></p>                
                 <%} %>
                 
             </div>
@@ -54,9 +54,9 @@
 		<div class="menubar-container">
 			<ul>
 				<li>커뮤니티</li>
-				<a href=""><li>자유게시판</li></a>
-				<a href=""><li>정보게시판</li></a>
-				<a href=""><li>멍스타그램</li></a>
+				<a href="<%=request.getContextPath() %>/board/freeboard.do"><li>자유게시판</li></a>
+				<a href="<%=request.getContextPath() %>/board/informationboard.do">공지게시판</li></a>
+				<a href="<%=request.getContextPath() %>/board/dogstargram.do"><li>멍스타그램</li></a>
 			</ul>
 			<ul>
 				<li>쇼핑하개</li>

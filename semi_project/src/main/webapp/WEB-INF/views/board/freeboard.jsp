@@ -1,6 +1,11 @@
+<%@page import="com.web.board.model.dto.Bulletin"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
+<%
+	List<Bulletin> bulletins = (List<Bulletin>)request.getAttribute("bulletins");
+%>
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/board/freeboardmain.css">
 <section class="content">
@@ -9,7 +14,7 @@
 	</div>
 	<div id="boardmenu">
 		<a href="<%=request.getContextPath() %>/board/freeboard.do">자유게시판</a>
-		<a href="<%=request.getContextPath() %>/board/informationboard.do">정보게시판</a>
+		<a href="<%=request.getContextPath() %>/board/informationboard.do">공지게시판</a>
 		<a href="<%=request.getContextPath() %>/board/dogstargram.do">멍스타그램</a>
 	</div>
 	<div class="board">
@@ -20,13 +25,13 @@
 			<li class="board-date">작성일</li>
 			<li class="board-read">조회수</li>
 		</ul>
-		<%for(int i = 0; i < 10; i++){ %>
+		<%for(Bulletin b : bulletins){ %>
 		<ul class="board-body">
-			<li class="board-num">1212</li>
-			<li class="board-body-title">요약</li>
-			<li class="board-writer">MJ</li>
-			<li class="board-date">24.04.28</li>
-			<li class="board-read">211</li>
+			<li class="board-num"><%=b.getBullNo() %></li>
+			<li class="board-body-title"><%=b.getTitle() %></li>
+			<li class="board-writer"><%=b.getUserId() %></li>
+			<li class="board-date"><%=b.getRDate() %></li>
+			<li class="board-read"><%=b.getHits() %></li>
 		</ul>
 		<%} %>
 	</div>
@@ -40,15 +45,17 @@
 			<input style="width: 55px" type="button" value="제목"> <input
 				style="width: 250px" type="text" name="freeboardSearch">
 		</form>
-		<button class="insert_board" onclick="location.assign('<%=request.getContextPath()%>/board/insertboard.do');">글 작성</button>
+		<button class="insert_board" onclick="location.assign('<%=request.getContextPath()%>/board/freeboardInsert.do');">글 작성</button>
 	</div>
-	<div id="freeboardFooter2">
+	<%=request.getAttribute("pageBar") %>
+	<!-- <div id="freeboardFooter2">
 		<a class="page1" href=""><<</a> <a class="page1" href=""><</a> <a
 			class="page2" href="">1</a> <a class="page2" href="">2</a> <a
 			class="page2" href="">3</a> <a class="page2" href="">4</a> <a
 			class="page2" href="">5</a> <a class="page1" href="">></a> <a
 			class="page1" href="">>></a>
-	</div>
+	</div> -->
+	
 </section>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

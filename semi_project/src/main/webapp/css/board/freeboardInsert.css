@@ -12,102 +12,77 @@ h6{
 	font-weight: 600;
 }
 .br{
-	position:relative;
 	top:20px;
-	left:15%;
-	width:70vw;
+	width:50vw;
 	height:3px;
-	background-color: lightgray;
-	margin-bottom:40px;
-}
-.insertBoard1{
-	position:relative;
-	left:15%;
-	width:70vw;
-	height:50px;
-	border:1px solid lightgray;
-	border-radius: 5px;
-	display:flex;
-	justify-content: space-around;
-	align-content: center;
-	align-items: center;
-}
-.insertBoard1>input[type=text]{
-	width:80%;
-	height:80%;
-	background-color: lightgray;
-	border-style: none;
-	border-radius:5px;
-}
-.insertBoard1>label{
-	position: relative;
-	right:30px;
-	font-size:15px;
-}
-.insertBoard2{
-	top:20px;
-	position:relative;
-	left:15%;
-	display: flex;
-	flex-direction: column;
-	width:70vw;
-	height:60vh;
-	background-color:#f1f3f5;
-	border:1px solid lightgray;
-	border-radius:5px;
-}
-.insertBoard2>div{
-	display:flex;
-	width:100%;
-	height:13%;
-	justify-content: space-between;
-	align-items: center;
-}
-.insertBoard2>div>.menu1{
-	margin-left:10px;
-	display:flex;
-	align-content: center;
-	align-items: center;
-}
-.insertBoard2>div>.menu1>#inputImg{
-	width:auto;
-	height:auto;
-	display:flex;
-	flex-direction: column;
-	text-align:center;
-	margin-right:25px;
-	font-size:13px;
-	cursor:pointer;
-}
-.insertBoard2>div>.menu1>#inputImg>img{
-	width:33px;
-	height:33px;
-}
-.insertBoard2>div>.menu1>select:first-child{
-	width:80px;
-	height:30px;
-}
-.insertBoard2>div>.menu1>select:last-child{
-	margin-left:10px;
-}
-.insertBoard2>div>.menu2{
-	margin-right:10px;
-}
-.insertBoard2>div>.menu2>input[type=button]{
-	color:white;
-	background-color:black;
-	border-radius:5px;
-	font-size:12px;
-	font-weight:600;
-	width:40px;
-	height:25px;
-}
-.insertBoard2>textarea{
 	margin-left:auto;
 	margin-right:auto;
+	background-color: lightgray;
+	margin-top:10px;
+	margin-bottom:20px;
+}
+.insertBoard1{
+	width:50vw;
+	height:60vh;
+	margin-left:auto;
+	margin-right:auto;
+}
+.insertBoard1>form{
+	width:100%;
+	height:100%;
+}
+.menu1{
+	width:100%;
+	height:10%;
+	box-sizing: border-box;
+	border-radius:8px;
+	border:1px solid lightgray;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+.menu1>input[type="text"]{
 	width:99%;
-	height:87%;
-	resize: none;
-	overflow-y: scroll;
+	height:80%;
+	border-radius:9px;
+	background-color:lightgray;
+	border-style:none;
+}
+.menu2{
+	margin-top:20px;
+	width:100%;
+	height:80%;
+	background-color:whitesmoke;
+	border-radius:8px;
+}
+.menu2>.btn-container{
+	width:100%;
+	height:10%;
+	display:flex;
+	background-color: lightgray;
+}
+.btn-container>input{
+	width:5%;
+	height:70%;
+	margin-top:auto;
+	margin-bottom:auto;
+	font-size:11px;
 	border-radius: 5px;
+	background-color:rgb(0,0,0,0.8);
+	color:white;
+}
+.btn-container>input:first-child{
+	margin-left:88%;
+	margin-right:0.3%;
+}
+.menu2>textarea{
+	width:100%;
+	height:88.5%;
+	margin-left:auto;
+	margin-right:auto;
+	box-sizing: border-box;
+	resize: none;
+	border:1px solid lightgray;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
 }

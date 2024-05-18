@@ -5,11 +5,11 @@
   
 <section class="content">
    <div id="boardHeader">
-      <h2>정보게시판</h2>
+      <h2>공지게시판</h2>
    </div>
    <div id="boardmenu">
       <a href="<%=request.getContextPath() %>/board/freeboard.do">자유게시판</a>
-      <a href="<%=request.getContextPath() %>/board/informationboard.do">정보게시판</a>
+      <a href="<%=request.getContextPath() %>/board/informationboard.do">공지게시판</a>
       <a href="<%=request.getContextPath() %>/board/dogstargram.do">멍스타그램</a>
    </div>
    <div class="board">
@@ -30,7 +30,7 @@
    	</ul>
    	<%} %>
    </div>
-   <div class="visible-box" style="display: none">
+   <div class="visible-box" style="display:none">
    		<p>제목</p>
    		<p>내용</p>
    		<p>닉네임</p>

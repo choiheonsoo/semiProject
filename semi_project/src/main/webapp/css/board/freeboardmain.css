@@ -115,8 +115,13 @@
 }
 #freeboardFooter2 a{
    text-decoration: none;
-   color:gray;
+   color:black;
    text-align: center;
+	font-weight: 400;
+}
+#freeboardFooter2 p{
+	text-align: center;
+	color:gray;
 }
 .insert_board{
 	position: relative;
