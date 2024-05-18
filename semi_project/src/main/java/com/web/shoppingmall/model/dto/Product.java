@@ -28,5 +28,5 @@ public class Product {
 	//리뷰 총 갯수
 	private int totalReviewCount;
 	//평균 별점
-	private int avgRating;
+	private double avgRating;
 }

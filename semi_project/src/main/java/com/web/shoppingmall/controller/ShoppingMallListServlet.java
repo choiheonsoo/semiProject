@@ -54,16 +54,36 @@ public class ShoppingMallListServlet extends HttpServlet {
 		int totalPage=(int)Math.ceil((double)totalData/numPerpage);
 		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
 		int pageEnd=pageNo+pageBarSize-1;
-		StringBuffer sb=new StringBuffer();
 		
+		String pageBar="<div id='pagebar'>";
 		if(pageNo==1) {
-			sb.append("<p><<</p>");
-			sb.append("");
+			pageBar+="<p class='page1'><<</p>";
+			pageBar+="<p class='page1'><</p>";
+		}else {
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage=1'><<</a>";
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo-1)+"'><</a>";
 		}
+		while(!(pageNo>pageEnd||pageNo>totalPage)) {
+			if(pageNo==cPage) {
+				pageBar+="<p class='page2'>"+pageNo+"</p>";
+			}else {
+				pageBar+="<a class='page2' href='"+request.getRequestURI()+"?cPage="+pageNo+"'>"+pageNo+"</a>";
+			}
+			pageNo++;
+		}
+		if(pageNo>totalPage) {
+			pageBar+="<p class='page1'>></p>";
+			pageBar+="<p class='page1'>>></p>";
+		}else {
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo)+"'>></a>";
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(totalPage)+"'>>></a>";
+		}
+		pageBar+="</div>";
 		
 		List<Product> products=getService().selectProduct(category,cPage,numPerpage,sort);
+		products.stream().forEach(System.out::println);
 		request.setAttribute("products", products);
-		request.setAttribute("pagebar", sb);
+		request.setAttribute("pagebar", pageBar);
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalllist.jsp")
 		.forward(request, response);
 	}

@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
+<%
+	List<Product> products=(List<Product>)request.getAttribute("products");
+	String pagebar=(String)request.getAttribute("pagebar");
+%>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/shoppingmall/shoppingmalllist.css">
 <section>
 	<div class="title">
@@ -67,7 +72,7 @@
 		</div>
 	</div>
 	<div id="pagebar">
-	
+		<%=pagebar %>
 	</div>
 </section>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

@@ -68,7 +68,14 @@ public class ShoppingmallDao {
 			pstmt.setInt(3, cPage*numPerpage);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
-				result.add(getProduct(rs));
+				
+				result.add(new Product().builder()
+						.productName(rs.getString("PRODUCT_NAME"))
+						.price(rs.getInt("PRICE"))
+						.rateDiscount(rs.getInt("RATE_DISCOUNT"))
+						.totalReviewCount(rs.getInt("R_COUNT"))
+						.avgRating(rs.getDouble("AVG_RATING"))
+						.build());
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -87,7 +94,11 @@ public class ShoppingmallDao {
 	
 	
 	
-	
+	/*
+	 * 	상품 객체를 만들어 반환하는 메소드
+	 * 	매개변수 : ResultSet
+	 * 	반환 : Product 객체
+	 */
 	private Product getProduct(ResultSet rs)throws SQLException{
 		return Product.builder()
 				.productKey(rs.getInt("PRODUCT_KEY"))
@@ -100,7 +111,7 @@ public class ShoppingmallDao {
 				.deletionStatus(rs.getString("DELETION_STATUS"))
 				.rateDiscount(rs.getInt("RATE_DISCOUNT"))
 				.totalReviewCount(rs.getInt("R_COUNT"))
-				.avgRating(rs.getInt("AVG_RATING"))
+				.avgRating((Double)rs.getDouble("AVG_RATING")==null?0:rs.getInt("AVG_RATING"))
 				.build();
 	}
 }
