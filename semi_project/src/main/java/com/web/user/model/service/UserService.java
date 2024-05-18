@@ -18,4 +18,11 @@ public class UserService {
 		close(conn);
 		return user;
 	}
+	
+	public int enrollUser(User user) {
+		Connection con = getConnection();
+		int result = getUserDao().enrollUser(con, user);
+		close(con);
+		return result;
+	}
 }
