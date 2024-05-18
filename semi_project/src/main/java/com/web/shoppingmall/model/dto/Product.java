@@ -24,4 +24,9 @@ public class Product {
 	private String content;
 	private String deletionStatus;
 	private int rateDiscount;
+	
+	//리뷰 총 갯수
+	private int totalReviewCount;
+	//평균 별점
+	private int avgRating;
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.web.shoppingmall.model.dto.Product;
+
 /*
  * 쇼핑몰 dao
  */
@@ -62,9 +63,9 @@ public class ShoppingmallDao {
 		ResultSet rs=null;
 		try {
 			pstmt=conn.prepareStatement(sql.getProperty("selectProduct"));
-			pstmt.setInt(1, numPerpage);
-			pstmt.setInt(2, numPerpage);
-			pstmt.setInt(3, numPerpage);
+			pstmt.setInt(1, category);
+			pstmt.setInt(2, (cPage-1)*numPerpage+1);
+			pstmt.setInt(3, cPage*numPerpage);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				result.add(getProduct(rs));
@@ -98,6 +99,8 @@ public class ShoppingmallDao {
 				.content(rs.getString("CONTENT"))
 				.deletionStatus(rs.getString("DELETION_STATUS"))
 				.rateDiscount(rs.getInt("RATE_DISCOUNT"))
+				.totalReviewCount(rs.getInt("R_COUNT"))
+				.avgRating(rs.getInt("AVG_RATING"))
 				.build();
 	}
 }
