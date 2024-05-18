@@ -28,7 +28,7 @@
 		<%for(Bulletin b : bulletins){ %>
 		<ul class="board-body">
 			<li class="board-num"><%=b.getBullNo() %></li>
-			<li class="board-body-title"><%=b.getTitle() %></li>
+			<li class="board-body-title"><a href="<%=request.getContextPath()%>/board/freeboardview.do?no=<%=b.getBullNo() %>"><%=b.getTitle() %></a></li>
 			<li class="board-writer"><%=b.getUserId() %></li>
 			<li class="board-date"><%=b.getRDate() %></li>
 			<li class="board-read"><%=b.getHits() %></li>
@@ -48,13 +48,6 @@
 		<button class="insert_board" onclick="location.assign('<%=request.getContextPath()%>/board/freeboardInsert.do');">글 작성</button>
 	</div>
 	<%=request.getAttribute("pageBar") %>
-	<!-- <div id="freeboardFooter2">
-		<a class="page1" href=""><<</a> <a class="page1" href=""><</a> <a
-			class="page2" href="">1</a> <a class="page2" href="">2</a> <a
-			class="page2" href="">3</a> <a class="page2" href="">4</a> <a
-			class="page2" href="">5</a> <a class="page1" href="">></a> <a
-			class="page1" href="">>></a>
-	</div> -->
 	
 </section>
 
