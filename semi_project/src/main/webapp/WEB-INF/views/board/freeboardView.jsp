@@ -1,4 +1,4 @@
-	<%@page import="java.util.List"%>
+<%@page import="java.util.List"%>
 <%@page import="com.web.board.model.dto.BulletinComment"%>
 	<%@page import="com.web.board.model.dto.Bulletin"%>
 	<%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -11,7 +11,6 @@
 	<link rel="stylesheet"
 		href="<%=request.getContextPath()%>/css/board/freeboardView.css">
 	<h3>자유게시판</h3>
-	<%=bcs %>
 	<div class="freeboard-br"></div>
 	<div class="freeboard-view-container">
 		<div class="freeboard-view-header">
@@ -52,14 +51,19 @@
                     <div class="freeboard-comment-header">
                         <div>
                             <img src="<%=request.getContextPath()%>/images/user.png" width="30" height="30">
-                            <p><%=b.getUserId() %></p>
+                            <p><%=bc.getUserId() %></p>
                         </div>
                         <div class="freeboard-comment-menu">
                             <img src="<%=request.getContextPath()%>/images/menu.png" width="20" height="20"
                             	onclick="menu(event,'<%=bc.getUserId()%>');">
                             <div>
-                                <button>수정</button>
-                                <button>삭제</button>
+                            	<% if(bc.getUserId().equals(loginUser.getUserId())){%>
+	                                <button>수정</button>
+    	                            <button>삭제</button>
+                            	<%}else{%>
+                            		<button>정보보기</button>
+                              		<button>신고하기</button>
+                            	<% }%>
                             </div>
                         </div>
                     </div>
@@ -68,7 +72,7 @@
                         <button>댓글</button>
                     </div>
                 <% } else { %>
-                    <div class="freeboard-comment-header">
+                    <div class="freeboard-comment-header sub-comment">
                         <div>
                             <img src="<%=request.getContextPath()%>/images/user.png" width="30" height="30">
                             <p><%=bc.getUserId() %></p>
@@ -77,14 +81,18 @@
                             <img src="<%=request.getContextPath()%>/images/menu.png" width="20" height="20"
                             onclick="menu(event,'<%=bc.getUserId()%>');">
                             <div>
-                                <button>수정</button>
-                                <button>삭제</button>
+                                <% if(bc.getUserId().equals(loginUser.getUserId())){%>
+	                                <button>수정</button>
+    	                            <button>삭제</button>
+                            	<%}else{%>
+                            		<button>정보보기</button>
+                              		<button>신고하기</button>
+                            	<% }%>
                             </div>
                         </div>
                     </div>
-                    <div class="freeboard-comment-body">
+                    <div class="freeboard-comment-body-sub">
                         <p><%=bc.getContent() %></p>
-                        <button>댓글</button>
                     </div>
                 <% }
             }
@@ -102,8 +110,9 @@
 			$(".freeboard-user-container").slideToggle("visible-box");
 		});
 		const menu=(e,k)=>{
-			if("<%=loginUser.getUserId()%>"==e){
-				console.log(e.target.next());
+			if("<%=loginUser.getUserId()%>"==k){
+				$(e.target).next().toggle("visible-box");
+			}else{
 				$(e.target).next().toggle("visible-box");
 			}
 		};
