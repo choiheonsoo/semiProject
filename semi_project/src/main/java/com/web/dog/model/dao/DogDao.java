@@ -1,13 +1,15 @@
 package com.web.dog.model.dao;
 
+import static com.web.common.JDBCTemplate.close;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import static com.web.common.JDBCTemplate.*;
 import com.web.dog.model.dto.Dog;
 
 public class DogDao {
@@ -15,7 +17,7 @@ public class DogDao {
 	// 기본 생성자에 properties 초기화 설정
 	private Properties sql = new Properties();
 	private DogDao() {
-		try(FileReader fr = new FileReader(DogDao.class.getResource("/sql.user/sql_user.properties").getPath())) {
+		try(FileReader fr = new FileReader(DogDao.class.getResource("/sql/user/sql_user.properties").getPath())) {
 			sql.load(fr);
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -25,6 +27,23 @@ public class DogDao {
 	public static DogDao getDogDao() {
 		if(dao==null) dao = new DogDao();
 		return dao;
+	}
+	
+	public String getDogImg(Connection con, String Id) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String dogImg="";
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("selectDogImg"));
+			pstmt.setString(1, Id);
+			rs=pstmt.executeQuery();
+			if(rs.next()) dogImg=rs.getString(1);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		} return dogImg;
 	}
 	
 	public int enrollDog(Connection con, Dog dog) {
@@ -38,9 +57,9 @@ public class DogDao {
 			pstmt.setDouble(4, dog.getDogWeight());
 			pstmt.setString(5, dog.getDogImg());
 			result = pstmt.executeUpdate();
-		}catch(SQLException e){
+		} catch(SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			close(pstmt);
 		}
 		return result;

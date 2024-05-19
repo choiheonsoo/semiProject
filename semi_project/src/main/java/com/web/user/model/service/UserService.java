@@ -2,6 +2,7 @@ package com.web.user.model.service;
 
 import static com.web.common.JDBCTemplate.*;
 import static com.web.user.model.dao.UserDao.getUserDao;
+import static com.web.dog.model.dao.DogDao.getDogDao;
 import java.sql.Connection;
 
 import com.web.user.model.dto.User;
@@ -16,6 +17,13 @@ public class UserService {
 		User user = getUserDao().loginUser(conn,id,password);
 		close(conn);
 		return user;
+	}
+	
+	public String getDogImg(String id) {
+		Connection con = getConnection();
+		String dogImg = getDogDao().getDogImg(con,id);
+		close(con);
+		return dogImg;
 	}
 	
 	public int enrollUser(User user) {
