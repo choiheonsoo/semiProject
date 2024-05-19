@@ -17,17 +17,24 @@
 }
 /* 상품이미지부분 */
 .productImg{
-	width:30%;
-	height:50vh;
+	width:70%;
+	height:70vh;
+	display:flex;
+	flex-direction:column;
+	flex-wrap:wrap;
 }
-.productImg img{
-	width:100%;
+.mainProductImg{
+	width:80%;
 	height:100%;
+}
+.productImgs{
+	width:20%;
+	height:20%;
 }
 /* 상품 구매 부분 */
 .purchase{
-	width:70%;
-	height:50vh;
+	width:50%;
+	height:70vh;
 	display:flex;
 	justify-content:center;
 	align-items:center;
@@ -74,24 +81,39 @@
 	width:50%;
 	margin-top:1%;
 }
-/* 구매수량 */
-.quantity{
+/* 구매수량 +,- 버튼 */
+.quantity>span{
 	font-size:25px;
+	margin-left:3%;
+	margin-right:3%;
 }
-/* 구매버튼 */
-.purchaseButton{
-	height:10%;
-}
-.purchaseButton>a{
-	margin-left:1%;
+.quantity{
 	display:flex;
-	width:10%;
-	height:90%;
-	background-color:rgb(255, 237, 164);
-	color:black;
+	align-items:center;
+	text-align:center;
+}
+.quantity>button{
+	width:25px;
+	height:25px;
+	border:none;
+	border-radius:50%;
+	color:white;
+	background-color:magenta;
+	display:flex;
+	justify-content:center;
+}
+./* 구매버튼 */
+.purchaseButton{
+	height:auto;
+}
+.purchaseButton>button{
+	width:40%;
+	height:6vh;
+	background-color:magenta;
+	color:white;
 	text-decoration:none;
 	border-radius:5px;
-	justify-content:center;
+	border:none;
 }
 
 /* 총 별점, 전체 리뷰 수 */

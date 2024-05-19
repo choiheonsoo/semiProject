@@ -1,6 +1,8 @@
 package com.web.shoppingmall.model.dto;
 
 import java.sql.Date;
+import java.util.Map;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +32,9 @@ public class Product {
 	//평균 별점
 	private double avgRating;
 	//이미지
-	private String productImg;
+	private Map<String, ProductImg> productImgs;
 	//카테고리 이름
-	private String productCategoryName;
+	private ProductCategory productCategory;
+	//옵션
+	private Set<ProductOption> productOption;
 }

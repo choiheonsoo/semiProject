@@ -44,7 +44,7 @@
 								<div class="thumbnail">
 									<div class="imagearea">
 										<a href="<%=request.getContextPath()%>/shoppingmall/shoppingmalldetail.do?productKey=<%=p.getProductKey()%>">
-											<img src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategoryName() %>/<%=p.getProductImg() %>" alt="productImg">
+											<img src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName()%>/<%=p.getProductImgs().get("thumbnail").getProductImg() %>" alt="productImg">
 										</a>
 									</div>
 									<div class="iconarea">
@@ -68,7 +68,7 @@
 									<div class="starReview">
 										<div class="star"><img src="<%=request.getContextPath()%>/images/shoppingmall/star.png" alt="star"></div>
 										<div class="rated"><span><%=Math.round(p.getAvgRating() * 10.0) / 10.0 %></span></div>
-										<div class="review" onclick='location.assign("<%=request.getContextPath()%>/shoppingmall/shoppingmalldetail.do?productKey=<%=p.getProductKey()%>")'><span><%=p.getTotalReviewCount() %>개 리뷰보기</span></div>
+										<div class="review" onclick='location.assign("<%=request.getContextPath()%>/shoppingmall/shoppingmalldetail.do?productKey=<%=p.getProductKey()%>&r=1")'><span><%=p.getTotalReviewCount() %>개 리뷰보기</span></div>
 									</div>
 								</div>
 							</div>

@@ -33,9 +33,9 @@ public class FreeboardInsertEndServlet extends HttpServlet {
 		int result = getService().insertBoard(id,title,content);
 		
 		if(result>0) {
-			request.getRequestDispatcher(request.getContextPath()+"/board/freeboard.do").forward(request, response);
+			response.sendRedirect(request.getContextPath()+"/board/freeboard.do");
 		}else {
-			response.sendRedirect(request.getContextPath());
+			response.sendRedirect(request.getContextPath()+"/");
 		}
 	}
 

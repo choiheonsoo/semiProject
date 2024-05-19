@@ -1,27 +1,23 @@
-package com.web.shoppingmall.controller;
+package com.web.board.controller;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.web.shoppingmall.model.dto.Product;
-import static com.web.shoppingmall.model.service.ShoppingmallService.getService;
+import static com.web.board.model.service.BoardService.getService;
 /**
- * Servlet implementation class ShoppingMallDetailServlet
- * 쇼핑몰 상품 상세페이지 이동 서블릿
+ * Servlet implementation class FreeBoardDeleteServlet
  */
-@WebServlet("/shoppingmall/shoppingmalldetail.do")
-public class ShoppingMallDetailServlet extends HttpServlet {
+@WebServlet("/board/deletefreeboard.do")
+public class FreeBoardDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShoppingMallDetailServlet() {
+    public FreeBoardDeleteServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,14 +26,11 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 클릭한 상품 상세 페이지로 이동
-		int productKey=Integer.parseInt(request.getParameter("productKey"));
-		String r=request.getParameter("r");
-		
-		Product p=getService().selectProductByKey(productKey);
-		request.setAttribute("product", p);
-		request.setAttribute("r", r);
-		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalldetail.jsp").forward(request, response);
+		int no = Integer.parseInt(request.getParameter("no"));
+		int result = getService().deleteFreeBoard(no);
+		if(result > 0) {
+			response.sendRedirect(request.getContextPath()+"/board/freeboard.do");
+		}
 	}
 
 	/**
