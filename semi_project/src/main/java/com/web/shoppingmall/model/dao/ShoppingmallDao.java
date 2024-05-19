@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -157,6 +158,7 @@ public class ShoppingmallDao {
 				.build();
 		Map<String, ProductImg> imgs=new HashMap<>();
 		int str=1;
+		
 		do{
 			if(rs.getString("THUMBNAIL").equals("Y")) {
 				imgs.put("thumbnail", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());

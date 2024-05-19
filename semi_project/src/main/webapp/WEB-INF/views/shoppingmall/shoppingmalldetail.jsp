@@ -214,7 +214,7 @@ const minus=()=>{
 	if(count>1){
 		count=parseInt(count)-1;
 		$("#purchaseQuantity").text(count);
-		$("#totalPrice").text(count*<%=p.getPrice()%>);
+		$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
 	}
 }
 //상품개수 플러스버튼 누를 시 실행되는 함수
@@ -222,7 +222,7 @@ const plus=()=>{
 	let count=$("#purchaseQuantity").text();
 	count=parseInt(count)+1;
 	$("#purchaseQuantity").text(count);
-	$("#totalPrice").text(count*<%=p.getPrice()%>);
+	$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
 }
 //메뉴 고정 함수
 $(document).ready(()=>{
