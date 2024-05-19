@@ -33,11 +33,17 @@
 		<div class="freeboard-view-body">
 			<%=b.getContent() %>
 		</div>
+		<div id="editForm" style="display: none;">
+		    <textarea id="editContent"><%= b.getContent() %></textarea>
+		    <button id="saveButton">저장</button>
+		    <button id="cancelButton">취소</button>
+		</div>
 		<div class="freeboard-user-container">
 			<%if(b.getUserId().equals(loginUser.getUserId())){ %>
-			<button onclick="location">수정</button>
-			<button>삭제</button>
+			 <button id="editButton">수정</button>
+			 <button>삭제</button>
 			<%}else{ %>
+			<button>정보보기</button>
 			<button>신고</button>
 			<%} %>
 		</div>
@@ -116,5 +122,42 @@
 				$(e.target).next().toggle("visible-box");
 			}
 		};
+		
+		$(document).ready(function() {
+		    // 수정 버튼 클릭 시 수정 폼 표시
+		    $('#editButton').click(function() {
+		        $('#editForm').show();
+		        $(".freeboard-user-container").slideToggle("visible-box");
+		        $(".freeboard-view-body").hide();
+		    });
+		    // 취소 버튼 클릭 시 수정 폼 숨김
+		    $('#cancelButton').click(function() {
+		        $('#editForm').hide();
+		    });
+
+		    // 저장 버튼 클릭 시 AJAX 요청
+		    $('#saveButton').click(function() {
+		        var updatedContent = $('#editContent').val();
+		        var postId = <%= b.getBullNo() %>;
+
+		        $.ajax({
+		            url: '<%= request.getContextPath() %>/board/updateboard.do',
+		            method: 'POST',
+		            data: { id: postId, content: updatedContent },
+		            success: function(response) {
+		                if(response.status === "success") {
+		                    alert('수정되었습니다.');
+		                    $('.freeboard-view-body').text(updatedContent);
+		                    $('#editForm').hide();
+		                } else {
+		                    alert('수정에 실패했습니다.');
+		                }
+		            },
+		            error: function() {
+		                alert('수정에 실패했습니다.');
+		            }
+		        });
+		    });
+		});
 	</script>
-	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
+<%@ include file="/WEB-INF/views/common/footer.jsp"%>

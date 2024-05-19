@@ -34,4 +34,13 @@ public class BoardService {
 		close(conn);
 		return bulletin;
 	}
+	
+	//게시글 등록
+	public int insertBoard(String id, String title, String content) {
+		Connection conn = getConnection();
+		int result = getDao().insertBoard(conn,id, title, content);
+		if(result > 0 ) commit(conn);
+		else rollback(conn);
+		return result;
+	}
 }
