@@ -4,6 +4,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 	Product p=(Product)request.getAttribute("product");
+	String r=(String)request.getAttribute("r");
 %>
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/shoppingmall/shoppingmalldetail.css">
@@ -19,7 +20,7 @@
 	<div class="detailContainer">
 		<div>
 			<div class="productImg">
-				<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("thumbnail")%>">
+				<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("thumbnail").getProductImg()%>">
 				
 			</div>
 			<div class="purchase">
@@ -32,22 +33,24 @@
 						<span class="cost"><%=p.getPrice() %></span>
 						<span class="salePrices"><%=p.getPrice()*(100-p.getRateDiscount())/100 %>원</span>
 					</div>
-					<%if(!p.getProductOption().isEmpty()){ %>
-					<div class="option">
-						<span>옵션선택 *</span>
-						<select name="size">
-							<option value="" selected disabled>사이즈 선택</option>
-							<option value="S">S</option>
-							<option value="M">M</option>
-							<option value="L">L</option>
-						</select>
-						<select name="color">
-							<option value="" selected disabled>색상 선택</option>
-							<option value="red">빨강</option>
-							<option value="black">검정</option>
-							<option value="blue">파랑</option>
-						</select>
-					</div>
+					<%if(p.getProductOption()!=null){
+						if(!p.getProductOption().isEmpty()){%>
+							<div class="option">
+								<span>옵션선택 *</span>
+								<select name="size">
+									<option value="" selected disabled>사이즈 선택</option>
+									<option value="S">S</option>
+									<option value="M">M</option>
+									<option value="L">L</option>
+								</select>
+								<select name="color">
+									<option value="" selected disabled>색상 선택</option>
+									<option value="red">빨강</option>
+									<option value="black">검정</option>
+									<option value="blue">파랑</option>
+								</select>
+							</div>
+						<%} %>
 					<%} %>
 					<div class="quantity">
 						<button onclick='minus()'>-</button>
@@ -59,6 +62,7 @@
 					</div>
 					<div class="purchaseButton">
 						<button onclick="movePaypage()">구매</button> <!-- 구매버튼 누르면 구매 페이지로 가야함 -->
+						<button onclick="">장바구니 담기</button>
 					</div>
 				</div>
 			</div>
@@ -96,11 +100,6 @@
 	</div>
 	<div class="detailImgContainer">
 		<div class="detailImg">
-			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
 			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
 		</div>
 	</div>
@@ -211,21 +210,19 @@ const movePaypage=()=>{
 }
 //상품개수 마이너스버튼 누를 시 실행되는 함수
 const minus=()=>{
-	let count=$("#purchaseQuantity").innerText;
+	let count=$("#purchaseQuantity").text();
 	if(count>1){
-		let count=parseInt(count)-1;
-		$("#purchaseQuantity").innerText=count;
-		$("#totalPrice").innerText=count*<%=p.getPrice()%>;
+		count=parseInt(count)-1;
+		$("#purchaseQuantity").text(count);
+		$("#totalPrice").text(count*<%=p.getPrice()%>);
 	}
 }
 //상품개수 플러스버튼 누를 시 실행되는 함수
 const plus=()=>{
-	let count=$("#purchaseQuantity").innerText;
-	if(count>1){
-		let count=parseInt(count)+1;
-		$("#purchaseQuantity").innerText=count;
-		$("#totalPrice").innerText=count*<%=p.getPrice()%>
-	}
+	let count=$("#purchaseQuantity").text();
+	count=parseInt(count)+1;
+	$("#purchaseQuantity").text(count);
+	$("#totalPrice").text(count*<%=p.getPrice()%>);
 }
 //메뉴 고정 함수
 $(document).ready(()=>{
@@ -243,16 +240,22 @@ $(document).ready(()=>{
     });
 });
 
+	$(window).on('load', ()=>{
+		<%if(r!=null){%>
+			const mmc=$('.reviewContainer').offset().top-$('.moveMenuContainer').outerHeight()*2;
+			$('html, body').scrollTop(mmc);
+		<%} %>
+	});
 //스크롤 이동메뉴 함수
 $(document).ready(()=>{
 	$('#moveDetail').click((e)=>{
 		$('html, body').scrollTop($('.detailImgContainer').offset().top)
 	});
 	$('#moveReview').click((e)=>{
-		$('html, body').scrollTop($('.reviewContainer').offset().top)
+		$('html, body').scrollTop($('.reviewContainer').offset().top-$('.moveMenuContainer').outerHeight())
 	});
 	$('#moveQna').click((e)=>{
-		$('html, body').scrollTop($('.qnaContainer').offset().top)
+		$('html, body').scrollTop($('.qnaContainer').offset().top-$('.moveMenuContainer').outerHeight())
 	});
 })
 

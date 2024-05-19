@@ -32,9 +32,11 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 클릭한 상품 상세 페이지로 이동
 		int productKey=Integer.parseInt(request.getParameter("productKey"));
+		String r=request.getParameter("r");
 		
 		Product p=getService().selectProductByKey(productKey);
 		request.setAttribute("product", p);
+		request.setAttribute("r", r);
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalldetail.jsp").forward(request, response);
 	}
 
