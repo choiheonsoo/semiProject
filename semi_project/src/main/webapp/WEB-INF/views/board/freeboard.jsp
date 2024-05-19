@@ -41,9 +41,9 @@
 		<p>닉네임</p>
 	</div>
 	<div id="freeboardFooter1">
-		<form id="freeboardSearch" action="" method="get">
-			<input style="width: 55px" type="button" value="제목"> <input
-				style="width: 250px" type="text" name="freeboardSearch">
+		<form id="freeboardSearch" action="<%=request.getContextPath() %>/board/freeboard.do" method="get">
+			<input style="width: 55px" name="type" type="button" value="제목">
+			<input style="width: 250px" name="keyword" type="text" name="freeboardSearch">
 		</form>
 		<button class="insert_board" onclick="location.assign('<%=request.getContextPath()%>/board/freeboardInsert.do');">글 작성</button>
 	</div>
