@@ -19,6 +19,7 @@
 		border-style: none;
 		background-color: #5b9dff;
 		color: #dfdffd;
+		padding: 2px;
 	}
 </style>
 </head>
@@ -57,7 +58,7 @@
                 <%if(loginUser==null){ %>
                 	<p style="font-weight:600">로그인 후 <br>이용할 수 있습니다.</p>
                 <%}else{ %>
-                	<p><strong><%=loginUser.getUserId() %></strong>님</p><p>환영합니다. <button id="logOutbtn" onclick="location.assign('<%=request.getContextPath()%>/logout.do');">로그아웃</button></p>
+                	<p><strong><%=loginUser.getUserId() %></strong>님</p><button id="logOutbtn" onclick="location.assign('<%=request.getContextPath()%>/logout.do');">로그아웃</button>
                 <%} %>
             </div>
         </nav>
