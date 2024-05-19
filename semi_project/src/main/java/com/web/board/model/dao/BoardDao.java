@@ -101,6 +101,23 @@ public class BoardDao {
 		return bulletin;
 	}
 	
+	//게시글 등록하기
+	public int insertBoard(Connection conn, String id, String title, String content) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("insertBoard"));
+			pstmt.setString(1,id);
+			pstmt.setString(2, title);
+			pstmt.setString(3, content);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
 	private BulletinComment getComments(ResultSet rs) throws SQLException{
 		return BulletinComment.builder()
 				.mainComment(rs.getInt("main_comment"))
