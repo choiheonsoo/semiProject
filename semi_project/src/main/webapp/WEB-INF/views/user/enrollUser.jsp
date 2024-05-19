@@ -79,7 +79,6 @@
 	}
 	div#dogPrev{
 		width: 250px;
-		height: 250px;
 		/* background-color: magenta; */
 	}
 </style>
@@ -153,7 +152,7 @@
 		reader.onload = function(event){
 			const $img = document.createElement("img");
 			// base64 인코드 된 정보를 img태그에 담음
-			$img.setAttribute("style", "width:100%");
+			$img.setAttribute("style", "width:98%");
 			$img.setAttribute("src", event.target.result);
 			document.getElementById("dogPrev").appendChild($img);
 		} 

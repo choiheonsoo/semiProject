@@ -36,6 +36,7 @@ public class UpdateUserEndServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json;charset=utf-8");
+		
 		String dateString = request.getParameter("birthday");
 		SimpleDateFormat birthSdf = new SimpleDateFormat("yyyy-MM-dd");
 		java.sql.Date sqlDate = null;
