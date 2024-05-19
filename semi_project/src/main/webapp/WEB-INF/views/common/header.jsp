@@ -19,6 +19,7 @@
 		border-style: none;
 		background-color: #5b9dff;
 		color: #dfdffd;
+		padding: 2px;
 	}
 </style>
 </head>
