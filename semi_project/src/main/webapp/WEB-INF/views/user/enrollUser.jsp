@@ -73,13 +73,12 @@
 		justify-content: space-between;
 		width: 300px;
 	}
-	div#dogInfo *{
+	div#dogInfo>*{
 		margin-left: 2%;
 		display: none;
 	}
 	div#dogPrev{
 		width: 250px;
-		height: 250px;
 		/* background-color: magenta; */
 	}
 </style>
@@ -129,7 +128,7 @@
 	            	<label for="dogWeight">반려견 몸무게 *</label>
 	            	<input type="text" name="dogWeight">
 	            	<label for="dogImg">대표 반려견 사진 *</label>
-	            	<input type="file" name="dogImg" accept="image/*">
+	            	<input id="dogImg" type="file" name="dogImg" accept="image/*">
 	            	<div id="dogPrev">
 	            	</div>
 	            </div>
@@ -142,22 +141,22 @@
 </section>
 
 <script>
-	$("input[name='dogImg']").change(e => {
-	    $("#dogPrev").html('');
-	    $.each(e.target.files,(i,file)=>{
-		    const fileReader = new FileReader();
-		    fileReader.readAsDataURL(file);
-		    fileReader.onload = (event) => {
-		        const path = event.target.result;
-		        const img = $("<img>").attr({
-		            src: path,
-		            width: "200",
-		            height: "200"
-		        });
-	        	$("#dogPrev").append(img);
-	    	};
-	    });
-	});
+	const $dogImg = document.querySelector("#dogImg");
+	// 이벤트가 선택됐을 때 발생하는 이벤트
+	$dogImg.addEventListener("change", (e) => {
+		document.getElementById("dogPrev").innerHTML="";
+		const reader = new FileReader();
+		reader.readAsDataURL(e.target.files[0])
+		
+		// FileReader 가 이미지를 모두 읽어왔을 때(로딩 됐을 때) 발생하는 이벤트
+		reader.onload = function(event){
+			const $img = document.createElement("img");
+			// base64 인코드 된 정보를 img태그에 담음
+			$img.setAttribute("style", "width:98%");
+			$img.setAttribute("src", event.target.result);
+			document.getElementById("dogPrev").appendChild($img);
+		} 
+	})
 
 	document.querySelector("label[for=ishavingdog]").addEventListener("change",e=>{
 		const $inputs = document.querySelectorAll("label[for=ishavingdog]>input");
