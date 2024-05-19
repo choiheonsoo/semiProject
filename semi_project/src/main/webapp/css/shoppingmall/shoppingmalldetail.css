@@ -17,17 +17,24 @@
 }
 /* 상품이미지부분 */
 .productImg{
-	width:30%;
-	height:50vh;
+	width:70%;
+	height:70vh;
+	display:flex;
+	flex-direction:column;
+	flex-wrap:wrap;
 }
-.productImg img{
-	width:100%;
+.mainProductImg{
+	width:80%;
 	height:100%;
+}
+.productImgs{
+	width:20%;
+	height:20%;
 }
 /* 상품 구매 부분 */
 .purchase{
-	width:70%;
-	height:50vh;
+	width:50%;
+	height:70vh;
 	display:flex;
 	justify-content:center;
 	align-items:center;

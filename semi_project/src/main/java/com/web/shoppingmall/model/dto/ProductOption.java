@@ -18,4 +18,7 @@ public class ProductOption {
 	private int colorKey;
 	private int sizeKey;
 	private int stock;
+	
+	private ProductSize productSize;
+	private Color color;
 }

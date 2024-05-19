@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
+<%
+	/* Product p=(Product)request.getAttribute("product"); */
+%>
+
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/shoppingmall/shoppingmalldetail.css">
 <!-- 포트원 결제 -->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
@@ -14,7 +19,12 @@
 	<div class="detailContainer">
 		<div>
 			<div class="productImg">
-				<img alt="" src="<%=request.getContextPath()%>/images/shoppingmall/product/feed/royal_canin.jpg">
+				<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
+				<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
+				<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
+				<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
+				<%-- <img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
+				<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg"> --%>
 			</div>
 			<div class="purchase">
 				<div>
@@ -24,7 +34,7 @@
 					<div class="price">
 						<span class="discountRate">10%</span>
 						<span class="cost">30000</span>
-						<span class="salePrices">27000</span>
+						<span class="salePrices">27000원</span>
 					</div>
 					<div class="option">
 						<span>옵션선택 *</span>
