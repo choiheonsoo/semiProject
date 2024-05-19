@@ -35,5 +35,5 @@ public class Product {
 	//카테고리 이름
 	private ProductCategory productCategory;
 	//옵션
-	private ProductOption productOption;
+//	private  productOption;
 }
