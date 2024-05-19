@@ -37,7 +37,7 @@
             </div>
             <div id="menu2">
                 <a href="<%=request.getContextPath()%>/board/freeboard.do">커뮤니티</a>
-                <a href="<%=request.getContextPath()%>/shoppingmall/shoppingmallfeed.do">쇼핑하개</a>
+                <a href="<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do?category=1">쇼핑하개</a>
                 <a href="<%=request.getContextPath()%>/board/walkingmate.do">산책메이트</a>
                 <a href="<%=request.getContextPath()%>/hotplace/walking.do">핫플레이스</a>
             </div>
