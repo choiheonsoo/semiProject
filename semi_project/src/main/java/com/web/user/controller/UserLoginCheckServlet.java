@@ -37,13 +37,19 @@ public class UserLoginCheckServlet extends HttpServlet {
 		String password = request.getParameter("password");
 
 		User user = getUserService().loginUser(id,password);
+		String dogImg = getUserService().getDogImg(id);
 		if(user!=null) {
 			HttpSession session = request.getSession();
+			System.out.println(dogImg);
 			session.setAttribute("loginUser", user);
-			response.sendRedirect(request.getContextPath());
-			System.out.println("로그인 성공");
-		}else {
-			System.out.println("로그인 실패");
+			session.setAttribute("dogImg", dogImg);
+			request.setAttribute("msg", "어서오세요!");
+			request.setAttribute("loc", "/");
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		} else {
+			request.setAttribute("msg", "아이디 혹은 비밀번호를 확인해주세요.");
+			request.setAttribute("loc", "/user/login.do");
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 		}
 	}
 

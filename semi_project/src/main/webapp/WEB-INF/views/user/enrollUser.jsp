@@ -87,7 +87,7 @@
 	 <div class="container">
         <h1>회원가입</h1>
         <p> * 표시는 필수 입력 값 입니다.</p>
-        <form id="signupForm" action="<%=request.getContextPath() %>/user/enrollend.do" method="POST">
+        <form id="signupForm" action="<%=request.getContextPath() %>/user/enrollend.do" method="POST" enctype="multipart/form-data">
         	<div class="enrollTab">
 	        	<div id="personInfo">
 		            <label for="userId">회원 아이디 *</label>

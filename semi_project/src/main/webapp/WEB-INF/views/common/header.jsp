@@ -1,9 +1,11 @@
-<%@page import="com.web.user.model.dto.User"%>
+<%@page import="com.web.user.model.dto.User, com.web.dog.model.dto.Dog"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
 	//UserLoginCheckServlet.do에서 session에 담은 값 불러오기
 	User loginUser = (User)session.getAttribute("loginUser");
+	//UserLoginCheckServlet.do에서 로그인 한 유저의 아이디에 해당되는 대표이미지의 파일명(Renamed)를 담는 변수 설정
+	String dogImg = (String)session.getAttribute("dogImg");
 %>
 <!DOCTYPE html>
 <html>
@@ -47,7 +49,11 @@
                 	</a>
                 <%} else { %>
                		<a href="<%=request.getContextPath()%>/user/myPage.do">
-               			<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30">
+               			<%if(dogImg.contains(".")){ %>
+               				<img style="border-radius: 100px" src="<%=request.getContextPath() %>/upload/user/<%=dogImg %>" alt="유저" width="30" height="30">
+               			<%} else { %>
+               				<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30">
+               			<%} %>
                		</a>
                 <%} %>
             </div>

@@ -68,7 +68,11 @@
 	<div>
 		<div id="myPageHeader">
 			<div>
-				<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30"> 
+				<%if(dogImg.contains(".")){ %>
+               		<img style="border-radius: 100px" src="<%=request.getContextPath() %>/upload/user/<%=dogImg %>" alt="유저" width="30" height="30">
+               	<%} else { %>
+               		<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30">
+               	<%} %> 
 				<strong><%=loginUser.getUserId() %></strong>님
 			</div>
 			<div>
