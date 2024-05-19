@@ -3,7 +3,7 @@
 <%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
-	/* Product p=(Product)request.getAttribute("product"); */
+	Product p=(Product)request.getAttribute("product");
 %>
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/shoppingmall/shoppingmalldetail.css">
@@ -19,23 +19,20 @@
 	<div class="detailContainer">
 		<div>
 			<div class="productImg">
-				<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
-				<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
-				<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
-				<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
-				<%-- <img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg">
-				<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/royal_canin.jpg"> --%>
+				<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("thumbnail")%>">
+				
 			</div>
 			<div class="purchase">
 				<div>
 					<div class="name">
-						<span>로얄캐닌 강아지사료 미니 인도어 어덜트 8.7KG</span>
+						<span><%=p.getProductName() %></span>
 					</div>
 					<div class="price">
-						<span class="discountRate">10%</span>
-						<span class="cost">30000</span>
-						<span class="salePrices">27000원</span>
+						<span class="discountRate"><%=p.getRateDiscount() %></span>
+						<span class="cost"><%=p.getPrice() %></span>
+						<span class="salePrices"><%=p.getPrice()*(100-p.getRateDiscount())/100 %>원</span>
 					</div>
+					<%if(!p.getProductOption().isEmpty()){ %>
 					<div class="option">
 						<span>옵션선택 *</span>
 						<select name="size">
@@ -51,16 +48,17 @@
 							<option value="blue">파랑</option>
 						</select>
 					</div>
+					<%} %>
 					<div class="quantity">
-						<button>-</button>
+						<button onclick='minus()'>-</button>
 						<span class="purchaseQuantity" id="purchaseQuantity">1</span>
-						<button>+</button>
+						<button onclick='plus()'>+</button>
 					</div>
 					<div class="totalPrice">
-						<span>총 결제가격 : <span class="totalPrice" id="totalPrice">27000</span>원</span> 
+						<span>총 결제가격 : <span class="totalPrice" id="totalPrice"><%=p.getPrice()*(100-p.getRateDiscount())/100 %></span>원</span> 
 					</div>
 					<div class="purchaseButton">
-						<button onclick="kakaopay()">구매</button> <!-- 구매버튼 누르면 구매 페이지로 가야함 -->
+						<button onclick="movePaypage()">구매</button> <!-- 구매버튼 누르면 구매 페이지로 가야함 -->
 					</div>
 				</div>
 			</div>
@@ -79,12 +77,12 @@
 				<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="별">
 			</div>
 			<div>
-				<span>4.9</span>
+				<span><%=p.getAvgRating() %></span>
 			</div>
 		</div>
 		<div class="reviews">
 			<span>전체 리뷰 수</span>
-			<span class="reviewCount">2014</span>
+			<span class="reviewCount"><%=p.getTotalReviewCount() %></span>
 		</div>
 	</div>
 	<div class="moveMenuContainer">
@@ -98,12 +96,12 @@
 	</div>
 	<div class="detailImgContainer">
 		<div class="detailImg">
-			<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="">
-			<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="">
+			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
+			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
+			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
+			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
+			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
+			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
 		</div>
 	</div>
 	<div class="reviewContainer">
@@ -132,11 +130,11 @@
 					</div>
 				</div>
 				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
 				</div>
 				<div class="reviewContent">
 					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
@@ -160,11 +158,11 @@
 					</div>
 				</div>
 				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
 				</div>
 				<div class="reviewContent">
 					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
@@ -188,11 +186,11 @@
 					</div>
 				</div>
 				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/images/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
+					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
 				</div>
 				<div class="reviewContent">
 					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
@@ -207,6 +205,28 @@
 	</div>
 </section>
 <script>
+//구매페이지 이동 함수
+const movePaypage=()=>{
+	location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
+}
+//상품개수 마이너스버튼 누를 시 실행되는 함수
+const minus=()=>{
+	let count=$("#purchaseQuantity").innerText;
+	if(count>1){
+		let count=parseInt(count)-1;
+		$("#purchaseQuantity").innerText=count;
+		$("#totalPrice").innerText=count*<%=p.getPrice()%>;
+	}
+}
+//상품개수 플러스버튼 누를 시 실행되는 함수
+const plus=()=>{
+	let count=$("#purchaseQuantity").innerText;
+	if(count>1){
+		let count=parseInt(count)+1;
+		$("#purchaseQuantity").innerText=count;
+		$("#totalPrice").innerText=count*<%=p.getPrice()%>
+	}
+}
 //메뉴 고정 함수
 $(document).ready(()=>{
     const scrollDiv = $('.moveMenuContainer');
@@ -237,7 +257,7 @@ $(document).ready(()=>{
 })
 
 //결제테스트 코드
-function kakaopay(){
+/* function kakaopay(){
 IMP.init("imp74680205");
 IMP.request_pay({
     pg : 'kakaopay.TC0ONETIME',
@@ -283,6 +303,6 @@ IMP.request_pay({
         alert(msg);
     }
 });
-};
+}; */
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

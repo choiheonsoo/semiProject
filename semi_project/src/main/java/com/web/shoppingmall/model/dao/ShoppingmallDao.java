@@ -128,6 +128,7 @@ public class ShoppingmallDao {
 		Map<String, ProductImg> imgs=new HashMap<>();
 		imgs.put("thumbnail", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
 		return new Product().builder()
+				.productKey(rs.getInt("PRODUCT_KEY"))
 				.productName(rs.getString("PRODUCT_NAME"))
 				.price(rs.getInt("PRICE"))
 				.rateDiscount(rs.getInt("RATE_DISCOUNT"))
@@ -140,18 +141,19 @@ public class ShoppingmallDao {
 	
 	/*
 	 * 	쇼핑몰 상품 상세페이지에 필요한 상품 정보를 담아 반환하는 메소드
-	 * 	상품의 이름, 가격, 할인율, 총리뷰개수, 평균별점, 이미지이름 정보가 포함되어 있음
+	 * 	상품의 이름, 가격, 할인율, 총리뷰개수, 평균별점, 이미지이름, 옵션 정보가 포함되어 있음
 	 * 	매개변수 : ResultSet
 	 * 	반환 : 상품 객체
 	 */
 	private Product getProductForDetailpage(ResultSet rs, Product p) throws SQLException{
 		p=new Product().builder()
+				.productKey(rs.getInt("PRODUCT_KEY"))
 				.productName(rs.getString("PRODUCT_NAME"))
+				.productCategory(ProductCategory.builder().productCategoryName(rs.getString("PRODUCT_CATEGORY_NAME")).build())
 				.price(rs.getInt("PRICE"))
 				.rateDiscount(rs.getInt("RATE_DISCOUNT"))
 				.totalReviewCount(rs.getInt("R_COUNT"))
 				.avgRating(rs.getDouble("AVG_RATING"))
-				
 				.build();
 		Map<String, ProductImg> imgs=new HashMap<>();
 		int str=1;

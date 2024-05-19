@@ -34,7 +34,7 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		int productKey=Integer.parseInt(request.getParameter("productKey"));
 		
 		Product p=getService().selectProductByKey(productKey);
-		
+		request.setAttribute("product", p);
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalldetail.jsp").forward(request, response);
 	}
 

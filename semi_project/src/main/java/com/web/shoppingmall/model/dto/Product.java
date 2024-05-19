@@ -2,6 +2,7 @@ package com.web.shoppingmall.model.dto;
 
 import java.sql.Date;
 import java.util.Map;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,5 +36,5 @@ public class Product {
 	//카테고리 이름
 	private ProductCategory productCategory;
 	//옵션
-//	private  productOption;
+	private Set<ProductOption> productOption;
 }
