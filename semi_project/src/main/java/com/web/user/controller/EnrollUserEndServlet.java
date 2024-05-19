@@ -85,7 +85,7 @@ public class EnrollUserEndServlet extends HttpServlet {
 			int dogResult = DogService.getDogService().enrollDog(dog);
 			File delFile = new File(path+"/"+dog.getDogImg());
 			if(!(dogResult>0) && delFile.exists()) {
-				System.out.println("왜지워져 ㅠㅠ?");
+				System.out.println("기존 파일 삭제");
 				delFile.delete();
 			}
 		}
