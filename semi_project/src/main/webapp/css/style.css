@@ -81,6 +81,12 @@ header {
 	font-size: 12px;
 	border-radius: 8px;
 }
+
+#mainMenu .noLogin{
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+}
 #mainMenu .noLogin p {
 	font-size: 15px;
 	font-weight: 400;
