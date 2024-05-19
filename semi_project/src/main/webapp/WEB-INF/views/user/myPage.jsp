@@ -22,17 +22,20 @@
 		display: flex;
 		justify-content: space-around;
 	}
+	div#myPageHeader strong{
+		font-size:30px;
+	}
 	section.myPage button{
 	 	border-radius: 20px;
 	 	width: 120px;
 	 	height: 35px;
-	 	background-color: #adb5bd;
+	 	background-color: #ffeda4;
 	 	border-style: none;
-	 	color: #343a40;
+	 	color: #000;
 	 	font-weight: bolder;
 	}
-	section.myPage button:active{
-		background-color: #B0C4DE;
+	section.myPage button:hover{
+		background-color: #ffbb00;
 	}
 	div.userInfo{
 		border-radius: 5px;
@@ -69,11 +72,11 @@
 		<div id="myPageHeader">
 			<div>
 				<%if(dogImg.contains(".")){ %>
-               		<img style="border-radius: 100px" src="<%=request.getContextPath() %>/upload/user/<%=dogImg %>" alt="유저" width="30" height="30">
+               		<img style="border-radius: 100px" src="<%=request.getContextPath() %>/upload/user/<%=dogImg %>" alt="유저" width="50" height="50">
                	<%} else { %>
                		<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30">
                	<%} %> 
-				<strong><%=loginUser.getUserId() %></strong>님
+				&nbsp;<strong> <%=loginUser.getUserId() %>님</strong>
 			</div>
 			<div>
 				<button id="updateUser" onclick="updateInfo();">회원 수정</button>

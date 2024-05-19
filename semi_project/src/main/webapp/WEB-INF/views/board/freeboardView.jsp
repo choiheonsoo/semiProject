@@ -7,6 +7,7 @@
 	<%
 		Bulletin b = (Bulletin)request.getAttribute("bulletin");
 		List<BulletinComment> bcs = b.getComments(); 
+		System.out.println(bcs);
 	%>
 	<link rel="stylesheet"
 		href="<%=request.getContextPath()%>/css/board/freeboardView.css">
@@ -41,7 +42,7 @@
 		<div class="freeboard-user-container">
 			<%if(b.getUserId().equals(loginUser.getUserId())){ %>
 			 <button id="editButton">수정</button>
-			 <button>삭제</button>
+			 <button onclick="location.assign('<%=request.getContextPath()%>/board/deletefreeboard.do?no=<%=b.getBullNo()%>');">삭제</button>
 			<%}else{ %>
 			<button>정보보기</button>
 			<button>신고</button>
@@ -51,7 +52,7 @@
 	<div class="freeboard-br"></div>
 	<div class="freeboard-comment-container">
     <div class="freeboard-comment">
-        <% if (b.getComments() != null) {
+        <% if (bcs.get(0).getUserId()!=null) {
             for (BulletinComment bc : bcs) {
                 if (bc.getCommentLevel() == 1) { %>
                     <div class="freeboard-comment-header">
@@ -124,7 +125,8 @@
 		};
 		
 		$(document).ready(function() {
-		    // 수정 버튼 클릭 시 수정 폼 표시
+			
+			// 수정 버튼 클릭 시 수정 폼 표시
 		    $('#editButton').click(function() {
 		        $('#editForm').show();
 		        $(".freeboard-user-container").slideToggle("visible-box");
@@ -141,14 +143,15 @@
 		        var postId = <%= b.getBullNo() %>;
 
 		        $.ajax({
-		            url: '<%= request.getContextPath() %>/board/updateboard.do',
+		            url: '<%= request.getContextPath() %>/board/freeobardupdate.do',
 		            method: 'POST',
-		            data: { id: postId, content: updatedContent },
-		            success: function(response) {
-		                if(response.status === "success") {
-		                    alert('수정되었습니다.');
-		                    $('.freeboard-view-body').text(updatedContent);
-		                    $('#editForm').hide();
+		            data: { id: postId, content: updatedContent},
+		            success: function(data) {
+		            	console.log(data);
+		                if(data > 0) {
+		                	 $('#editForm').hide();
+		                	 alert('수정되었습니다.');
+		                	 $('.freeboard-view-body').text(updatedContent);
 		                } else {
 		                    alert('수정에 실패했습니다.');
 		                }

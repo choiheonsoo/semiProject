@@ -43,4 +43,22 @@ public class BoardService {
 		else rollback(conn);
 		return result;
 	}
+	
+	//게시글 수정
+	public int updateFreeBoard(int bullNo, String content) {
+		Connection conn = getConnection();
+		int result = getDao().updateFreeBoard(conn, bullNo, content);
+		if(result > 0 ) commit(conn);
+		else rollback(conn);
+		return result;
+	}
+	
+	//게시글 삭제
+	public int deleteFreeBoard(int bullNo) {
+		Connection conn = getConnection();
+		int result = getDao().deleteFreeBoard(conn, bullNo);
+		if(result > 0 ) commit(conn);
+		else rollback(conn);
+		return result;
+	}
 }

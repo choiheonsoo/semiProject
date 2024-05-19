@@ -23,6 +23,17 @@
 		color: #dfdffd;
 		padding: 2px;
 	}
+	button#loginBtn{
+		width: 50px;
+		height: 20px;
+		border-style: none;
+		background-color: #5b9dff;
+		color: #dfdffd;
+		padding: 2px;
+	}
+	button#logOutbtn:hover, button#loginBtn:hover{
+		background-color: #0167ff;
+	}
 </style>
 </head>
 <body>
@@ -62,7 +73,7 @@
                 <!-- <p>로그인 후</p>
                 <p>이용할 수 있습니다.</p> -->
                 <%if(loginUser==null){ %>
-                	<p style="font-weight:600">로그인 후 <br>이용할 수 있습니다.</p>
+                	<button id="loginBtn" onclick="location.assign('<%=request.getContextPath()%>/user/login.do')">로그인</button>
                 <%}else{ %>
                 	<p><strong><%=loginUser.getUserId() %></strong>님</p><button id="logOutbtn" onclick="location.assign('<%=request.getContextPath()%>/logout.do');">로그아웃</button>
                 <%} %>

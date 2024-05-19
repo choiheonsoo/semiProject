@@ -118,7 +118,42 @@ public class BoardDao {
 		}
 		return result;
 	}
+
+	//게시글 수정하기
+	public int updateFreeBoard(Connection conn, int bullNo, String content) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("updateFreeBoard"));
+			pstmt.setString(1, content);
+			pstmt.setInt(2, bullNo);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	//게시글 삭제하기
+	public int deleteFreeBoard(Connection conn, int bullNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt= conn.prepareStatement(sql.getProperty("deleteFreeBoard"));
+			pstmt.setInt(1, bullNo);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
 	private BulletinComment getComments(ResultSet rs) throws SQLException{
+		 String delCStr = rs.getString("bc_del_c");
+		    char delC = (delCStr != null && !delCStr.isEmpty()) ? delCStr.charAt(0) : 'N';
 		return BulletinComment.builder()
 				.mainComment(rs.getInt("main_comment"))
 				.subComment(rs.getInt("sub_comment"))
@@ -126,7 +161,7 @@ public class BoardDao {
 				.userId(rs.getString("bc_user_id"))
 				.content(rs.getString("bc_content"))
 				.rDate(rs.getDate("bc_r_date"))
-				.delC(rs.getString("bc_del_c").charAt(0))
+				.delC(delC)
 				.commentLevel(rs.getInt("comment_level"))
 				.build();
 	}

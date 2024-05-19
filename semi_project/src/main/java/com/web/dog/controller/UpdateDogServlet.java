@@ -1,23 +1,30 @@
-package com.web.board.controller;
+package com.web.dog.controller;
+
+import static com.web.dog.service.DogService.getDogService;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static com.web.board.model.service.BoardService.getService;
+
+import com.web.dog.model.dto.Dog;
+import com.web.user.model.dto.User;
+
 /**
- * Servlet implementation class FreeboardInsertEndServlet
+ * Servlet implementation class UpdateDogServlet
  */
-@WebServlet("/board/insertfreeboard.do")
-public class FreeboardInsertEndServlet extends HttpServlet {
+@WebServlet("/user/dogupdate.do")
+public class UpdateDogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FreeboardInsertEndServlet() {
+    public UpdateDogServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,17 +33,13 @@ public class FreeboardInsertEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
+		User user = (User)request.getSession().getAttribute("loginUser");
+		String userId = user.getUserId();
+		List<Dog> dogs = getDogService().selectDogs(userId);
 		
-		int result = getService().insertBoard(id,title,content);
+		request.setAttribute("dogs", dogs);
+		request.getRequestDispatcher("/WEB-INF/views/user/updateDog.jsp").forward(request, response);
 		
-		if(result>0) {
-			response.sendRedirect(request.getContextPath()+"/board/freeboard.do");
-		}else {
-			response.sendRedirect(request.getContextPath()+"/");
-		}
 	}
 
 	/**

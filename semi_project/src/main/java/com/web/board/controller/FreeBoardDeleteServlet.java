@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import static com.web.board.model.service.BoardService.getService;
 /**
- * Servlet implementation class FreeboardInsertEndServlet
+ * Servlet implementation class FreeBoardDeleteServlet
  */
-@WebServlet("/board/insertfreeboard.do")
-public class FreeboardInsertEndServlet extends HttpServlet {
+@WebServlet("/board/deletefreeboard.do")
+public class FreeBoardDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FreeboardInsertEndServlet() {
+    public FreeBoardDeleteServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,16 +26,10 @@ public class FreeboardInsertEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
-		
-		int result = getService().insertBoard(id,title,content);
-		
-		if(result>0) {
+		int no = Integer.parseInt(request.getParameter("no"));
+		int result = getService().deleteFreeBoard(no);
+		if(result > 0) {
 			response.sendRedirect(request.getContextPath()+"/board/freeboard.do");
-		}else {
-			response.sendRedirect(request.getContextPath()+"/");
 		}
 	}
 

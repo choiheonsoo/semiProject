@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import com.web.dog.model.dto.Dog;
@@ -63,5 +65,52 @@ public class DogDao {
 			close(pstmt);
 		}
 		return result;
+	}
+	
+	public int updateDog(Connection con, Dog dog) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("updateDog"));
+			pstmt.setString(1, dog.getDogBreedName());
+			pstmt.setDouble(2, dog.getDogWeight());
+			pstmt.setString(3, dog.getDogImg());
+			pstmt.setString(4, dog.getDogName());
+			pstmt.setString(5, dog.getUserId());
+			result=pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		} return result;
+	}
+	
+	// userId로 DB에서 Mapping되어 있는 반려견 전부 가져오기
+	public List<Dog> selectDogs(Connection con, String userId){
+		List<Dog> dogs = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("selectDogs"));
+			pstmt.setString(1, userId);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				dogs.add(getDog(rs));
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		} return dogs;
+	}
+	
+	public Dog getDog(ResultSet rs) throws SQLException{
+		return Dog.builder().userId(rs.getString("USER_ID"))
+							.dogBreedName(rs.getString("DOG_BREED_NAME"))
+							.dogName(rs.getString("DOG_NAME"))
+							.dogWeight(rs.getDouble("DOG_WEIGHT"))
+							.dogImg(rs.getString("DOG_IMG"))
+						    .build();
 	}
 }
