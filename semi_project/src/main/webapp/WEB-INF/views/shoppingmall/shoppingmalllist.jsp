@@ -6,6 +6,7 @@
 	List<Product> products=(List<Product>)request.getAttribute("products");
 	String pagebar=(String)request.getAttribute("pagebar");
 	int category=(int)request.getAttribute("category");
+	int s=(int)request.getAttribute("sort");
 %>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/shoppingmall/shoppingmalllist.css">
 
@@ -27,10 +28,10 @@
 	</div>
 	<div class="sortMenuContainer">
 		<div>
-			<div class="sortMenu">최신순</div>
-			<div class="sortMenu">리뷰순</div>
-			<div class="sortMenu">높은가격</div>
-			<div class="sortMenu">낮은가격</div>
+			<div class="sortMenu" onclick="sort(1)">최신순</div>
+			<div class="sortMenu" onclick="sort(2)">리뷰순</div>
+			<div class="sortMenu" onclick="sort(3)">높은가격</div>
+			<div class="sortMenu" onclick="sort(4)">낮은가격</div>
 		</div>
 	</div>
 	<div class="productList">
@@ -43,7 +44,7 @@
 								<div class="thumbnail">
 									<div class="imagearea">
 										<a href="<%=request.getContextPath()%>/shoppingmall/shoppingmalldetail.do?productKey=<%=p.getProductKey()%>">
-											<img src="<%=request.getContextPath()%>/images/shoppingmall/product/feed/<%=p.getProductImg() %>" alt="productImg">
+											<img src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategoryName() %>/<%=p.getProductImg() %>" alt="productImg">
 										</a>
 									</div>
 									<div class="iconarea">
@@ -84,7 +85,7 @@
 	</div>
 </section>
 <script>
-	// 카테고리 메뉴 스타일 입히는 함수
+	// 카테고리 메뉴 스타일, 정렬메뉴 스타일 입히는 함수
 	(()=>{
 	    <%for(int i=0;i<8;i++){ %>
 	    	<%if(i==category-1){%>
@@ -93,6 +94,13 @@
 	    		$(".menu>ul").children().eq(<%=i%>).children().eq(0).addClass("otherMenu");
 	    	<%} %>
 	    <%} %>
+	    <%-- <%switch(s){
+	    	case "1":%>$(".") <%break;
+	    	case "2":%> <%break;
+	    	case "3":%> <%break;
+	    	case "4":%> <%break;
+	    }%> --%>
+	    $(".sortMenu").eq(<%=s-1%>).addClass("selectedSortMenu");
 	})();
 	
 	// 상품이미지 위에 마우스 올려놓으면 찜하기, 장바구니 버튼 나오게 하기
@@ -109,5 +117,14 @@
 	$(".iconarea").mouseleave((e)=>{
 		$(e.target).parent().css("display","none");
 	});
+	
+	const sort=(s)=>{
+		switch(s){
+			case 1: location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do?category=<%=category%>&sort=1'); break;
+			case 2: location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do?category=<%=category%>&sort=2'); break;
+			case 3: location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do?category=<%=category%>&sort=3'); break;
+			case 4: location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do?category=<%=category%>&sort=4'); break;
+		}
+	}
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

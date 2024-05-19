@@ -76,7 +76,10 @@
 	color:#333;
 	cursor:pointer;
 }
-
+.selectedSortMenu{
+	text-weight:900;
+	color:#333;
+}
 /* 상품 */
 .productList{
 	display:flex;

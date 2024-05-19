@@ -34,7 +34,14 @@ public class ShoppingMallListServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//쇼핑몰 상품리스트페이지로 페이지 이동시키는 기능
 		
-		String sort=request.getParameter("sort");
+		String sort="";
+		String s=request.getParameter("sort")==null?"1":request.getParameter("sort");
+		switch(s) { //1.최신순  2.리뷰순  3.높은가격  4.낮은가격
+			case "1":sort="REGISTRATION_DATE DESC"; break;
+			case "2":sort="R_COUNT DESC"; break;
+			case "3":sort="PRICE*(100-RATE_DISCOUNT)/100 DESC"; break;
+			case "4":sort="PRICE*(100-RATE_DISCOUNT)/100 ASC"; break;
+		}
 		int category=1;
 		try {
 			category=Integer.parseInt(request.getParameter("category"));
@@ -60,14 +67,14 @@ public class ShoppingMallListServlet extends HttpServlet {
 			pageBar+="<p class='page1'><<</p>";
 			pageBar+="<p class='page1'><</p>";
 		}else {
-			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage=1'><<</a>";
-			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo-1)+"'><</a>";
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage=1&sort='"+s+"><<</a>";
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo-1)+"&sort="+s+"'><</a>";
 		}
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
 			if(pageNo==cPage) {
 				pageBar+="<p class='page2'>"+pageNo+"</p>";
 			}else {
-				pageBar+="<a class='page2' href='"+request.getRequestURI()+"?cPage="+pageNo+"'>"+pageNo+"</a>";
+				pageBar+="<a class='page2' href='"+request.getRequestURI()+"?cPage="+pageNo+"&sort="+s+"'>"+pageNo+"</a>";
 			}
 			pageNo++;
 		}
@@ -75,16 +82,16 @@ public class ShoppingMallListServlet extends HttpServlet {
 			pageBar+="<p class='page1'>></p>";
 			pageBar+="<p class='page1'>>></p>";
 		}else {
-			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo)+"'>></a>";
-			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(totalPage)+"'>>></a>";
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo)+"&sort="+s+"'>></a>";
+			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(totalPage)+"&sort="+s+"'>>></a>";
 		}
 		pageBar+="</div>";
 		
 		List<Product> products=getService().selectProduct(category,cPage,numPerpage,sort);
-		products.stream().forEach(System.out::println);
 		request.setAttribute("products", products);
 		request.setAttribute("pagebar", pageBar);
 		request.setAttribute("category", category);
+		request.setAttribute("sort", Integer.parseInt(s));
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalllist.jsp")
 		.forward(request, response);
 	}

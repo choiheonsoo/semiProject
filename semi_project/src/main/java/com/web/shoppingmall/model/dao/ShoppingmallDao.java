@@ -61,8 +61,9 @@ public class ShoppingmallDao {
 		List<Product> result=new ArrayList<Product>();
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
+		String sortSql=sql.getProperty("selectProduct").replace(":SORT", sort);
 		try {
-			pstmt=conn.prepareStatement(sql.getProperty("selectProduct"));
+			pstmt=conn.prepareStatement(sortSql);
 			pstmt.setInt(1, category);
 			pstmt.setInt(2, (cPage-1)*numPerpage+1);
 			pstmt.setInt(3, cPage*numPerpage);
@@ -76,6 +77,7 @@ public class ShoppingmallDao {
 						.totalReviewCount(rs.getInt("R_COUNT"))
 						.avgRating(rs.getDouble("AVG_RATING"))
 						.productImg(rs.getString("PRODUCT_IMG"))
+						.productCategoryName(rs.getString("PRODUCT_CATEGORY_NAME"))
 						.build());
 			}
 		}catch(SQLException e) {

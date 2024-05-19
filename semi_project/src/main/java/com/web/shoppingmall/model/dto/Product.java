@@ -31,4 +31,6 @@ public class Product {
 	private double avgRating;
 	//이미지
 	private String productImg;
+	//카테고리 이름
+	private String productCategoryName;
 }
