@@ -35,8 +35,7 @@ public class UpdateUserEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json;charset=utf-8");
-		
+		request.setCharacterEncoding("utf-8");
 		String dateString = request.getParameter("birthday");
 		SimpleDateFormat birthSdf = new SimpleDateFormat("yyyy-MM-dd");
 		java.sql.Date sqlDate = null;
@@ -55,9 +54,17 @@ public class UpdateUserEndServlet extends HttpServlet {
 					   	 	 	  .birthDay(sqlDate)
 					   	 	 	  .build();
 		int result = UserService.getUserService().updateUser(user);
-		boolean flag = (result!=0);
-		request.setAttribute("flag", flag);
-		request.getRequestDispatcher("/WEB-INF/views/user/myPage.jsp").forward(request, response);
+		if(result>0) {
+			request.setAttribute("msg","회원 정보 수정완료");
+			request.setAttribute("loc","/");
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		} else {
+			request.setAttribute("msg","수정에 실패했습니다. 관리자에게 문의해주세요.");
+			request.setAttribute("loc","/");
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		}
+		
+		
 	}
 
 	/**

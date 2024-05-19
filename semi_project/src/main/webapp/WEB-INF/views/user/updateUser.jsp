@@ -4,24 +4,29 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <style>
-	section#updateContainer{
+	section#enrollContainer{
 		font-family: Arial, sans-serif;
-	    justify-content: center;
-	    align-items: center;
-	    height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	    height: auto;
 	}
+	
 	div.container{
 		padding: 20px;
 		box-shadow: 0 0 20px 10px rgba(0,0,0,0.1);
 		border-radius: 5px;
 		width: 500px;
+		height: auto;
 		margin-top: 4%;
+		margin-bottom: 4%;
 	}
 	
 	div.container>h1{
 		margin-bottom: 15px;
 		font-size: 30px;
 		text-align: center;
+		overflow: hidden;
 	}
 	div.container>p{
 		margin-bottom: 0px;
@@ -40,7 +45,13 @@
 		justify-content: center;
 		align-content: center; 
 	}
-	
+	form#signupForm input{
+		border-color: lightgray;
+		border-left-style: none;
+		border-right-style: none;
+		border-top-style: none;
+		border-left-width: 1px;
+	}
 	form#signupForm label{
 		margin-top: 10px;
 		margin-bottom: 3px;
@@ -53,7 +64,7 @@
 		border-radius: 15px;
 		cursor: pointer;
 		margin-top: 5%;
-		width: 100%;
+		width: 90%;
 		color: white;
 		font-weight: bolder;
 		border-style: none;
@@ -94,7 +105,7 @@
         	<div class="enrollTab">
 	        	<div id="personInfo">
 		            <label for="userId">회원 아이디 *</label>
-		            <input type="text" id="userId" name="userId" value=" <%=loginUser.getUserId()%>" readOnly style="background-color: #DCDCDC">
+		            <input type="text" id="userId" name="userId" value=" <%=loginUser.getUserId()%>" readOnly style="font-weight: bolder; background-color: lightgray;">
 		
 		            <label for="password">비밀번호 *</label>
 		            <input type="password" id="password" name="password" placeholder=" 특수기호 포함 8글자 이상" minlength="8" required>
@@ -113,10 +124,8 @@
 		
 		            <label for="birthday">생일</label>
 		            <input type="date" id="birthday" name="birthday">
+		            <button type="submit">수정하기</button>
 	            </div>	            
-            </div>
-            <div class="enrollTab">
-           		<button type="submit">수정하기</button>
             </div>
         </form>
     </div>

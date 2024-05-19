@@ -4,22 +4,27 @@
 <style>
 	section#enrollContainer{
 		font-family: Arial, sans-serif;
-	    justify-content: center;
-	    align-items: center;
-	    height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	    height: auto;
 	}
+	
 	div.container{
-		padding: 20px;
+		padding: 30px;
 		box-shadow: 0 0 20px 10px rgba(0,0,0,0.1);
 		border-radius: 5px;
 		width: 500px;
-		margin-top: 5%;
+		height: auto;
+		margin-top: 4%;
+		margin-bottom: 4%;
 	}
 	
 	div.container>h1{
 		margin-bottom: 15px;
 		font-size: 30px;
 		text-align: center;
+		overflow: hidden;
 	}
 	div.container>p{
 		margin-bottom: 0px;
@@ -32,11 +37,23 @@
 		display: flex;
 		flex-direction: column;
 	}
+	form#signupForm input{
+		border-color: lightgray;
+		border-left-style: none;
+		border-right-style: none;
+		border-top-style: none;
+		border-left-width: 1px;
+	}
+	
 	div.enrollTab{
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
 		align-content: center; 
+	}
+	
+	div#dogInfo{
+		margin-left: 30px;
 	}
 	
 	form#signupForm label{
