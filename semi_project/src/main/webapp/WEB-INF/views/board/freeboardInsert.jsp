@@ -10,16 +10,22 @@
 	<div class="insertBoard1">
 		<form action="<%=request.getContextPath()%>/board/insertfreeboard.do">
 			<div class="menu1">
-				<input type="text" name="inputTitle" placeholder="제목을 입력하세요.">
+				<input type="text" name="title" placeholder="제목을 입력하세요.">
 			</div>
 			<div class="menu2">
 				<div class="btn-container">
-					<input type="button" value="등록">
+					<input type="hidden" name="id" value="<%=loginUser.getUserId()%>">
+					<input type="submit" value="등록">
 					<input type="button" value="취소">
 				</div>
-			<textarea rows="" cols="" placeholder="내용을 입력하세요."></textarea>
+			<textarea name="content" rows="" cols="" placeholder="내용을 입력하세요."></textarea>
 			</div>
 		</form>
 	</div>
 </section>
+<script>
+	$('.btn-container>input[type="button"]').click(e=>{
+		location.href="<%=request.getContextPath()%>/board/freeboard.do";
+	});
+</script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>
