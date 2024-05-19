@@ -33,7 +33,6 @@ public class FreeBoardServlet extends HttpServlet {
 		try {
 			cPage=Integer.parseInt(request.getParameter("cPage"));
 		}catch(NumberFormatException e) {
-			System.out.println("cPage 불러올 때 오류 발생");
 		}
 		int numPerpage=10;
 		List<Bulletin> bulletins = getService().selectBoardAll(cPage,numPerpage);
