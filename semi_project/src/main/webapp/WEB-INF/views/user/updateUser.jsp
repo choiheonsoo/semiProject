@@ -94,7 +94,7 @@
         	<div class="enrollTab">
 	        	<div id="personInfo">
 		            <label for="userId">회원 아이디 *</label>
-		            <input type="text" id="userId" name="userId" value=" <%=loginUser.getUserId() %>" readOnly style="background-color: #DCDCDC">
+		            <input type="text" id="userId" name="userId" value=" <%=loginUser.getUserId()%>" readOnly style="background-color: #DCDCDC">
 		
 		            <label for="password">비밀번호 *</label>
 		            <input type="password" id="password" name="password" placeholder=" 특수기호 포함 8글자 이상" minlength="8" required>

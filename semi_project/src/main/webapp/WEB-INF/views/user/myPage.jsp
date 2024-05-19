@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+
 <style>
 	section.myPage{
 		background-color: rgba(230,230,250,0.65);
@@ -73,7 +74,7 @@
 			<div>
 				<button id="updateUser" onclick="updateInfo();">회원 수정</button>
 				
-				<button id="updateDog">반려견 수정</button>
+				<button id="updateDog" onclick="updateDog();">반려견 수정</button>
 			</div>
 		</div>
 		<div class="userInfo">
@@ -127,7 +128,11 @@
 </section>
 <script>
 	const updateInfo=()=>{
-		location.assign("<%=request.getContextPath() %>/user/update.do");
+		location.assign("<%=request.getContextPath()%>/user/update.do");
+	}
+	
+	const updateDog=()=>{
+		location.assign("<%=request.getContextPath()%>/user/dogupdate.do")
 	}
 </script>
 

@@ -26,4 +26,12 @@ public class BoardService {
 		close(conn);
 		return bulletins;
 	}
+	
+	//게시글 번호로 조회
+	public Bulletin selectBoardNo(int no) {
+		Connection conn = getConnection();
+		Bulletin bulletin = getDao().selectBoardNo(conn, no);
+		close(conn);
+		return bulletin;
+	}
 }

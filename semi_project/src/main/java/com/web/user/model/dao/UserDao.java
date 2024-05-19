@@ -70,6 +70,27 @@ public class UserDao {
 		} return result;
 	}
 	
+	public int updateUser(Connection con, User user) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt=con.prepareStatement(sql.getProperty("updateUser"));
+			pstmt.setString(1, user.getUserName());
+			pstmt.setString(2, user.getPhone());
+			pstmt.setString(3, user.getEmail());
+			pstmt.setString(4, user.getAddress());
+			pstmt.setString(5, user.getPassword());
+			pstmt.setDate(6, user.getBirthDay());
+			pstmt.setString(7, user.getUserId());
+			result = pstmt.executeUpdate();
+			System.out.println(user);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		} return result;
+	}
+	
 	private User getUser(ResultSet rs) throws SQLException{
 		return User.builder()
 				.userId(rs.getString("user_id"))
