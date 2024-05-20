@@ -15,9 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.web.shoppingmall.model.dto.Color;
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductCategory;
 import com.web.shoppingmall.model.dto.ProductImg;
+import com.web.shoppingmall.model.dto.ProductOption;
+import com.web.shoppingmall.model.dto.ProductSize;
 
 /*
  * 쇼핑몰 dao
@@ -99,6 +102,9 @@ public class ShoppingmallDao {
 		try {
 			pstmt=conn.prepareStatement(sql.getProperty("selectProductByKey"));
 			pstmt.setInt(1, productKey);
+			pstmt.setInt(2, productKey);
+			pstmt.setInt(3, productKey);
+			pstmt.setInt(4, productKey);
 			rs=pstmt.executeQuery();
 			if(rs.next())
 				result=getProductForDetailpage(rs, result);
@@ -157,16 +163,30 @@ public class ShoppingmallDao {
 				.avgRating(rs.getDouble("AVG_RATING"))
 				.build();
 		Map<String, ProductImg> imgs=new HashMap<>();
-		int str=1;
-		
-		do{
-			if(rs.getString("THUMBNAIL").equals("Y")) {
-				imgs.put("thumbnail", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
-			}else if(rs.getString("DESCRIPTION_IMG").equals("Y")) {
-				imgs.put("description", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
+		List<String> imgNames=new ArrayList<String>();
+		int num=0;
+		do {
+			if(!imgNames.contains(rs.getString("PRODUCT_IMG"))) {
+				imgNames.add(rs.getString("PRODUCT_IMG"));
+				if(rs.getString("THUMBNAIL").equals("Y")) {
+					imgs.putIfAbsent("thumbnail", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
+				}else if(rs.getString("DESCRIPTION_IMG").equals("Y")) {
+					imgs.putIfAbsent("description", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
+				}else {
+					imgs.putIfAbsent("imgs"+num++, ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
+				}
+			}
+			ProductOption po=new ProductOption().builder()
+			.productSize(ProductSize.builder().pSize(rs.getString("P_SIZE")).build())
+			.color(Color.builder().color(rs.getString("COLOR")).build())
+			.stock(rs.getInt("STOCK")).build();
+			if(p.getProductOption()==null) {
+				p.setProductOption(new ArrayList<ProductOption>());
+				p.getProductOption().add(po);
 			}else {
-				imgs.put("img"+str, ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
-				str++;
+				if(!p.getProductOption().stream().anyMatch(e->e.equals(po))) {
+					p.getProductOption().add(po);
+				}
 			}
 		}while(rs.next());
 		p.setProductImgs(imgs);

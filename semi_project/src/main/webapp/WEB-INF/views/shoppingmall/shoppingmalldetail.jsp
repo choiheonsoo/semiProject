@@ -1,10 +1,12 @@
+<%@page import="java.io.IOException"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product" %>
+<%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product,java.util.Map,com.web.shoppingmall.model.dto.ProductImg" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 	Product p=(Product)request.getAttribute("product");
 	String r=(String)request.getAttribute("r");
+	String imgName=null;
 %>
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/shoppingmall/shoppingmalldetail.css">
@@ -21,7 +23,15 @@
 		<div>
 			<div class="productImg">
 				<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("thumbnail").getProductImg()%>">
-				
+				<%for (Map.Entry<String, ProductImg> entry : p.getProductImgs().entrySet()) {
+					if(!entry.getKey().equals("description")){
+						imgName=entry.getValue().getProductImg();%>
+						<div class="imgbordercontainer">
+							<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=imgName%>">
+							<i class="iborder"></i>
+						</div>
+					<%} %>
+				<% }%>
 			</div>
 			<div class="purchase">
 				<div>
@@ -37,18 +47,36 @@
 						if(!p.getProductOption().isEmpty()){%>
 							<div class="option">
 								<span>옵션선택 *</span>
-								<select name="size">
-									<option value="" selected disabled>사이즈 선택</option>
-									<option value="S">S</option>
-									<option value="M">M</option>
-									<option value="L">L</option>
-								</select>
-								<select name="color">
-									<option value="" selected disabled>색상 선택</option>
-									<option value="red">빨강</option>
-									<option value="black">검정</option>
-									<option value="blue">파랑</option>
-								</select>
+								<%if(p.getProductOption().stream().anyMatch(e->e.getProductSize().getPSize()!=null)){ %>
+									<select name="size">
+										<option value="" selected disabled>사이즈 선택</option>
+										<%p.getProductOption().stream().forEach(e->{
+											try{%>
+											<option value="<%=e.getProductSize().getPSize()%>"><%=e.getProductSize().getPSize()%></option>
+											<%}catch(IOException i){ 
+												
+											}
+										}); %>
+										<!-- <option value="S">S</option>
+										<option value="M">M</option>
+										<option value="L">L</option> -->
+									</select>
+								<%} %>
+								<%if(p.getProductOption().stream().anyMatch(e->e.getColor().getColor()!=null)){ %>
+									<select name="color">
+										<option value="" selected disabled>색상 선택</option>
+										<%p.getProductOption().stream().forEach(e->{
+											try{%>
+											<option value="<%=e.getColor().getColor()%>"><%=e.getColor().getColor()%></option>
+											<%}catch(IOException i){ 
+												
+											}
+										}); %>
+										<!-- <option value="red">빨강</option>
+										<option value="black">검정</option>
+										<option value="blue">파랑</option> -->
+									</select>
+								<%} %>
 							</div>
 						<%} %>
 					<%} %>
@@ -69,16 +97,26 @@
 		</div>
 	</div>
 	<div class="starReviewContainer">
-		<div class="star">
+		<div class="starContainer">
 			<div>
 				<span>사용자 총 평점</span>
 			</div>
 			<div class="stars">
-				<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="별">
-				<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="별">
-				<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="별">
-				<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="별">
-				<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="별">
+				<%for(int i=0;i<5;i++){ %>
+					<%if(i<Math.floor(p.getAvgRating())){ %>
+						<div class="star full-star"></div>
+					<%}else if(i==Math.floor(p.getAvgRating())){ %>
+						<%if(p.getAvgRating()-Math.floor(p.getAvgRating())>0.5){ %>
+							<div class="star full-star"></div>
+						<%}else if(p.getAvgRating()-Math.floor(p.getAvgRating())>0){ %>
+							<div class="star half-star"></div>
+						<%}else{ %>
+	        				<div class="star empty-star"></div>
+	        			<%} %>
+	        		<%}else{ %>
+	        			<div class="star empty-star"></div>
+	        		<%} %>
+        		<%} %>
 			</div>
 			<div>
 				<span><%=p.getAvgRating() %></span>
@@ -100,7 +138,11 @@
 	</div>
 	<div class="detailImgContainer">
 		<div class="detailImg">
-			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="">
+			<%if(p.getProductImgs().containsKey("description")){ %>
+			<div class="imgborder">
+			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("description").getProductImg() %>" alt="상세설명이미지">
+			</div>
+			<%} %>
 		</div>
 	</div>
 	<div class="reviewContainer">
@@ -208,6 +250,15 @@
 const movePaypage=()=>{
 	location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
 }
+//이미지 누르면 메인이미지 바뀌게하는 함수
+$(".imgbordercontainer").mouseenter(e=>{
+	console.log($(e.target));
+	const newimg=$(e.target).siblings("img").attr("src");
+	$(e.target).parent().parent().find("i").removeClass("selectedimg");
+	$(e.target).eq(0).addClass("selectedimg");
+	$(e.target).parent().parent().eq(0)
+	$(e.target).parent().siblings("img").attr("src",newimg);
+});
 //상품개수 마이너스버튼 누를 시 실행되는 함수
 const minus=()=>{
 	let count=$("#purchaseQuantity").text();
@@ -257,7 +308,10 @@ $(document).ready(()=>{
 	$('#moveQna').click((e)=>{
 		$('html, body').scrollTop($('.qnaContainer').offset().top-$('.moveMenuContainer').outerHeight())
 	});
+	$(".productImgs").eq(0).addClass("selectedImg");
+	$(".iborder").eq(0).addClass("selectedimg");
 })
+
 
 //결제테스트 코드
 /* function kakaopay(){
