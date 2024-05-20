@@ -80,7 +80,6 @@
 			</div>
 			<div>
 				<button id="updateUser" onclick="updateInfo();">회원 수정</button>
-				
 				<button id="updateDog" onclick="updateDog();">반려견 수정</button>
 			</div>
 		</div>

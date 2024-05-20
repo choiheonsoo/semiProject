@@ -4,7 +4,6 @@
 <%
 	String msg = (String)request.getAttribute("msg");
 	String loc = (String)request.getAttribute("loc");
-	User loginUser = (User)session.getAttribute("loginUser");
 %>
 <!DOCTYPE html>
 <html>
@@ -14,11 +13,7 @@
 </head>
 <body>
 	<script>
-	<%if(loginUser!=null){%>
-		alert('<%=loginUser.getUserId()%>ดิ, <%=msg%>');
-	<%} else { %>
 		alert('<%=msg%>');
-	<%}%>
 		location.assign('<%=request.getContextPath() %><%=loc%>');
 	</script>
 </body>

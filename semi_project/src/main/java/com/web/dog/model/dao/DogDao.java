@@ -105,7 +105,7 @@ public class DogDao {
 		} return dogs;
 	}
 	
-	public Dog getDog(ResultSet rs) throws SQLException{
+	public static Dog getDog(ResultSet rs) throws SQLException{
 		return Dog.builder().userId(rs.getString("USER_ID"))
 							.dogBreedName(rs.getString("DOG_BREED_NAME"))
 							.dogName(rs.getString("DOG_NAME"))
