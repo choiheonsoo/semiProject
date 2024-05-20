@@ -46,7 +46,7 @@ public class UpdateDogEndServlet extends HttpServlet {
 		String dogBreedName = mr.getParameter("dogBreedKey");
 		double dogWeight = Double.parseDouble(mr.getParameter("dogWeight"));
 		String dogImg = mr.getFilesystemName("dogImg");
-		String oriName = mr.getOriginalFileName("dogImg");
+		String oriName = mr.getParameter("orifilename");
 		
 		Dog dog = Dog.builder().dogName(dogName)
 				 			   .userId(userId)
@@ -57,21 +57,25 @@ public class UpdateDogEndServlet extends HttpServlet {
 		
 		int updateDogResult = DogService.getDogService().updateDog(dog);
 		
-		request.getSession().setAttribute("dogImg", getUserService().getDogImg(userId));
-		
-		
 		String msg, loc;
-		if(updateDogResult>0) {
+		File delFile = new File(path+"/"+dogImg);
+		File oriFile = new File(path+"/"+oriName);
+		if(updateDogResult>0 && dogImg!=null) {
 			msg = "반려견 정보 수정 완료";
 			loc = "/user/myPage.do";
+			if(oriFile.exists()) {
+				oriFile.delete();
+			}
 		}else {
 			msg = "정보 수정 실패";
 			loc = "/user/updateDog.do";
-			File delFile = new File(path+"/"+dogImg);
 			if(delFile.exists()) {
 				delFile.delete();
 			}
 		}
+		request.getSession().setAttribute("dogImg", getUserService().getDogImg(userId));
+		request.setAttribute("msg", msg);
+		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 //		if(updateDogResult>0 && delFile.exists()) {
 //			delFile.delete();

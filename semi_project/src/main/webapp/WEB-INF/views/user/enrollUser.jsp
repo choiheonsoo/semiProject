@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
+<%
+String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안","도베르만","리트리버","말라뮤트","말티즈","말티푸","미니핀","배들링턴 테리어","불독","비숑","사모예드","샤페이","세상에 하나뿐인 믹스","셰퍼드","쉽독","슈나우저","스피츠","시바","시츄","요크셔테리어","웰시코기","잭러셀테리어","진돗개","치와와","코커스페니얼","파피용","퍼그","포메라니안","푸들","허스키","기타"};
+%>
 <style>
 	section#enrollContainer{
 		font-family: Arial, sans-serif;
@@ -138,9 +141,9 @@
 	            	<input type="text" name="dogName">
 	            	<label for="dogBreed">반려견 견종 *</label>
 	            	<select name="dogBreedKey" id="dogBreed">
-	            		<option value="진도">진도</option>
-	            		<option value="믹스">세상에 하나뿐인 믹스</option>
-	            		<option value="치와와">치와와</option>
+	            		<%for(String breed:breeds){ %>
+					    <option value=<%=breed %>><%=breed %></option>
+					    <%} %>
 	            	</select>
 	            	<label for="dogWeight">반려견 몸무게 *</label>
 	            	<input type="text" name="dogWeight">

@@ -66,6 +66,7 @@
 		justify-content: space-around;
 		margin-top:2%;    
 	}
+	
 </style>
 <section class="myPage">
 	<div>
@@ -84,19 +85,19 @@
 			</div>
 		</div>
 		<div class="userInfo">
-			<div>
+			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/pickitems.do?userId=<%=loginUser.getUserId()%>')">
 				<img src="<%=request.getContextPath() %>/images/member/heartIcon.png" alt="찜" width="40" height="40">
 				<p>찜 한 상품</p>
 			</div>
-			<div>
+			<div style="cursor: pointer;">
 				<img src="<%=request.getContextPath() %>/images/member/cart.png" alt="장바구니" width="40" height="40">
 				<p>장바구니</p>
 			</div>
-			<div>
+			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/writen.do?userId=<%=loginUser.getUserId()%>')">
 				<img src="<%=request.getContextPath() %>/images/member/board.png" alt="내가 쓴 글" width="40" height="40">
 				<p>내가 쓴 글</p>
 			</div>
-			<div>
+			<div style="cursor: pointer;" >
 				<img src="<%=request.getContextPath() %>/images/member/receipt.png" alt="주문 내역" width="40" height="40">
 				<p>주문 내역</p>
 			</div>

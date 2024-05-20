@@ -78,9 +78,22 @@
             color: red;
             margin-top: 10px;
         }
+        
+        #kakaologinbtn {
+        	margin-bottom: 4%;
+        	width: 339px;
+        	height: 48px;
+        	border-radius: 15px;
+        	opacity: 0.5;
+        	transition: opacity 0.3s;
+        }
+        #kakaologinbtn:hover{
+        	opacity: 1;
+        }
  </style>
 <section class="content">
 	<div class="login_container">
+	<img id="kakaologinbtn" src="<%=request.getContextPath()%>/images/kakaologin.png">
 		<h2>어서오시개!</h2>
 	        <form action="<%=request.getContextPath() %>/user/loginuser.do" method="post">
 	            <input type="text" name="username" placeholder="아이디 입력" required>
@@ -88,15 +101,16 @@
 	            <input type="submit" value="로그인">
 		            <div class="login_links">
 		                <a href="<%=request.getContextPath()%>/user/new_user.do">회원가입</a><br>
-		                <a href="<%=request.getContextPath()%>/user/email_user.do">이메일로 회원가입</a><br>
-		                <a href="<%=request.getContextPath()%>/user/find_userId.do">아이디/비밀번호 찾기</a><br>
+		                <a href="<%=request.getContextPath()%>/user/finduserinfo.do">아이디/비밀번호 찾기</a><br>
 		            </div>
 	        </form>
 	</div>
 </section>
 
  <script>
- 
+ 	document.getElementById("kakaologinbtn").addEventListener("click", () =>{
+ 		Kakao.Auth.authorize();
+ 	})
  
  </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
