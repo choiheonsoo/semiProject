@@ -117,6 +117,25 @@ public class ShoppingmallDao {
 	}
 	
 	
+	public List<ProductOption> selectColorBySize(Connection conn, int productKey, String size){
+		List<ProductOption> result=new ArrayList<>();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectProductOptionBySize"));
+			pstmt.setInt(1, productKey);
+			pstmt.setString(2, size);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(new ProductOption().builder().color(new Color().builder().color(rs.getString("COLOR")).build()).stock(rs.getInt("STOCK")).build());
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 	
 	
 	

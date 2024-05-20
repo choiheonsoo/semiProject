@@ -1,12 +1,31 @@
 <%@page import="java.io.IOException"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product,java.util.Map,com.web.shoppingmall.model.dto.ProductImg" %>
+<%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product,java.util.Map,com.web.shoppingmall.model.dto.ProductImg,
+				 com.web.shoppingmall.model.dto.ProductOption,java.util.HashMap,java.util.ArrayList,java.util.Set,
+				 java.util.TreeSet" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 	Product p=(Product)request.getAttribute("product");
 	String r=(String)request.getAttribute("r");
 	String imgName=null;
+	List<Map<String, String>> options=new ArrayList<>();
+	boolean first=true;
+	if(p.getProductOption()!=null){
+		for(ProductOption po:p.getProductOption()){
+			Map<String, String> m=new HashMap<>();
+			if(po.getColor()!=null&&po.getProductSize()!=null){
+				m.put(po.getProductSize().getPSize(),po.getColor().getColor());
+				options.add(m);
+			}else if(po.getColor()==null&&po.getProductSize()!=null){
+				m.put(po.getProductSize().getPSize(),"NULL");
+				options.add(m);
+			}else if(po.getColor()!=null&&po.getProductSize()==null){
+				m.put("NULL",po.getProductSize().getPSize());
+				options.add(m);
+			}
+		}
+	}
 %>
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/shoppingmall/shoppingmalldetail.css">
@@ -43,43 +62,6 @@
 						<span class="cost"><%=p.getPrice() %></span>
 						<span class="salePrices"><%=p.getPrice()*(100-p.getRateDiscount())/100 %>원</span>
 					</div>
-					<%if(p.getProductOption()!=null){
-						if(!p.getProductOption().isEmpty()){%>
-							<div class="option">
-								<span>옵션선택 *</span>
-								<%if(p.getProductOption().stream().anyMatch(e->e.getProductSize().getPSize()!=null)){ %>
-									<select name="size">
-										<option value="" selected disabled>사이즈 선택</option>
-										<%p.getProductOption().stream().forEach(e->{
-											try{%>
-											<option value="<%=e.getProductSize().getPSize()%>"><%=e.getProductSize().getPSize()%></option>
-											<%}catch(IOException i){ 
-												
-											}
-										}); %>
-										<!-- <option value="S">S</option>
-										<option value="M">M</option>
-										<option value="L">L</option> -->
-									</select>
-								<%} %>
-								<%if(p.getProductOption().stream().anyMatch(e->e.getColor().getColor()!=null)){ %>
-									<select name="color">
-										<option value="" selected disabled>색상 선택</option>
-										<%p.getProductOption().stream().forEach(e->{
-											try{%>
-											<option value="<%=e.getColor().getColor()%>"><%=e.getColor().getColor()%></option>
-											<%}catch(IOException i){ 
-												
-											}
-										}); %>
-										<!-- <option value="red">빨강</option>
-										<option value="black">검정</option>
-										<option value="blue">파랑</option> -->
-									</select>
-								<%} %>
-							</div>
-						<%} %>
-					<%} %>
 					<div class="quantity">
 						<button onclick='minus()'>-</button>
 						<span class="purchaseQuantity" id="purchaseQuantity">1</span>
@@ -246,71 +228,119 @@
 	</div>
 </section>
 <script>
-//구매페이지 이동 함수
-const movePaypage=()=>{
-	location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
-}
-//이미지 누르면 메인이미지 바뀌게하는 함수
-$(".imgbordercontainer").mouseenter(e=>{
-	console.log($(e.target));
-	const newimg=$(e.target).siblings("img").attr("src");
-	$(e.target).parent().parent().find("i").removeClass("selectedimg");
-	$(e.target).eq(0).addClass("selectedimg");
-	$(e.target).parent().parent().eq(0)
-	$(e.target).parent().siblings("img").attr("src",newimg);
-});
-//상품개수 마이너스버튼 누를 시 실행되는 함수
-const minus=()=>{
-	let count=$("#purchaseQuantity").text();
-	if(count>1){
-		count=parseInt(count)-1;
+	//구매페이지 이동 함수
+	const movePaypage=()=>{
+		location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
+	}
+	//이미지 누르면 메인이미지 바뀌게하는 함수
+	$(".imgbordercontainer").mouseenter(e=>{
+		console.log($(e.target));
+		const newimg=$(e.target).siblings("img").attr("src");
+		$(e.target).parent().parent().find("i").removeClass("selectedimg");
+		$(e.target).eq(0).addClass("selectedimg");
+		$(e.target).parent().parent().eq(0)
+		$(e.target).parent().siblings("img").attr("src",newimg);
+	});
+	//상품개수 마이너스버튼 누를 시 실행되는 함수
+	const minus=()=>{
+		let count=$("#purchaseQuantity").text();
+		if(count>1){
+			count=parseInt(count)-1;
+			$("#purchaseQuantity").text(count);
+			$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
+		}
+	}
+	//상품개수 플러스버튼 누를 시 실행되는 함수
+	const plus=()=>{
+		let count=$("#purchaseQuantity").text();
+		count=parseInt(count)+1;
 		$("#purchaseQuantity").text(count);
 		$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
 	}
-}
-//상품개수 플러스버튼 누를 시 실행되는 함수
-const plus=()=>{
-	let count=$("#purchaseQuantity").text();
-	count=parseInt(count)+1;
-	$("#purchaseQuantity").text(count);
-	$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
-}
-//메뉴 고정 함수
-$(document).ready(()=>{
-    const scrollDiv = $('.moveMenuContainer');
-    const fixedOffset = scrollDiv.offset().top; // 고정되기 시작할 스크롤 위치
-
-    $(window).scroll(()=>{
-        let scrollPosition = $(window).scrollTop();
-        
-        if (scrollPosition >= fixedOffset) {
-            scrollDiv.addClass('fixed');
-        } else {
-            scrollDiv.removeClass('fixed');
-        }
-    });
-});
-
+	$(document).ready(()=>{
+		//메뉴 고정 함수
+	    const scrollDiv = $('.moveMenuContainer');
+	    const fixedOffset = scrollDiv.offset().top; // 고정되기 시작할 스크롤 위치
+	
+	    $(window).scroll(()=>{
+	        let scrollPosition = $(window).scrollTop();
+	        
+	        if (scrollPosition >= fixedOffset) {
+	            scrollDiv.addClass('fixed');
+	        } else {
+	            scrollDiv.removeClass('fixed');
+	        }
+	    });
+	    
+	});
+	    //옵션 태그 추가
+	    <%if(options!=null){%>
+	    	const $optionDiv=$("<div>").addClass("option").append($("<span>").text("옵션선택 *"));
+	    	<%if(!options.stream().anyMatch(e->e.containsKey("NULL"))){%>
+	    		const $sizeSelect=$("<select>").attr("name","size").append($("<option>").attr({disabled:true,selected:true}).text("사이즈를 선택해주세요"));
+    			<%List<String> key=new ArrayList<>();%>
+	    		<%for(Map<String,String> m:options){
+	    			for(String k:m.keySet()){
+	    				if(!key.contains(k)){
+	    					key.add(k);
+	    				}
+	    			}
+	    		}%>
+	    		<%for(String e:key){%>	
+	    			$sizeSelect.append($("<option>").attr("name","<%=e%>").text("<%=e%>"));
+		    		$optionDiv.append($sizeSelect);
+	    		<%};%>
+	    		<%if(!options.stream().anyMatch(e->e.containsValue("NULL"))){%>
+	    			const $colorSelect=$("<select>").attr("name","color").append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
+	    			$optionDiv.append($colorSelect);
+	    		<%}%>
+	    	<%}else{%>
+	    		<%if(!options.stream().anyMatch(e->e.containsValue("NULL"))){%>
+    				const $colorSelect=$("<select>").attr("name","color").append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
+    				<%for(Map<String,String> m:options){%>
+    					<%for(Map.Entry<String, String> e:m.entrySet()){%>
+    						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>"));
+    					<%};%>
+    				<%}%>
+    				$optionDiv.append($colorSelect);
+    			<%}%>
+    		<%}%>
+    		$(".price").after($optionDiv);
+	    <%}%>
+	    //사이즈 선택시 색상 옵션태그 추가하는 함수
+	    $("select[name='size']").change((e)=>{
+	    	const size=$(e.target).val();
+	    	console.log(size);
+	    	$.ajax({
+	    		url:"<%=request.getContextPath()%>/shoppingmall/productoption.do",
+	    		type:"POST",
+	    		data:{"productKey":<%=p.getProductKey()%>, "size":size},
+	    		success:(response)=>{
+	    			console.log(response);
+	    		}
+	    	})
+	    });
+	//리뷰보기를 눌러서 넘어왔을 때 리뷰로 스크롤이동시키는 함수
 	$(window).on('load', ()=>{
 		<%if(r!=null){%>
 			const mmc=$('.reviewContainer').offset().top-$('.moveMenuContainer').outerHeight()*2;
 			$('html, body').scrollTop(mmc);
 		<%} %>
 	});
-//스크롤 이동메뉴 함수
-$(document).ready(()=>{
-	$('#moveDetail').click((e)=>{
-		$('html, body').scrollTop($('.detailImgContainer').offset().top)
-	});
-	$('#moveReview').click((e)=>{
-		$('html, body').scrollTop($('.reviewContainer').offset().top-$('.moveMenuContainer').outerHeight())
-	});
-	$('#moveQna').click((e)=>{
-		$('html, body').scrollTop($('.qnaContainer').offset().top-$('.moveMenuContainer').outerHeight())
-	});
-	$(".productImgs").eq(0).addClass("selectedImg");
-	$(".iborder").eq(0).addClass("selectedimg");
-})
+	//메뉴 스크롤 이동메뉴 함수
+	$(document).ready(()=>{
+		$('#moveDetail').click((e)=>{
+			$('html, body').scrollTop($('.detailImgContainer').offset().top)
+		});
+		$('#moveReview').click((e)=>{
+			$('html, body').scrollTop($('.reviewContainer').offset().top-$('.moveMenuContainer').outerHeight())
+		});
+		$('#moveQna').click((e)=>{
+			$('html, body').scrollTop($('.qnaContainer').offset().top-$('.moveMenuContainer').outerHeight())
+		});
+		$(".productImgs").eq(0).addClass("selectedImg");
+		$(".iborder").eq(0).addClass("selectedimg");
+	})
 
 
 //결제테스트 코드
