@@ -77,7 +77,16 @@ header {
 	width: 8%;
 	margin-right:20px;
 }
+#mainMenu .menu4 button{
+	font-size: 12px;
+	border-radius: 8px;
+}
 
+#mainMenu .noLogin{
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+}
 #mainMenu .noLogin p {
 	font-size: 15px;
 	font-weight: 400;
@@ -187,4 +196,34 @@ section.content {
 	padding-top: 2%;
 	text-decoration: none;
 	color: black;
+}
+
+.page1{
+   width:50px;
+}
+.page2 {
+   font-size:16px;
+   width:30px;
+   height:30px;
+   background-color:lightgray;
+   margin-left:5px;
+   margin-right:5px;
+   border-radius: 6px;
+   align-content: center;
+}
+#pagebar{
+   margin-top:1%;
+   margin-bottom:2%;
+   display:flex;
+   justify-content: center;
+}
+#pagebar a{
+   text-decoration: none;
+   color:black;
+   text-align: center;
+    font-weight: 400;
+}
+#pagebar p{
+    text-align: center;
+    color:gray;
 }

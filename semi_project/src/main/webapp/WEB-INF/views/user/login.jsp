@@ -1,22 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-<section class="content">
-	<div class="login_container">
-		<h2>어서오시개!</h2>
-	        <form action="<%=request.getContextPath() %>/user/loginuser.do" method="post">
-	            <input type="text" name="username" placeholder="아이디 입력" required>
-	            <input type="password" name="password" placeholder="패스워드 입력" required>
-	            <!--<button type="submit" name="login">로그인</button>-->
-	            <input type="submit" value="로그인">
-		            <div class="login_links">
-		                <a href="<%=request.getContextPath()%>/user/new_user.do">회원가입</a><br>
-		                <a href="<%=request.getContextPath()%>/user/email_user.do">이메일로 회원가입</a><br>
-		                <a href="<%=request.getContextPath()%>/user/find_userId.do">아이디/비밀번호 찾기</a><br>
-		            </div>
-	        </form>
-	</div>
-</section>
 <style>
 		section{
             font-family: Arial, sans-serif;
@@ -54,28 +38,13 @@
         .login_container input[type="password"]:focus {
             border-color: #ffeda4;
         }
-       /*.login_container button {
-            width: 100%;
-            padding: 12px;
-            background-color: #ffeda4;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .login_container button:hover {
-            background-color: #ffbb00;
-            color: #fff;
-        }
-       */
         .login_container input[type="submit"] {
-            width: 100%;
+            width: 90%;
             padding: 12px;
             background-color: #ffeda4;
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 15px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -87,10 +56,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-        .login_container .login_inputs input[type="text"],
-        .login_container .login_inputs input[type="password"] {
-            width: calc(50% - 10px);
         }
         .login_container .login_submit {
             width: 100%;
@@ -114,6 +79,22 @@
             margin-top: 10px;
         }
  </style>
+<section class="content">
+	<div class="login_container">
+		<h2>어서오시개!</h2>
+	        <form action="<%=request.getContextPath() %>/user/loginuser.do" method="post">
+	            <input type="text" name="username" placeholder="아이디 입력" required>
+	            <input type="password" name="password" placeholder="패스워드 입력" required>
+	            <input type="submit" value="로그인">
+		            <div class="login_links">
+		                <a href="<%=request.getContextPath()%>/user/new_user.do">회원가입</a><br>
+		                <a href="<%=request.getContextPath()%>/user/email_user.do">이메일로 회원가입</a><br>
+		                <a href="<%=request.getContextPath()%>/user/find_userId.do">아이디/비밀번호 찾기</a><br>
+		            </div>
+	        </form>
+	</div>
+</section>
+
  <script>
  
  

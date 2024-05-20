@@ -1,8 +1,8 @@
 package com.web.user.model.service;
 
-import static com.web.common.JDBCTemplate.getConnection;
-import static com.web.common.JDBCTemplate.close;
+import static com.web.common.JDBCTemplate.*;
 import static com.web.user.model.dao.UserDao.getUserDao;
+import static com.web.dog.model.dao.DogDao.getDogDao;
 import java.sql.Connection;
 
 import com.web.user.model.dto.User;
@@ -18,4 +18,33 @@ public class UserService {
 		close(conn);
 		return user;
 	}
+	
+	public String getDogImg(String id) {
+		Connection con = getConnection();
+		String dogImg = getDogDao().getDogImg(con,id);
+		close(con);
+		return dogImg;
+	}
+	
+	public int enrollUser(User user) {
+		Connection con = getConnection();
+		int result = getUserDao().enrollUser(con, user);
+		if(result>0) {
+			System.out.println(result);
+			close(con);
+		} else {
+			rollback(con);
+		} return result;
+	}
+	
+	public int updateUser(User user) {
+		Connection con = getConnection();
+		int result = getUserDao().updateUser(con, user);
+		if(result>0) {
+			close(con);
+		} else {
+			rollback(con);
+		} return result;
+	}
+	
 }

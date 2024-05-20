@@ -1,0 +1,64 @@
+package com.web.board.model.service;
+import static com.web.common.JDBCTemplate.*;
+import static com.web.board.model.dao.BoardDao.getDao;
+import java.sql.Connection;
+import java.util.List;
+
+import com.web.board.model.dto.Bulletin;
+public class BoardService {
+	private static BoardService service = new BoardService();
+	public static BoardService getService() {return service;};
+	private BoardService() {}
+	
+	
+	//게시글 총 갯수 조회
+	public int selectBoardCount() {
+		Connection conn = getConnection();
+		int result = getDao().selectBoardCount(conn);
+		close(conn);
+		return result;
+	}
+	
+	//게시글 전체 조회
+	public List<Bulletin> selectBoardAll(int cPage, int numPerpage){
+		Connection conn = getConnection();
+		List<Bulletin> bulletins = getDao().selectBoardAll(conn,cPage,numPerpage);
+		close(conn);
+		return bulletins;
+	}
+	
+	//게시글 번호로 조회
+	public Bulletin selectBoardNo(int no) {
+		Connection conn = getConnection();
+		Bulletin bulletin = getDao().selectBoardNo(conn, no);
+		close(conn);
+		return bulletin;
+	}
+	
+	//게시글 등록
+	public int insertBoard(String id, String title, String content) {
+		Connection conn = getConnection();
+		int result = getDao().insertBoard(conn,id, title, content);
+		if(result > 0 ) commit(conn);
+		else rollback(conn);
+		return result;
+	}
+	
+	//게시글 수정
+	public int updateFreeBoard(int bullNo, String content) {
+		Connection conn = getConnection();
+		int result = getDao().updateFreeBoard(conn, bullNo, content);
+		if(result > 0 ) commit(conn);
+		else rollback(conn);
+		return result;
+	}
+	
+	//게시글 삭제
+	public int deleteFreeBoard(int bullNo) {
+		Connection conn = getConnection();
+		int result = getDao().deleteFreeBoard(conn, bullNo);
+		if(result > 0 ) commit(conn);
+		else rollback(conn);
+		return result;
+	}
+}

@@ -1,26 +1,23 @@
-package com.web.shoppingmall.controller;
+package com.web.board.controller;
 
 import java.io.IOException;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import static com.web.board.model.service.BoardService.getService;
 /**
- * Servlet implementation class ShoppingMallMainServlet
- * 쇼핑몰 메인페이지로 페이지 이동시키는 기능 - 작성자 : GJH
+ * Servlet implementation class FreeBoardDeleteServlet
  */
-@WebServlet("/shoppingmall/shoppingmallfeed.do")
-public class ShoppingMallMainServlet extends HttpServlet {
+@WebServlet("/board/deletefreeboard.do")
+public class FreeBoardDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShoppingMallMainServlet() {
+    public FreeBoardDeleteServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,9 +26,11 @@ public class ShoppingMallMainServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//쇼핑몰 메인페이지로 페이지 이동시키는 기능
-		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmallfeed.jsp")
-		.forward(request, response);
+		int no = Integer.parseInt(request.getParameter("no"));
+		int result = getService().deleteFreeBoard(no);
+		if(result > 0) {
+			response.sendRedirect(request.getContextPath()+"/board/freeboard.do");
+		}
 	}
 
 	/**
