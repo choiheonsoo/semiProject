@@ -31,6 +31,9 @@ public class FreeBoardCommentInsertServlet extends HttpServlet {
 		String id = request.getParameter("user_id");
 		int level = Integer.parseInt(request.getParameter("comment_level"));
 		int bullNo = Integer.parseInt(request.getParameter("bull_no"));
+		String subCommentStr = request.getParameter("sub_comment");
+		System.out.println(subCommentStr);
+		int subComment = subCommentStr.equals("0")?0:Integer.parseInt(subCommentStr);
 		String content = request.getParameter("content");
 		
 		BulletinComment bc = BulletinComment.builder()
@@ -39,6 +42,7 @@ public class FreeBoardCommentInsertServlet extends HttpServlet {
 											.content(content)
 											.commentLevel(level)
 											.delC('n')
+											.subComment(subComment)
 											.build();
 		int result = getService().insertBoardComment(bc);
 		String msg = result>0?"댓글 등록 성공" : "댓글 등록 실패";

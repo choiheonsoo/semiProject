@@ -195,10 +195,11 @@ public class BoardDao {
 		int result = 0;
 		try {
 			pstmt = conn.prepareStatement(sql.getProperty("insertBoardComment"));
-			pstmt.setInt(1, bc.getBullNo());
-			pstmt.setString(2,bc.getUserId());
-			pstmt.setString(3,bc.getContent());
-			pstmt.setInt(4,bc.getCommentLevel());
+			pstmt.setString(1, bc.getSubComment()==0?null:String.valueOf(bc.getSubComment()));
+			pstmt.setInt(2, bc.getBullNo());
+			pstmt.setString(3,bc.getUserId());
+			pstmt.setString(4,bc.getContent());
+			pstmt.setInt(5,bc.getCommentLevel());
 			result= pstmt.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
