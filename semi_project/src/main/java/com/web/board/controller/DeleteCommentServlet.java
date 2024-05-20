@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import static com.web.board.model.service.BoardService.getService;
 /**
- * Servlet implementation class FreeboardInsertEndServlet
+ * Servlet implementation class DeleteCommentServlet
  */
-@WebServlet("/board/insertfreeboard.do")
-public class FreeboardInsertEndServlet extends HttpServlet {
+@WebServlet("/board/deletecomment.do")
+public class DeleteCommentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FreeboardInsertEndServlet() {
+    public DeleteCommentServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,14 +26,11 @@ public class FreeboardInsertEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
-		
-		int result = getService().insertBoard(id,title,content);
-		
-		String msg = result > 0 ? "등록 성공하였습니다." : "등록 실패하였습니다.";
-		String loc ="/board/freeboard.do";
+		int bcNo = Integer.parseInt(request.getParameter("bcNo"));
+		int bNo = Integer.parseInt(request.getParameter("bNo"));
+		int result = getService().deleteBoardComment(bcNo);
+		String msg = result>0 ? "댓글 삭제 성공" : "댓글 삭제 실퍠";
+		String loc = request.getContextPath()+"/board/freeboardview.do?no="+bNo;
 		request.setAttribute("msg", msg);
 		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
