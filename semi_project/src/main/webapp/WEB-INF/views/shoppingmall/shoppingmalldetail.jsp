@@ -232,7 +232,7 @@ IMP.init("imp74680205");
 IMP.request_pay({
     pg : 'kakaopay.TC0ONETIME',
     pay_method : 'card',
-    merchant_uid: "order_no_0003", // 상점에서 관리하는 주문 번호
+    merchant_uid: "order_no_0004", // 상점에서 관리하는 주문 번호 랜덤값 줘야함
     name : '주문명:결제테스트',
     amount : 1,
     buyer_email : 'dpdlxj12@naver.com',
