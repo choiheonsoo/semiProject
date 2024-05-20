@@ -44,7 +44,6 @@ public class EnrollUserEndServlet extends HttpServlet {
 		if(!dir.exists())dir.mkdirs();
 		int maxSize=1024*1024*1;
 		MultipartRequest mr = new MultipartRequest(request, path, maxSize, "UTF-8", new DefaultFileRenamePolicy());
-		System.out.println(path);
 		// String → java.util.Date
 		String dateString = mr.getParameter("birthday");
 		SimpleDateFormat birthSdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -85,7 +84,6 @@ public class EnrollUserEndServlet extends HttpServlet {
 			int dogResult = DogService.getDogService().enrollDog(dog);
 			File delFile = new File(path+"/"+dog.getDogImg());
 			if(!(dogResult>0) && delFile.exists()) {
-				System.out.println("기존 파일 삭제");
 				delFile.delete();
 			}
 		}

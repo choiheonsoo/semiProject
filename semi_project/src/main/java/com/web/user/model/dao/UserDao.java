@@ -91,7 +91,7 @@ public class UserDao {
 		} return result;
 	}
 	
-	private User getUser(ResultSet rs) throws SQLException{
+	private static User getUser(ResultSet rs) throws SQLException{
 		return User.builder()
 				.userId(rs.getString("user_id"))
 				.userName(rs.getString("user_name"))

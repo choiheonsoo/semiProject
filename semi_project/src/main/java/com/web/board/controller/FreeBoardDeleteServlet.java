@@ -28,9 +28,11 @@ public class FreeBoardDeleteServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int no = Integer.parseInt(request.getParameter("no"));
 		int result = getService().deleteFreeBoard(no);
-		if(result > 0) {
-			response.sendRedirect(request.getContextPath()+"/board/freeboard.do");
-		}
+		String msg = result > 0 ? "삭제 성공하였습니다." : "삭제 실패하였습니다.";
+		String loc = result > 0 ? "/board/freeboard.do" : "/board/freeboardview.do?no="+no;
+		request.setAttribute("msg", msg);
+		request.setAttribute("loc", loc);
+		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 	}
 
 	/**

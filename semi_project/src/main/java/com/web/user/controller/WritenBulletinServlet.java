@@ -1,23 +1,24 @@
-package com.web.board.controller;
+package com.web.user.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static com.web.board.model.service.BoardService.getService;
+
 /**
- * Servlet implementation class FreeboardInsertEndServlet
+ * Servlet implementation class WritenBulletinServlet
  */
-@WebServlet("/board/insertfreeboard.do")
-public class FreeboardInsertEndServlet extends HttpServlet {
+@WebServlet("/user/writen.do")
+public class WritenBulletinServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FreeboardInsertEndServlet() {
+    public WritenBulletinServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,17 +27,8 @@ public class FreeboardInsertEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
-		
-		int result = getService().insertBoard(id,title,content);
-		
-		String msg = result > 0 ? "등록 성공하였습니다." : "등록 실패하였습니다.";
-		String loc ="/board/freeboard.do";
-		request.setAttribute("msg", msg);
-		request.setAttribute("loc", loc);
-		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		String userId=request.getParameter("userId");
+		System.out.println(userId);
 	}
 
 	/**

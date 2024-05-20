@@ -29,15 +29,16 @@ public class FreeBoardServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String type = request.getParameter("type");
-		String keyword = request.getParameter("keyword");
+		String type = request.getParameter("type") == null ? "title" : request.getParameter("type");
+		String keyword = request.getParameter("keyword") == null ? "" : request.getParameter("keyword");
+		System.out.println(type+keyword);
 		int cPage=1;
 		try {
 			cPage=Integer.parseInt(request.getParameter("cPage"));
 		}catch(NumberFormatException e) {
 		}
 		int numPerpage=10;
-		List<Bulletin> bulletins = getService().selectBoardAll(cPage,numPerpage);
+		List<Bulletin> bulletins = getService().selectBoardAll(cPage,numPerpage,type,keyword);
 		
 		int totalData = getService().selectBoardCount();
 		int totalPage = (int)Math.ceil((double)totalData/numPerpage);

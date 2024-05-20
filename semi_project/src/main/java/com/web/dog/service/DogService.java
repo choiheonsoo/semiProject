@@ -51,4 +51,11 @@ public class DogService {
 		return dogs;
 	}
 	
+	public int insertDog(Dog dog) {
+		Connection con = getConnection();
+		int result = getDogDao().enrollDog(con, dog);
+		if(result > 0) close(con);
+		else rollback(con);
+		return result;
+	}
 }

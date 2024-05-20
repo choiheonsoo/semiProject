@@ -6,18 +6,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.web.board.model.dto.BulletinComment;
 import static com.web.board.model.service.BoardService.getService;
 /**
- * Servlet implementation class FreeboardInsertEndServlet
+ * Servlet implementation class FreeBoardCommentInsertServlet
  */
-@WebServlet("/board/insertfreeboard.do")
-public class FreeboardInsertEndServlet extends HttpServlet {
+@WebServlet("/board/insertboardcomment.do")
+public class FreeBoardCommentInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FreeboardInsertEndServlet() {
+    public FreeBoardCommentInsertServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,15 +28,22 @@ public class FreeboardInsertEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
-		String title = request.getParameter("title");
+		String id = request.getParameter("user_id");
+		int level = Integer.parseInt(request.getParameter("comment_level"));
+		int bullNo = Integer.parseInt(request.getParameter("bull_no"));
 		String content = request.getParameter("content");
 		
-		int result = getService().insertBoard(id,title,content);
-		
-		String msg = result > 0 ? "등록 성공하였습니다." : "등록 실패하였습니다.";
-		String loc ="/board/freeboard.do";
-		request.setAttribute("msg", msg);
+		BulletinComment bc = BulletinComment.builder()
+											.bullNo(bullNo)
+											.userId(id)
+											.content(content)
+											.commentLevel(level)
+											.delC('n')
+											.build();
+		int result = getService().insertBoardComment(bc);
+		String msg = result>0?"댓글 등록 성공" : "댓글 등록 실패";
+		String loc = "/board/freeboardview.do?no="+bullNo;
+		request.setAttribute("msg",msg);
 		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 	}

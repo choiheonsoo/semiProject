@@ -85,7 +85,7 @@
 		<div class="menubar-container">
 			<ul>
 				<li>커뮤니티</li>
-				<a href=""><li>자유게시판</li></a>
+				<a href="<%=request.getContextPath()%>/board/freeboard.do"><li>자유게시판</li></a>
 				<a href=""><li>정보게시판</li></a>
 				<a href=""><li>멍스타그램</li></a>
 			</ul>

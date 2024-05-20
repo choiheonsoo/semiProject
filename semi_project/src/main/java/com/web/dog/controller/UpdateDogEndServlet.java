@@ -1,5 +1,7 @@
 package com.web.dog.controller;
 
+import static com.web.user.model.service.UserService.getUserService;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -44,6 +46,7 @@ public class UpdateDogEndServlet extends HttpServlet {
 		String dogBreedName = mr.getParameter("dogBreedKey");
 		double dogWeight = Double.parseDouble(mr.getParameter("dogWeight"));
 		String dogImg = mr.getFilesystemName("dogImg");
+		String oriName = mr.getParameter("orifilename");
 		
 		Dog dog = Dog.builder().dogName(dogName)
 				 			   .userId(userId)
@@ -51,16 +54,38 @@ public class UpdateDogEndServlet extends HttpServlet {
 				 			   .dogWeight(dogWeight)
 				 			   .dogImg(dogImg)
 				 			   .build();
-		System.out.println(dog);
+		
 		int updateDogResult = DogService.getDogService().updateDog(dog);
 		
-		File delFile = new File(path+"/"+dog.getDogImg());
-		if(!(updateDogResult>0) && delFile.exists()) {
-			delFile.delete();
+		String msg, loc;
+		File delFile = new File(path+"/"+dogImg);
+		File oriFile = new File(path+"/"+oriName);
+		if(updateDogResult>0 && dogImg!=null) {
+			msg = "반려견 정보 수정 완료";
+			loc = "/user/myPage.do";
+			if(oriFile.exists()) {
+				oriFile.delete();
+			}
+		}else {
+			msg = "정보 수정 실패";
+			loc = "/user/updateDog.do";
+			if(delFile.exists()) {
+				delFile.delete();
+			}
 		}
-		request.setAttribute("msg","반려견 정보 수정 완료");
-		request.setAttribute("loc","/user/myPage.do");
+		request.getSession().setAttribute("dogImg", getUserService().getDogImg(userId));
+		request.setAttribute("msg", msg);
+		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+//		if(updateDogResult>0 && delFile.exists()) {
+//			delFile.delete();
+//			request.setAttribute("msg","반려견 정보 수정 완료");
+//			request.setAttribute("loc","/user/myPage.do");
+//		} else if(!(updateDogResult>0)){
+//			delFile.delete();
+//			request.setAttribute("msg", "정보 수정 실패");
+//			request.setAttribute("loc", "/WEB-INF/views/user/updateDog.jsp");
+//		}
 	}
 
 	/**
