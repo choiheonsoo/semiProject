@@ -14,6 +14,8 @@ import java.util.Properties;
 
 import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.BulletinComment;
+import com.web.dog.model.dao.DogDao;
+import com.web.dog.model.dto.Dog;
 
 public class BoardDao {
 	//싱글톤 적용
@@ -53,14 +55,16 @@ public class BoardDao {
 	}
 	
 	//게시글 전체 조회
-	public List<Bulletin> selectBoardAll(Connection conn, int cPage, int numPerpage){
+	public List<Bulletin> selectBoardAll(Connection conn, int cPage, int numPerpage, String type, String keyword){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<Bulletin> bulletins = new ArrayList<>();
 		try {
-			pstmt = conn.prepareStatement(sql.getProperty("selectBoardAll"));
-			pstmt.setInt(1,(cPage-1)*numPerpage+1);
-			pstmt.setInt(2, numPerpage*cPage);
+			String newSql = sql.getProperty("selectBoardAll").replace("#type", type);
+			pstmt = conn.prepareStatement(newSql);
+			pstmt.setString(1,"%"+keyword+"%");
+			pstmt.setInt(2,(cPage-1)*numPerpage+1);
+			pstmt.setInt(3, numPerpage*cPage);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				bulletins.add(getBulletin(rs));
@@ -81,7 +85,6 @@ public class BoardDao {
 		ResultSet rs = null;
 		Bulletin bulletin  = null;
 		try {
-			System.out.println(no);
 			pstmt = conn.prepareStatement(sql.getProperty("selectBoardNo"));
 			pstmt.setInt(1,no);
 			rs = pstmt.executeQuery();
@@ -90,7 +93,6 @@ public class BoardDao {
 				do {
 					bulletin.getComments().add(getComments(rs));
 				}while(rs.next());
-				System.out.println(bulletin.getComments());
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -151,9 +153,80 @@ public class BoardDao {
 		}
 		return result;
 	}
-	private BulletinComment getComments(ResultSet rs) throws SQLException{
-		 String delCStr = rs.getString("bc_del_c");
-		    char delC = (delCStr != null && !delCStr.isEmpty()) ? delCStr.charAt(0) : 'N';
+	
+	//강아지 불러오기
+	public List<Dog> getDog(Connection conn){
+		List<Dog> dogs = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("getDog"));
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				dogs.add(DogDao.getDog(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return dogs;
+	}
+	
+	//게시글 조회 수 증가
+	public int updateFreeBoardReadCount(Connection conn, int no) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("updateFreeBoardReadCount"));
+			pstmt.setInt(1, no);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	//댓글 등록하기
+	public int insertBoardComment(Connection conn, BulletinComment bc) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("insertBoardComment"));
+			pstmt.setInt(1, bc.getBullNo());
+			pstmt.setString(2,bc.getUserId());
+			pstmt.setString(3,bc.getContent());
+			pstmt.setInt(4,bc.getCommentLevel());
+			result= pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	//댓글 삭제하기
+	public int deleteBoardComment(Connection conn, int bcNo) {
+		PreparedStatement pstmt =null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("deleteBoardComment"));
+			pstmt.setInt(1, bcNo);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	private static BulletinComment getComments(ResultSet rs) throws SQLException{
+			 String delCStr = rs.getString("bc_del_c");
+			 char delC = (delCStr != null && !delCStr.isEmpty()) ? delCStr.charAt(0) : 'N';
 		return BulletinComment.builder()
 				.mainComment(rs.getInt("main_comment"))
 				.subComment(rs.getInt("sub_comment"))
@@ -165,7 +238,7 @@ public class BoardDao {
 				.commentLevel(rs.getInt("comment_level"))
 				.build();
 	}
-	private Bulletin getBulletin(ResultSet rs) throws SQLException{
+	private static Bulletin getBulletin(ResultSet rs) throws SQLException{
 		return Bulletin.builder()
 				.bullNo(rs.getInt("b_bull_no"))
 				.categoryNo(rs.getInt("category_no"))

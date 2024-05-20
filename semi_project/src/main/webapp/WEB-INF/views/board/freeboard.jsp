@@ -41,10 +41,10 @@
 		<p>닉네임</p>
 	</div>
 	<div id="freeboardFooter1">
-		<form id="freeboardSearch" action="<%=request.getContextPath() %>/board/freeboard.do" method="get">
+		<div id="freeboardSearch">
 			<input style="width: 55px" name="type" type="button" value="제목">
-			<input style="width: 250px" name="keyword" type="text" name="freeboardSearch">
-		</form>
+			<input style="width: 250px" name="keyword" type="text">
+		</div>
 		<button class="insert_board" onclick="location.assign('<%=request.getContextPath()%>/board/freeboardInsert.do');">글 작성</button>
 	</div>
 	<%=request.getAttribute("pageBar") %>
@@ -69,4 +69,18 @@
 	   $(".visible-box").hide();
 	   $("#freeboardSearch input").eq(0).attr("value","닉네임");
    });
+   $("#freeboardSearch input[type='text']").keyup(function(e) {
+	   let type = $("#freeboardSearch input[name='type']").val();
+	   let keyword = $(this).val();
+	   switch (type) {
+	   case '제목' : type='title'; break;
+	   case '내용' : type='content'; break;
+	   case '닉네임' : type='user_id'; break;
+	 }
+	   if (e.keyCode === 13) {
+	   		let contextPath = "<%=request.getContextPath()%>";
+		    let url = contextPath + "/board/freeboard.do?type=" + type+"&keyword="+keyword;
+		    location.href = url;
+	   }
+	 });
 </script>
