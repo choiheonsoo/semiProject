@@ -1,13 +1,15 @@
 package com.web.shoppingmall.model.service;
 
+import static com.web.common.JDBCTemplate.close;
 import static com.web.common.JDBCTemplate.getConnection;
+import static com.web.shoppingmall.model.dao.ShoppingmallDao.getDao;
 
 import java.sql.Connection;
 import java.util.List;
 
+import com.web.shoppingmall.model.dto.Color;
 import com.web.shoppingmall.model.dto.Product;
-import static com.web.shoppingmall.model.dao.ShoppingmallDao.getDao;
-import static com.web.common.JDBCTemplate.close;
+import com.web.shoppingmall.model.dto.ProductOption;
 /*
  * 	쇼핑몰 관련 서비스 클래스
  */
@@ -49,6 +51,19 @@ public class ShoppingmallService {
 	public Product selectProductByKey(int productKey) {
 		Connection conn=getConnection();
 		Product result=getDao().selectProductByKey(conn, productKey);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 사이즈 옵션의 색상 옵션을 가져오는 메소드
+	 * 	상품의 고유키와 사이즈로 색상을 검색하여 가져온다
+	 * 	매개변수 : 상품고유키, 사이즈
+	 * 	반환 : 상품옵션 리스트
+	 */
+	public List<ProductOption> selectColorBySize(int productKey, String size){
+		Connection conn=getConnection();
+		List<ProductOption> result=getDao().selectColorBySize(conn, productKey, size);
 		close(conn);
 		return result;
 	}

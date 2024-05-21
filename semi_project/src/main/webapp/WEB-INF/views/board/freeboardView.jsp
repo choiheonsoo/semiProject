@@ -90,7 +90,7 @@
 				</div>
 				<div class="freeboard-comment-body">
 					<p><%=bc.getContent()%></p>
-					<button>댓글</button>
+					<button onclick="btn_reply(event,<%=bc.getMainComment()%>);">댓글</button>
 				</div>
 		<% } else { %>
 					<div class="freeboard-comment-header sub-comment">
@@ -128,6 +128,7 @@
 		<input type="hidden" name="user_id" value=<%=loginUser.getUserId() %>>
 		<input type="hidden" name="comment_level" value="1">
 		<input type="hidden" name="bull_no" value="<%=b.getBullNo() %>">
+		<input type="hidden" name="sub_comment" value="0">
 		<input type="text" name="content" placeholder="댓글을 입력하세요.">
 		<input type="submit" value="등록">
 	</form>
@@ -205,5 +206,16 @@
 				<%}%>
 			}
 		});
+		
+		const btn_reply=(e,no)=>{
+			$form=$(".freeboard-comment-insert").clone();
+			$form.find('input[name=comment_level]').val('2');
+			$form.find('input[name=sub_comment]').val(no);
+			$form.addClass('sub_comment');
+			$(e.target).parent().append($form);
+		}
+		 $(document).on('focusout', '.sub_comment', function() {
+		        $(this).hide(); // 해당 요소 숨기기
+		    });
 	</script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>
