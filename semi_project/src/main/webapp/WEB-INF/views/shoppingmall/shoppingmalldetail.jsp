@@ -3,13 +3,14 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product,java.util.Map,com.web.shoppingmall.model.dto.ProductImg,
 				 com.web.shoppingmall.model.dto.ProductOption,java.util.HashMap,java.util.ArrayList,java.util.Set,
-				 java.util.TreeSet" %>
+				 com.web.user.model.dto.User, com.web.shoppingmall.model.dto.Review, com.web.shoppingmall.model.dto.ReviewImg" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 	Product p=(Product)request.getAttribute("product");
 	String r=(String)request.getAttribute("r");
 	String imgName=null;
 	List<Map<String, String>> options=new ArrayList<>();
+	List<User> users=(List<User>)request.getAttribute("user");
 	boolean first=true;
 	if(p.getProductOption()!=null){
 		for(ProductOption po:p.getProductOption()){
@@ -140,34 +141,50 @@
 				<div>|</div>
 				<button>별점순</button>
 			</div>
-			<div class="reviewBox">
-				<div class="reviewWriter">
-					<div class="reviewWriterImg">
-						<img src="<%=request.getContextPath() %>/images/user.png" alt="회원프로필사진">
-					</div>
-					<div>
-						<span class="memberName">회원닉네임</span>
-						<span class="reviewDate">2024.05.13</span>
-						<div>
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
+			<%if(!users.isEmpty()){ %>
+				<%for(User u:users){ %>
+					<div class="reviewBox">
+						<div class="reviewWriter">
+							<div class="reviewWriterImg">
+									<%if(u.getDog().get(0).getDogImg()!=null){ %>
+									<img 
+									src="<%=request.getContextPath() %>/upload/user/<%=u.getDog().get(0).getDogImg()%>" 
+									alt="프로필">
+									<%}else{ %>
+										<img src="<%=request.getContextPath() %>/images/user.png" alt="프로필">
+									<%} %>
+							</div>
+							<div>
+								<span class="memberName"><%=u.getUserId() %></span>
+								<span class="reviewDate"><%=u.getReviews().get(0).getReviewDate() %></span>
+								<div class="stars">
+									<%for(int i=0;i<5;i++){ %>
+										<%if(i<u.getReviews().get(0).getRating()){ %>
+											<div class="star full-star"></div>
+						        		<%}else{ %>
+						        			<div class="star empty-star"></div>
+						        		<%} %>
+					        		<%} %>
+								</div>
+							</div>
+						</div>
+						<div class="reviewImgs">
+							<%for(Review re:u.getReviews()){ %>
+								<%for(ReviewImg ri:re.getReviewImgs()){ %>
+									<%if(ri.getReviewImg()!=null){ %>
+										<img src="<%=request.getContextPath() %>/upload/shoppingmall/review/<%=ri.getReviewImg() %>" alt="리뷰이미지">
+									<%} %>
+								<%} %>
+							<%} %>
+						</div>
+						<div class="reviewContent">
+							<span><%=u.getReviews().get(0).getReviewContent()%></span>
 						</div>
 					</div>
-				</div>
-				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-				</div>
-				<div class="reviewContent">
-					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
-				</div>
-			</div>
+				<%} %>
+			<%}else{ %>
+				<h3>리뷰가 없습니다.</h3>
+			<%} %>
 		</div>
 	</div>
 	<div class="qnaContainer">
@@ -176,7 +193,25 @@
 		</div>
 	</div>
 </section>
+	<div class="modalContainer modalhidden">
+		<div class="slideleftbtn">
+			<span><</span>
+		</div>
+		<div class="modalContent">
+			<span>></span>		
+			<img src"" alt"">
+			<span>></span>
+		</div>
+		<div class="sliderightbtn">
+			<span>></span>
+		</div>
+	</div>
 <script>
+	//모달창 관련
+	$(".reviewImgs").children().click(e=>{
+		$(".modalContainer").removeClass("modalhidden");
+	})
+	
 	//구매페이지 이동 함수
 	const movePaypage=()=>{
 		location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');

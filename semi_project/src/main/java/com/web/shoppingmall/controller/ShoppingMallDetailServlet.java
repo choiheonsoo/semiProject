@@ -38,9 +38,9 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		String r=request.getParameter("r");
 		
 		Product p=getService().selectProductByKey(productKey); //상품관련 정보를 담은 상품객체
-//		List<User> u=getService().selectReviewByProductKey(productKey); //리뷰정보를 담은 회원객체리스트
+		List<User> u=getService().selectReviewByProductKey(productKey); //리뷰정보를 담은 회원객체리스트
 		request.setAttribute("product", p);
-		request.setAttribute("r", r);
+		request.setAttribute("user", u);
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalldetail.jsp").forward(request, response);
 	}
 

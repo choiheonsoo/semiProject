@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.web.dog.model.dto.Dog;
 import com.web.shoppingmall.model.dto.Color;
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductCategory;
@@ -21,6 +22,7 @@ import com.web.shoppingmall.model.dto.ProductImg;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.ProductSize;
 import com.web.shoppingmall.model.dto.Review;
+import com.web.shoppingmall.model.dto.ReviewImg;
 import com.web.user.model.dto.User;
 
 /*
@@ -291,12 +293,29 @@ public class ShoppingmallDao {
 	
 	private List<User> getUser(List<User> users, ResultSet rs) throws SQLException{
 		String userId=rs.getString("USER_ID");
-		if(users.stream().anyMatch(e->e.equals(userId))) {
-			users.stream().filter(e->e.equals(userId)).forEach(u->{
-				//
+		if(users.stream().anyMatch(e->userId.equals(e.getUserId()))) {
+			users.stream().filter(e->userId.equals(e.getUserId())).forEach(u->{
+				u.getReviews().forEach(rr->{
+					try {
+						rr.getReviewImgs().add(new ReviewImg().builder().reviewImg(rs.getString("REVIEW_IMG")).build());
+					}catch(SQLException s) {
+						s.printStackTrace();
+					}
+				});
 			});
 		}else {
-			
+			User u=new User().builder().userId(rs.getString("USER_ID")).dog(new ArrayList<Dog>()).reviews(new ArrayList<Review>()).build();
+			u.getDog().add(new Dog().builder().dogImg(rs.getString("DOG_IMG")).build());
+			Review r=new Review().builder()
+					.reviewKey(rs.getInt("REVIEW_KEY"))
+					.reviewDate(rs.getDate("REVIEW_DATE"))
+					.rating(rs.getInt("RATING"))
+					.reviewContent(rs.getString("REVIEW_CONTENT"))
+					.reviewImgs(new ArrayList<ReviewImg>())
+					.build();
+			r.getReviewImgs().add(new ReviewImg().builder().reviewImgKey(rs.getInt("REVIEW_IMG_KEY")).reviewImg(rs.getString("REVIEW_IMG")).build());
+			u.getReviews().add(r);
+			users.add(u);
 		}
 		return users;
 	}
