@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script> <!-- Kakao 전체 API를 가져오는 무거운 거? -->
+<!-- <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.1/kakao.min.js" integrity="sha384-kDljxUXHaJ9xAb2AzRd59KxjrFjzHa5TAoFQ6GbYTCAG0bjM55XohjjDT7tDDC01" crossorigin="anonymous"></script> -->
 <style>
 		section{
             font-family: Arial, sans-serif;
@@ -93,7 +95,9 @@
  </style>
 <section class="content">
 	<div class="login_container">
-	<img id="kakaologinbtn" src="<%=request.getContextPath()%>/images/kakaologin.png">
+	<div>
+        <a href="javascript:kakaoLogin()"><img id="kakaologinbtn" src="<%=request.getContextPath()%>/images/kakaologin.png"></a>
+     </div>
 		<h2>어서오시개!</h2>
 	        <form action="<%=request.getContextPath() %>/user/loginuser.do" method="post">
 	            <input type="text" name="username" placeholder="아이디 입력" required>
@@ -106,11 +110,60 @@
 	        </form>
 	</div>
 </section>
+<!-- <script>
+카카오톡의 입장에서 개발자들이 만든 그룹을 Client가 어떠한 그룹을 보는 건지 확인하기 위하여 JavaScript 키를 가져온다.
+초기화의 기능이 아님.
+	Kakao.init('a5195f24115fc28a6fae3a6191e0f7b0');
+	console.log(Kakao.isInitialized());
+</script> -->
+<script type="text/javascript">
+    // Kakao SDK 초기화(JavaScript 키를 사용하여 초기화)
+    Kakao.init('a5195f24115fc28a6fae3a6191e0f7b0');
+    // 카카오 로그인을 실행
+    function kakaoLogin() {
+        Kakao.Auth.login({
+            // 로그인 성공 시 실행되는 콜백 함수
+            success: function (response) {
+                // 사용자 정보 요청을 위해 Kakao API를 호출
+                Kakao.API.request({
+                    url: '/v2/user/me', // 사용자 정보 요청 URL
+                    // 사용자 정보 요청이 성공했을 때 실행되는 콜백 함수
+                    success: function (response) {
+                        console.log(response); 
+                        const id = response.id; 
+                        const email = response.kakao_account.email.split('@')[0]; 
+                        const userInfo = {
+                            id: id,
+                            email: email
+                        };
+                        // Ajax를 사용하여 JSON 데이터를 서버로 전송
+                        fetch("<%=request.getContextPath()%>/user/enrollbykakao.do",{
+                        	method:"POST",
+                        	headers: {
+                        		"Content-Type" : "application/json"
+                        	},
+                        	body: JSON.stringify(userInfo)
+                        })
+                        .then(response=>response.json())
+                        .then(data=>{
+                        	console.log(data);
+                        })
+                        .catch(error =>{
+                        	console.error("Error-", error);
+                        });
+                    },
+                    // 사용자 정보 요청이 실패했을 때 실행되는 콜백 함수
+                    fail: function (error) {
+                        alert(JSON.stringify(error)); 
+                    },
+            });
+    	},
+            // 로그인 실패 시 실행되는 콜백 함수
+            fail: function (error) {
+                alert(JSON.stringify(error));
+            },
+        });
+    }
+</script>
 
- <script>
- 	document.getElementById("kakaologinbtn").addEventListener("click", () =>{
- 		Kakao.Auth.authorize();
- 	})
- 
- </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

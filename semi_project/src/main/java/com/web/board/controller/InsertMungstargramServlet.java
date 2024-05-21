@@ -6,18 +6,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static com.web.board.model.service.BoardService.getService;
+
 /**
- * Servlet implementation class DeleteCommentServlet
+ * Servlet implementation class InsertMungstargramServlet
  */
-@WebServlet("/board/deletecomment.do")
-public class DeleteCommentServlet extends HttpServlet {
+@WebServlet("/board/mungstargraminsert.do")
+public class InsertMungstargramServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DeleteCommentServlet() {
+    public InsertMungstargramServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,14 +26,7 @@ public class DeleteCommentServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int bcNo = Integer.parseInt(request.getParameter("bcNo"));
-		int bNo = Integer.parseInt(request.getParameter("bNo"));
-		int result = getService().deleteBoardComment(bcNo);
-		String msg = result>0 ? "댓글 삭제 성공" : "댓글 삭제 실퍠";
-		String loc ="/board/boardview.do?no="+bNo;
-		request.setAttribute("msg", msg);
-		request.setAttribute("loc", loc);
-		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/board/insetMungStargram.jsp").forward(request, response);
 	}
 
 	/**

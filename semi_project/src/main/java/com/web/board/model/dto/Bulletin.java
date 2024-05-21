@@ -1,7 +1,6 @@
 package com.web.board.model.dto;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -23,4 +22,6 @@ public class Bulletin {
 	private int hits;
 	private int likeC;
 	private List<BulletinComment> comments;
+	private List<BulletinImg> imgs;
+	private List<BulletinLike> likes;
 }

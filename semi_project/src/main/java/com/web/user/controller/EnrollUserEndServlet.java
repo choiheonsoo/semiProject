@@ -79,7 +79,7 @@ public class EnrollUserEndServlet extends HttpServlet {
 								   .dogWeight(Double.parseDouble(mr.getParameter("dogWeight")))
 								   .dogImg(mr.getFilesystemName("dogImg"))	// 파일 저장
 								   .build();
-			System.out.println(dog);
+			
 			// rename된 파일명만 저장 후 결과에 따라 파일 삭제, 등록 결정하는 로직
 			int dogResult = DogService.getDogService().enrollDog(dog);
 			File delFile = new File(path+"/"+dog.getDogImg());

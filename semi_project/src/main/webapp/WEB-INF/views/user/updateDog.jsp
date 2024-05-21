@@ -158,7 +158,6 @@ section.updateDog {
 	
 <script>
 	const $dogPrev = document.querySelectorAll("div[class='dogPrev']");
-	document.getElementById("updateDog").style.cssText = "display: flex; justify-content: center;";
 	const $dogImg = document.querySelectorAll("input[class='dogImg']");
 	
 	const $option = document.querySelectorAll("input[type=radio]");
@@ -194,7 +193,7 @@ section.updateDog {
 	} else {
 		// 기존에 등록된 강아지가 없는 회원의 경우 수정 항목 클릭 불가능 오직 추가등록만 가능
 		document.getElementById("userChoice").innerHTML = "<h4 style='overflow: hidden;'>반려견 추가 등록</h4>";
-		document.getElementById("insertDog").style.display = "flex";
+		document.getElementById("insertDog").style.cssText = "display: flex; justify-content: center;";
 	}
 </script>	
 

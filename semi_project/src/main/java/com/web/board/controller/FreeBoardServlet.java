@@ -1,5 +1,7 @@
 package com.web.board.controller;
 
+import static com.web.board.model.service.BoardService.getService;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -8,8 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static com.web.board.model.service.BoardService.getService;
+
 import com.web.board.model.dto.Bulletin;
+import com.web.board.model.dto.BulletinImg;
 /**
  * Servlet implementation class FreeBoardServlet
  */
@@ -38,9 +41,9 @@ public class FreeBoardServlet extends HttpServlet {
 		}catch(NumberFormatException e) {
 		}
 		int numPerpage=10;
-		List<Bulletin> bulletins = getService().selectBoardAll(cPage,numPerpage,type,keyword);
-		
-		int totalData = getService().selectBoardCount();
+		List<Bulletin> bulletins = getService().selectBoardAll(cPage,numPerpage,type,keyword,3);
+		List<BulletinImg> imgs = getService().selectBoardImg();
+		int totalData = getService().selectBoardCount(3);
 		int totalPage = (int)Math.ceil((double)totalData/numPerpage);
 		int pageBarSize = 5;
 		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
@@ -71,6 +74,7 @@ public class FreeBoardServlet extends HttpServlet {
 		}
 		pageBar+="</div>";
 		request.setAttribute("pageBar", pageBar);
+		request.setAttribute("imgs", imgs);
 		request.setAttribute("bulletins",bulletins);
 		request.getRequestDispatcher("/WEB-INF/views/board/freeboard.jsp").forward(request, response);
 	}

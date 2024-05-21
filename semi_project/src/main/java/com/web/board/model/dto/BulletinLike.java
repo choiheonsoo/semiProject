@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
-
-public class BulletinImg {
-	private int bulletinImgKey;
+public class BulletinLike {
+	private int bulletinLikeKey;
 	private int bullNo;
-	private String bullImg;
+	private String userId;
 }
