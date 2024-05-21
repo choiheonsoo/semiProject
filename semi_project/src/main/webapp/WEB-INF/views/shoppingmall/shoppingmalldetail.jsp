@@ -123,10 +123,13 @@
 	<div class="detailImgContainer">
 		<div class="detailImg">
 			<%if(p.getProductImgs().containsKey("description")){ %>
-			<div class="imgborder">
+			<div class="imgborder foldingoption">
 			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("description").getProductImg() %>" alt="상세설명이미지">
 			</div>
 			<%} %>
+			<div class="folding">
+				펼치기
+			</div>
 		</div>
 	</div>
 	<div class="reviewContainer">
@@ -135,63 +138,7 @@
 			<div class="reviewSortMenu">
 				<button>최신순</button>
 				<div>|</div>
-				<button>리뷰순</button>
-			</div>
-			<div class="reviewBox">
-				<div class="reviewWriter">
-					<div class="reviewWriterImg">
-						<img src="<%=request.getContextPath() %>/images/user.png" alt="회원프로필사진">
-					</div>
-					<div>
-						<span class="memberName">회원닉네임</span>
-						<span class="reviewDate">2024.05.13</span>
-						<div>
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-						</div>
-					</div>
-				</div>
-				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-				</div>
-				<div class="reviewContent">
-					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
-				</div>
-			</div>
-			<div class="reviewBox">
-				<div class="reviewWriter">
-					<div class="reviewWriterImg">
-						<img src="<%=request.getContextPath() %>/images/user.png" alt="회원프로필사진">
-					</div>
-					<div>
-						<span class="memberName">회원닉네임</span>
-						<span class="reviewDate">2024.05.13</span>
-						<div>
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-						</div>
-					</div>
-				</div>
-				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-				</div>
-				<div class="reviewContent">
-					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
-				</div>
+				<button>별점순</button>
 			</div>
 			<div class="reviewBox">
 				<div class="reviewWriter">
@@ -352,6 +299,14 @@
 	    		}
 	    	});
 	    });
+	    
+	//옵션 바꿨을때 구매개수 초기화하기
+	$(".option>select").change(e=>{
+		$(".purchaseQuantity").text("1");
+		$(".stockalarm").text("");
+		$("#totalPrice").text("<%=p.getPrice()*(100-p.getRateDiscount())/100%>");
+	});
+	
 	//리뷰보기를 눌러서 넘어왔을 때 리뷰로 스크롤이동시키는 함수
 	$(window).on('load', ()=>{
 		<%if(r!=null){%>
@@ -374,6 +329,16 @@
 		$(".iborder").eq(0).addClass("selectedimg");
 	})
 
+	//펼치기 기능
+	$(".folding").click(e=>{
+		if($(e.target).text()=='펼치기'){
+			$(e.target).text("접기");
+			$(".imgborder").removeClass("foldingoption");
+		}else{
+			$(e.target).text("펼치기");
+			$(".imgborder").addClass("foldingoption");
+		}
+	})
 
 //결제테스트 코드
 /* function kakaopay(){

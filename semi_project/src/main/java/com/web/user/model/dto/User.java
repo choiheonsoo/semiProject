@@ -1,6 +1,9 @@
 package com.web.user.model.dto;
 
 import java.sql.Date;
+import java.util.List;
+
+import com.web.shoppingmall.model.dto.Review;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +27,5 @@ public class User {
 	private boolean status;
 	private Date birthDay;
 	
+	private List<Review> reviews;
 }

@@ -102,11 +102,13 @@
 	width:50%;
 	margin-top:1%;
 }
-/* 구매수량 +,- 버튼 */
-.quantity>span{
+/* 구매수량, +, - 버튼 */
+.purchaseQuantity{
 	font-size:25px;
 	margin-left:3%;
 	margin-right:3%;
+	width:30px;
+	text-align:center;
 }
 .quantity{
 	display:flex;
@@ -198,7 +200,7 @@
 .empty-star {
     background-color: gray;
 }
-/* 리뷰 */
+/* 리뷰 총 개수 */
 .reviews{
 	/* border:1px solid yellow; */
 	width:45%;
@@ -212,7 +214,7 @@
 /* 이동메뉴 */
 .moveMenuContainer{
 	width:100%;
-	height:10vh;
+	height:50px;
 	/* border:1px solid red; */
 	display:flex;
 	justify-content:center;
@@ -227,20 +229,22 @@
 }
 .moveMenuWidth{
 	width:80%;
-	hieght:100%;
+	height:100%;
 }
 .moveMenu{
 	list-style-type:none;
 	padding:0;
 	margin:0;
 	border:1px solid lightgray;
+	border-top:0;
 	display:flex;
 	flex-direction:row;
-	justify-content:space-evenly;
+	justify-content:space-around;
 	text-align:center;
+	height:49px;
 }
 .moveMenu li{
-	width:33%;
+	width:20%;
 	font-size:30px;
 	cursor:pointer;
 }
@@ -261,8 +265,31 @@
 	justify-content:center;
 	align-items:center;
 }
-
-/* 리뷰 */
+.foldingoption{
+	height:800px;
+	overflow:hidden;
+}
+.folding{
+	width:20%;
+	height:50px;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	border:1px solid #346aff;
+	border-radius:5px;
+	margin-top:5px;
+	margin-bottom:50px;
+	cursor:pointer;
+}
+.folding:hover{
+	background-color:#346aff;
+	color:white;
+}
+/* 리뷰들 */
+.reviewBox{
+	border-bottom:1px solid lightgray;
+	width:100%;
+}
 .reviewContainer{
 	height:auto;
 	display:flex;
@@ -333,10 +360,6 @@
 	margin-top:1%;
 	margin-bottom:1%;
 	height:auto;
-}
-.reviewBox{
-	border-bottom:1px solid lightgray;
-	width:90%;
 }
 
 /* q&a 컨테이너 */

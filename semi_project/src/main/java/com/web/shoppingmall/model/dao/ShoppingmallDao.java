@@ -21,6 +21,8 @@ import com.web.shoppingmall.model.dto.ProductCategory;
 import com.web.shoppingmall.model.dto.ProductImg;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.ProductSize;
+import com.web.shoppingmall.model.dto.Review;
+import com.web.shoppingmall.model.dto.ReviewImg;
 
 /*
  * 쇼핑몰 dao
@@ -104,7 +106,6 @@ public class ShoppingmallDao {
 			pstmt.setInt(1, productKey);
 			pstmt.setInt(2, productKey);
 			pstmt.setInt(3, productKey);
-			pstmt.setInt(4, productKey);
 			rs=pstmt.executeQuery();
 			if(rs.next())
 				result=getProductForDetailpage(rs, result);
@@ -193,8 +194,30 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
-	
-	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에대한 리뷰객체를 반환하는 메소드
+	 * 	상품의 고유키로 리뷰들을 검색하여 리뷰 리스트를 반환
+	 * 	매개변수 : 상품고유키
+	 * 	반환 : 리뷰 리스트
+	 */	
+	 public List<Review> selectReviewByProductKey(Connection conn, int productKey){
+		 PreparedStatement pstmt=null;
+		 ResultSet rs=null;
+		 List<Review> result=new ArrayList<>();
+		 try {
+			 pstmt=conn.prepareStatement(sql.getProperty("selectReviewByProductKey"));
+			 pstmt.setInt(1, productKey);
+			 rs=pstmt.executeQuery();
+			 while(rs.next()) {
+				 
+			 }
+		 }catch(SQLException e) {
+			 e.printStackTrace();
+		 }finally {
+			 close(rs);
+			 close(pstmt);
+		 }return result;
+	 }
 	
 	
 	
@@ -265,4 +288,7 @@ public class ShoppingmallDao {
 		p.setProductImgs(imgs);
 		return p;
 	}
+	
+	
+	
 }

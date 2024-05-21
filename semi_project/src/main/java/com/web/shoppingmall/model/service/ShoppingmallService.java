@@ -7,9 +7,9 @@ import static com.web.shoppingmall.model.dao.ShoppingmallDao.getDao;
 import java.sql.Connection;
 import java.util.List;
 
-import com.web.shoppingmall.model.dto.Color;
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductOption;
+import com.web.user.model.dto.User;
 /*
  * 	쇼핑몰 관련 서비스 클래스
  */
@@ -93,4 +93,17 @@ public class ShoppingmallService {
 		close(conn);
 		return result;
 	}
+	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에대한 리뷰들을 가진 회원 객체를 반환하는 메소드
+	 * 	상품의 고유키로 리뷰들을 검색하여 리뷰 리스트를 반환
+	 * 	매개변수 : 상품고유키
+	 * 	반환 : 리뷰 리스트
+	 */	
+	 public List<User> selectReviewByProductKey(int productKey){
+		 Connection conn=getConnection();
+		 List<User> result=getDao().selectReviewByProductKey(conn, productKey);
+		 close(conn);
+		 return result;
+	 }
 }
