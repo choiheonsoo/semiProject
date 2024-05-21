@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -22,7 +21,7 @@ import com.web.shoppingmall.model.dto.ProductImg;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.ProductSize;
 import com.web.shoppingmall.model.dto.Review;
-import com.web.shoppingmall.model.dto.ReviewImg;
+import com.web.user.model.dto.User;
 
 /*
  * 쇼핑몰 dao
@@ -195,21 +194,21 @@ public class ShoppingmallDao {
 	}
 	
 	/*
-	 * 	쇼핑몰 상품 상세페이지의 상품에대한 리뷰객체를 반환하는 메소드
+	 * 	쇼핑몰 상품 상세페이지의 상품에대한 리뷰객체리스트를 담고있는 회원객체리스트를 반환하는 메소드
 	 * 	상품의 고유키로 리뷰들을 검색하여 리뷰 리스트를 반환
 	 * 	매개변수 : 상품고유키
 	 * 	반환 : 리뷰 리스트
 	 */	
-	 public List<Review> selectReviewByProductKey(Connection conn, int productKey){
+	 public List<User> selectReviewByProductKey(Connection conn, int productKey){
 		 PreparedStatement pstmt=null;
 		 ResultSet rs=null;
-		 List<Review> result=new ArrayList<>();
+		 List<User> result=new ArrayList<>();
 		 try {
 			 pstmt=conn.prepareStatement(sql.getProperty("selectReviewByProductKey"));
 			 pstmt.setInt(1, productKey);
 			 rs=pstmt.executeQuery();
 			 while(rs.next()) {
-				 
+				 getUser(result, rs);
 			 }
 		 }catch(SQLException e) {
 			 e.printStackTrace();
@@ -290,5 +289,15 @@ public class ShoppingmallDao {
 	}
 	
 	
-	
+	private List<User> getUser(List<User> users, ResultSet rs) throws SQLException{
+		String userId=rs.getString("USER_ID");
+		if(users.stream().anyMatch(e->e.equals(userId))) {
+			users.stream().filter(e->e.equals(userId)).forEach(u->{
+				//
+			});
+		}else {
+			
+		}
+		return users;
+	}
 }
