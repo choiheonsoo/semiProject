@@ -45,7 +45,6 @@ public class ApiListener implements ServletContextListener {
     	
     }
     public void parseData() {
-		System.out.println("왔지롱 ㅋㅋ");
 //		try(BufferedReader br = new BufferedReader(new FileReader(dogFacilityPath))) {
 //			String line;
 //			String holiday="확인 필요";
