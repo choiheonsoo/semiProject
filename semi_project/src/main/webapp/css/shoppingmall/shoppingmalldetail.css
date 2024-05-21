@@ -123,6 +123,10 @@
 	display:flex;
 	justify-content:center;
 }
+.stockalarm{
+	font-weight:900;
+	color:red;
+}
 /* 구매버튼 */
 .purchaseButton{
 	height:auto;

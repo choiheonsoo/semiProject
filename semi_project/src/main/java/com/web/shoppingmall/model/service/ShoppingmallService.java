@@ -56,14 +56,40 @@ public class ShoppingmallService {
 	}
 	
 	/*
-	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 사이즈 옵션의 색상 옵션을 가져오는 메소드
-	 * 	상품의 고유키와 사이즈로 색상을 검색하여 가져온다
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 상품옵션 객체를 반환하는 메소드
+	 * 	상품의 고유키로 검색하여 상품옵션객체를 가져온다
+	 * 	매개변수 : 상품고유키, 사이즈
+	 * 	반환 : 상품옵션 객체
+	 */
+	public ProductOption selectProductOptionByKey(int productKey) {
+		Connection conn=getConnection();
+		ProductOption result=getDao().selectProductOptionByKey(conn, productKey);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 사이즈 옵션에 대한 상품옵션 객체리스트를 반환하는 메소드
+	 * 	상품의 고유키와 사이즈로 검색하여 상품옵션객체리스트를 가져온다
 	 * 	매개변수 : 상품고유키, 사이즈
 	 * 	반환 : 상품옵션 리스트
 	 */
-	public List<ProductOption> selectColorBySize(int productKey, String size){
+	public List<ProductOption> selectProductOptionBySize(int productKey, String size){
 		Connection conn=getConnection();
-		List<ProductOption> result=getDao().selectColorBySize(conn, productKey, size);
+		List<ProductOption> result=getDao().selectProductOptionBySize(conn, productKey, size);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 사이즈 옵션에 대한 상품옵션 객체를 반환하는 메소드
+	 * 	상품의 고유키와 사이즈로 검색하여 상품옵션객체를 가져온다
+	 * 	매개변수 : 상품고유키, 사이즈
+	 * 	반환 : 상품옵션 객체
+	 */
+	public ProductOption selectProductOptionByColor(int productKey, String color){
+		Connection conn=getConnection();
+		ProductOption result=getDao().selectProductOptionByColor(conn, productKey, color);
 		close(conn);
 		return result;
 	}

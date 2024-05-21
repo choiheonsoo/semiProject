@@ -116,8 +116,38 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 상품옵션 객체를 반환하는 메소드
+	 * 	상품의 고유키와 사이즈로 검색하여 상품옵션객체를 가져온다
+	 * 	매개변수 : 상품고유키
+	 * 	반환 : 상품옵션 객체
+	 */
+	public ProductOption selectProductOptionByKey(Connection conn, int productKey){
+		ProductOption result=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectProductOptionByKey"));
+			pstmt.setInt(1, productKey);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result=new ProductOption().builder().stock(rs.getInt("STOCK")).build();
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 	
-	public List<ProductOption> selectColorBySize(Connection conn, int productKey, String size){
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 사이즈 옵션에 대한 상품옵션 객체리스트를 반환하는 메소드
+	 * 	상품의 고유키와 사이즈로 검색하여 상품옵션객체를 가져온다
+	 * 	매개변수 : 상품고유키, 사이즈
+	 * 	반환 : 상품옵션 리스트
+	 */
+	public List<ProductOption> selectProductOptionBySize(Connection conn, int productKey, String size){
 		List<ProductOption> result=new ArrayList<>();
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
@@ -137,7 +167,31 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
-	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 상품옵션 객체를 반환하는 메소드
+	 * 	상품의 고유키와 색상으로 검색하여 상품옵션객체를 가져온다
+	 * 	매개변수 : 상품고유키, 색상
+	 * 	반환 : 상품옵션 객체
+	 */
+	public ProductOption selectProductOptionByColor(Connection conn, int productKey, String color){
+		ProductOption result=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectProductOptionByColor"));
+			pstmt.setInt(1, productKey);
+			pstmt.setString(2, color);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result=new ProductOption().builder().stock(rs.getInt("STOCK")).build();
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 	
 	
 	

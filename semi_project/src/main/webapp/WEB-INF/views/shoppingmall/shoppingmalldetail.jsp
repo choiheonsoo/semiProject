@@ -13,15 +13,16 @@
 	boolean first=true;
 	if(p.getProductOption()!=null){
 		for(ProductOption po:p.getProductOption()){
-			Map<String, String> m=new HashMap<>();
-			if(po.getColor()!=null&&po.getProductSize()!=null){
+			//Map<size, color>
+			Map<String, String> m=new HashMap<>(); 
+			if(po.getColor().getColor()!=null&&po.getProductSize().getPSize()!=null){
 				m.put(po.getProductSize().getPSize(),po.getColor().getColor());
 				options.add(m);
-			}else if(po.getColor()==null&&po.getProductSize()!=null){
+			}else if(po.getColor().getColor()==null&&po.getProductSize().getPSize()!=null){
 				m.put(po.getProductSize().getPSize(),"NULL");
 				options.add(m);
-			}else if(po.getColor()!=null&&po.getProductSize()==null){
-				m.put("NULL",po.getProductSize().getPSize());
+			}else if(po.getColor().getColor()!=null&&po.getProductSize().getPSize()==null){
+				m.put("NULL",po.getColor().getColor());
 				options.add(m);
 			}
 		}
@@ -66,6 +67,7 @@
 						<button onclick='minus()'>-</button>
 						<span class="purchaseQuantity" id="purchaseQuantity">1</span>
 						<button onclick='plus()'>+</button>
+						<span class="stockalarm"></span>
 					</div>
 					<div class="totalPrice">
 						<span>총 결제가격 : <span class="totalPrice" id="totalPrice"><%=p.getPrice()*(100-p.getRateDiscount())/100 %></span>원</span> 
@@ -248,14 +250,40 @@
 			count=parseInt(count)-1;
 			$("#purchaseQuantity").text(count);
 			$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
+			$(".stockalarm").text("");
 		}
 	}
 	//상품개수 플러스버튼 누를 시 실행되는 함수
 	const plus=()=>{
 		let count=$("#purchaseQuantity").text();
 		count=parseInt(count)+1;
-		$("#purchaseQuantity").text(count);
-		$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
+		const size=$("select[name=size]").val();
+		const color=$("select[name=color]").val();
+		console.log(count+"/"+size+"/"+color);
+		$.ajax({
+			url:"<%=request.getContextPath()%>/shoppingmall/productoption.do",
+    		type:"POST",
+    		data:{"productKey":<%=p.getProductKey()%>, "size":size, "color":color},
+    		success:(data)=>{
+    			console.log(data);
+    			let stock=0;
+    			if(Array.isArray(data)){
+	    			$.each(data,(i,v)=>{
+	    				if(v["color"]["color"]==color){
+	    					stock=v["stock"];
+	    				}
+	    			});
+    			}else{
+    				stock=data["stock"];
+    			}
+				if(count<=stock){
+					$("#purchaseQuantity").text(count);
+					$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
+				}else{
+					$(".stockalarm").text("재고가 "+stock+"개 남았습니다.");
+				}
+    		}
+		});
 	}
 	$(document).ready(()=>{
 		//메뉴 고정 함수
@@ -274,7 +302,7 @@
 	    
 	});
 	    //옵션 태그 추가
-	    <%if(options!=null){%>
+	    <%if(!options.isEmpty()){%>
 	    	const $optionDiv=$("<div>").addClass("option").append($("<span>").text("옵션선택 *"));
 	    	<%if(!options.stream().anyMatch(e->e.containsKey("NULL"))){%>
 	    		const $sizeSelect=$("<select>").attr("name","size").append($("<option>").attr({disabled:true,selected:true}).text("사이즈를 선택해주세요"));
@@ -299,7 +327,7 @@
     				const $colorSelect=$("<select>").attr("name","color").append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
     				<%for(Map<String,String> m:options){%>
     					<%for(Map.Entry<String, String> e:m.entrySet()){%>
-    						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>"));
+    						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>").text("<%=e.getValue()%>"));
     					<%};%>
     				<%}%>
     				$optionDiv.append($colorSelect);
@@ -310,15 +338,19 @@
 	    //사이즈 선택시 색상 옵션태그 추가하는 함수
 	    $("select[name='size']").change((e)=>{
 	    	const size=$(e.target).val();
-	    	console.log(size);
+	    	$("select[name=color]").html("");
 	    	$.ajax({
 	    		url:"<%=request.getContextPath()%>/shoppingmall/productoption.do",
 	    		type:"POST",
 	    		data:{"productKey":<%=p.getProductKey()%>, "size":size},
-	    		success:(response)=>{
-	    			console.log(response);
+	    		success:(data)=>{
+	    			console.log(data);
+	    			$.each(data,(i,v)=>{
+	    				console.log(v["stock"]+" / "+v["color"]["color"]);
+	    				$("select[name=color]").append($("<option>").attr("name",v["color"]["color"]).text(v["color"]["color"]));
+	    			});
 	    		}
-	    	})
+	    	});
 	    });
 	//리뷰보기를 눌러서 넘어왔을 때 리뷰로 스크롤이동시키는 함수
 	$(window).on('load', ()=>{
