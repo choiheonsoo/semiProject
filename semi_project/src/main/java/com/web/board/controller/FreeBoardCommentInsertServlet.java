@@ -46,7 +46,7 @@ public class FreeBoardCommentInsertServlet extends HttpServlet {
 											.build();
 		int result = getService().insertBoardComment(bc);
 		String msg = result>0?"댓글 등록 성공" : "댓글 등록 실패";
-		String loc = "/board/freeboardview.do?no="+bullNo;
+		String loc = "/board/boardview.do?no="+bullNo;
 		request.setAttribute("msg",msg);
 		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);

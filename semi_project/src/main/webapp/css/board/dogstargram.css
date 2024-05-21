@@ -116,26 +116,53 @@
 	margin:0;
 }
 
-.sectionFooter{
-	width:100vw;
-	overflow-y:hidden;
-	display:flex;
-	bottom:0;
+#freeboardFooter1{
+   margin-top:1%;
+   display:flex;
+   width:100vw;
+   justify-content: center;
+      height:5%;
+}
+#freeboardSearch{
+   position:relative;
+   left:1.5%;
+   display: flex;
+   justify-content: center;
+   border:1px solid gray;
+   border-radius: 5px;
+}
+#freeboardSearch *{
+   border: 0px;
+}
+#freeboardInsert{
+   position: relative;
 }
 #freeboardFooter2{
    margin-top:1%;
    margin-bottom:2%;
    display:flex;
    justify-content: center;
-   margin-left:auto;
-   margin-right:auto;
-   position: relative;
-   left:25px;
 }
 #freeboardFooter2 a{
    text-decoration: none;
-   color:gray;
+   color:black;
    text-align: center;
+	font-weight: 400;
+}
+#freeboardFooter2 p{
+	text-align: center;
+	color:gray;
+}
+.insert_board{
+	position: relative;
+	left:27%;
+	padding:3px;
+	border-radius:5px;
+	background-color:#333333;
+	color:white;
+	border:1px solid lightgray;
+	font-size:15px;
+	font-weight:400;
 }
 .page1{
    width:50px;
@@ -150,19 +177,16 @@
    border-radius: 6px;
    align-content: center;
 }
-#freeboardInsert{
-	position: relative;
-	right:100px;
-	top:15px;
-}
-#freeboardInsert>input[type=button]{
-	background-color:gray;
-	color:white;
-	border-style:none;
-	border-radius:5px;
-	font-size:13px;
-	width:65px;
-	height:25px;
+.visible-box{
+   position:relative;
+   left:40%;
+   top: 10px;
+   width: 65px;
+   height:60px;
+   border:1px solid gray;
+   border-radius:5px;
+   font-size:15px;
+   font-weight: 400;
 }
 .popup {
     position: fixed;

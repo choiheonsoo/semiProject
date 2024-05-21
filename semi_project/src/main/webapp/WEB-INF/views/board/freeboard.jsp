@@ -25,15 +25,28 @@
 			<li class="board-date">작성일</li>
 			<li class="board-read">조회수</li>
 		</ul>
-		<%for(Bulletin b : bulletins){ %>
-		<ul class="board-body">
-			<li class="board-num"><%=b.getBullNo() %></li>
-			<li class="board-body-title"><a href="<%=request.getContextPath()%>/board/freeboardview.do?no=<%=b.getBullNo() %>"><%=b.getTitle() %></a></li>
-			<li class="board-writer"><%=b.getUserId() %></li>
-			<li class="board-date"><%=b.getRDate() %></li>
-			<li class="board-read"><%=b.getHits() %></li>
-		</ul>
-		<%} %>
+		<%for(Bulletin b : bulletins){ 
+			if(b.getCategoryNo()==2){%>
+				<ul class="board-body" style="background-color:black; color:red;">
+					<li class="board-num"><%=b.getBullNo() %></li>
+					<li class="board-body-title"><a style="color:red" href="<%=request.getContextPath()%>/board/boardview.do?no=<%=b.getBullNo() %>"><%=b.getTitle() %></a></li>
+					<li class="board-writer"><%=b.getUserId() %></li>
+					<li class="board-date"><%=b.getRDate() %></li>
+					<li class="board-read"><%=b.getHits() %></li>
+				</ul>
+		<%	}
+		}%>
+		<%for(Bulletin b : bulletins){ 
+			if(b.getCategoryNo()==3){%>
+				<ul class="board-body">
+					<li class="board-num"><%=b.getBullNo() %></li>
+					<li class="board-body-title"><a href="<%=request.getContextPath()%>/board/boardview.do?no=<%=b.getBullNo() %>"><%=b.getTitle() %></a></li>
+					<li class="board-writer"><%=b.getUserId() %></li>
+					<li class="board-date"><%=b.getRDate() %></li>
+					<li class="board-read"><%=b.getHits() %></li>
+				</ul>
+		<%	}
+		}%>
 	</div>
 	<div class="visible-box" style="display: none">
 		<p>제목</p>

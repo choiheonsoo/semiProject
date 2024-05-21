@@ -17,14 +17,14 @@ import com.web.dog.model.dto.Dog;
 /**
  * Servlet implementation class FreeBoardViewServlet
  */
-@WebServlet("/board/freeboardview.do")
-public class FreeBoardViewServlet extends HttpServlet {
+@WebServlet("/board/boardview.do")
+public class BoardViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FreeBoardViewServlet() {
+    public BoardViewServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
