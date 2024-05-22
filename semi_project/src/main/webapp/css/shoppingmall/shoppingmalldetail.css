@@ -363,9 +363,13 @@
 	height:auto;
 }
 /* 리뷰 페이지바 */
-#pagebar button{
+.pagebarnumbtn{
 	background:none;
-	
+	border:1px solid #346aff;
+}
+.pagebarinequality{
+	background:none;
+	border:none;
 }
 /* q&a 컨테이너 */
 .qnaContainer{

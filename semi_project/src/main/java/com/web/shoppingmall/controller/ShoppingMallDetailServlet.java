@@ -48,18 +48,18 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		int pageEnd=pageNo+pageBarSize-1;
 		
 		String pageBar="<div id='pagebar'>";
-		pageBar+="<button class=''><<</button>";
-		pageBar+="<button class=''><</button>";
+		pageBar+="<button class='pagebarinequality'><<</button>";
+		pageBar+="<button class='pagebarinequality'><</button>";
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
 			if(pageNo==cPage) {
-				pageBar+="<button class=''>"+pageNo+"</button>";
+				pageBar+="<button class='pagebarnumbtn'>"+pageNo+"</button>";
 			}else {
-				pageBar+="<button class=''>"+pageNo+"</button>";
+				pageBar+="<button class='pagebarnumbtn'>"+pageNo+"</button>";
 			}
 			pageNo++;
 		}
-		pageBar+="<button class=''>></button>";
-		pageBar+="<button class=''>>></button>";
+		pageBar+="<button class='pagebarinequality'>></button>";
+		pageBar+="<button class='pagebarinequality'>>></button>";
 		pageBar+="</div>";
 		
 		request.setAttribute("pageBar", pageBar);
