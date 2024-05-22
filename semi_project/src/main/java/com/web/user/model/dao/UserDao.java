@@ -140,6 +140,24 @@ public class UserDao {
 		} return userId;
 	}
 	
+	public String searchUserById(Connection con, String id) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String userId = "";
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("searchUserById"));
+			pstmt.setString(1,id);
+			rs=pstmt.executeQuery();
+			if(rs.next())userId = rs.getString(1);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		}
+		return userId;
+	}
+	
 	public User selectUser(Connection con, String id, String email) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

@@ -59,6 +59,13 @@ public class UserService {
 		return userId;
 	}
 	
+	public String searchUserById(String id) {
+		Connection con= getConnection();
+		String result = getUserDao().searchUserById(con, id);
+		close(con);
+		return result;
+	}
+	
 	public User selectUser(String id, String email) {
 		Connection con = getConnection();
 		User user = getUserDao().selectUser(con, id, email);
