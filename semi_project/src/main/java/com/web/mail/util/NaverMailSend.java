@@ -39,7 +39,7 @@ public class NaverMailSend {
 		    // 수신자 메일주소 설정
 		    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 		    // 메일 제목 설정
-		    message.setSubject("산책하개 사이트 임시 비밀번호 메일입니다.");
+		    message.setSubject("산책하개 사이트 이용을 위한 인증번호 메일입니다.");
 		    // 메일 내용 설정
 		    message.setText("비밀번호 변경 인증번호는 [  "+authenCode+ "  ] 입니다.");
 		    // 메세지 전송
