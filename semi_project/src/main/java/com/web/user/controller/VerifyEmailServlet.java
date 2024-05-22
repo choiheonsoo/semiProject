@@ -33,7 +33,9 @@ public class VerifyEmailServlet extends HttpServlet {
 		String inputCode = request.getParameter("inputCode");
 		response.setContentType("application/json;charset=utf-8");
 		Gson gson = new Gson();
+		System.out.println("사용자가 입력한 Code : "+inputCode);
 		boolean result = inputCode.equals(authenCode);
+		System.out.println("session == 사용자? "+result);
 		gson.toJson(result, response.getWriter());
 	}
 

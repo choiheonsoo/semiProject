@@ -149,7 +149,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 			         <div id="verifyBox">
 				        <input type="text" id="verifyText">
 				        <button id="checkMsgBtn">인증하기</button>
-			        </div>
+			         </div>
 			       
 			    <label for="phone">휴대전화 *</label>
 			    <input type="tel" id="phone" name="phone" minlength="8" required>
@@ -191,40 +191,63 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 </section>
 
 <script>
-	if(<%=(String)request.getSession().getAttribute("isLogin")%> == null){
-		const $dogImg = document.querySelector("#dogImg");
-		// 이벤트가 선택됐을 때 발생하는 이벤트
-		$dogImg.addEventListener("change", (e) => {
-			document.getElementById("dogPrev").innerHTML="";
-			const reader = new FileReader();
-			reader.readAsDataURL(e.target.files[0])
-			
-			// FileReader 가 이미지를 모두 읽어왔을 때(로딩 됐을 때) 발생하는 이벤트
-			reader.onload = function(event){
-				const $img = document.createElement("img");
-				// base64 인코드 된 정보를 img태그에 담음
-				$img.setAttribute("style", "width:98%");
-				$img.setAttribute("src", event.target.result);
-				document.getElementById("dogPrev").appendChild($img);
-			} 
+	//이메일 인증 로직
+	const verify = () => {
+		$.post("<%=request.getContextPath()%>/user/sendemail.do",{
+			"email":$("#email").val()	// 입력한 이메일을 서블릿으로 넘김(이메일로 메일 발신 및 session에 코드 저장)
 		})
-	
-		document.querySelector("label[for=ishavingdog]").addEventListener("change",e=>{
-			const $inputs = document.querySelectorAll("label[for=ishavingdog]>input");
-			if($inputs[0].checked){
-				document.querySelectorAll("div#dogInfo *").forEach(e=>{
-					e.style.display="block";
-				})
+		.done((user)=>{	// user? 해당 서블릿에서 DB에 접속해서 가져온 입력한 email 값을 가진 유저
+			if(user.email==null){	// 사용중인 이메일이 아니라면,
+				$("#verifyBox").css("display", "block");	// 인증번호 입력 박스 등장
+				$("#checkMsgBtn").off('click').on('click', e => {	// 챗 지피티의 도움... 재귀호출...
+			    	$.post("<%=request.getContextPath()%>/user/verifyemail.do", 
+			    		{"inputCode": $("#verifyText").val()})
+			        .done((data)=> {	// data ? Servlet에서 입력한 값.equals(session에 저장한 인증코드)
+			        		alert("인증코드가 발송되었습니다.");
+			            if(data==true){	// 인증코드가 같을 경우
+			               	$("div.enrollTab>button[type=submit]").css("display", "block");
+			            } else {
+			            	alert("올바른 인증코드가 아닙니다. 다시 시도해주세요.");
+			            }
+			         });
+			    });
 			} else {
-				document.querySelectorAll("div#dogInfo *").forEach(e=>{
-					e.style.display="none";
-				})
+				alert("이미 사용 중인 이메일입니다.");
 			}
-		})
-	} else {
-		alert('잘못된 접근 입니다.');
-		location.assign("<%=request.getContextPath()%>");
+		});
 	}
+	
+	const $dogImg = document.querySelector("#dogImg");
+	// 이벤트가 선택됐을 때 발생하는 이벤트
+	$dogImg.addEventListener("change", (e) => {
+		document.getElementById("dogPrev").innerHTML="";
+		const reader = new FileReader();
+		reader.readAsDataURL(e.target.files[0])
+				
+		// FileReader 가 이미지를 모두 읽어왔을 때(로딩 됐을 때) 발생하는 이벤트
+		reader.onload = function(event){
+			const $img = document.createElement("img");
+			// base64 인코드 된 정보를 img태그에 담음
+			$img.setAttribute("style", "width:98%");
+			$img.setAttribute("src", event.target.result);
+			document.getElementById("dogPrev").appendChild($img);
+		} 
+	});
+	
+	document.querySelector("label[for=ishavingdog]").addEventListener("change",e=>{
+		const $inputs = document.querySelectorAll("label[for=ishavingdog]>input");
+		if($inputs[0].checked){
+			document.querySelectorAll("div#dogInfo *").forEach(e=>{
+				e.style.display="block";
+			})
+		} else {
+			document.querySelectorAll("div#dogInfo *").forEach(e=>{
+				e.style.display="none";
+			})
+		}
+	});
+	
+	// 비밀번호 유효 검사
 	const checkInfo=()=>{
 		const pw = document.getElementById("password").value;
 		const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
@@ -232,32 +255,9 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 			alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
 			return false;
 		} else {
-			true;	
+			return true;	
 		}
 	}
-	
-	const verify = () => {
-		$.post("<%=request.getContextPath()%>/user/sendemail.do",{
-			"email":$("#email").val()
-		})
-		.done((user)=>{
-			if(user==null){
-				$("#verifyBox").css("display", "block");
-				$("#checkMsgBtn").off('click').on('click', e => {
-		            $.post("<%=request.getContextPath()%>/user/verifyemail.do", {
-		                "inputCode": $("#verifyText").val()
-		            })
-		            .done((data)=> {
-		                if(data){
-		                	$("div.enrollTab>button").css("display", "block");
-		                }
-		            });
-		        });
-			} else {
-				alert("이미 사용 중인 이메일입니다.");
-			}
-	    });
-	}	
 </script>
 
 
