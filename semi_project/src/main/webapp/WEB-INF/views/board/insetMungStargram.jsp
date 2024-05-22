@@ -35,7 +35,7 @@
             imageInputs.each(function() {
                 if ($(this).val() !== '') {
                     imageSelected = true;
-                    return false; // 이미지가 선택된 경우 각 이미지 반복문을 종료합니다.
+                    return false; // 이미지가 선택된 경우 각 이미지 반복문을 종료
                 }
             });
             if($("input[name=title]").val()==""){
