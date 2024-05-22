@@ -22,7 +22,7 @@ import com.web.user.model.service.UserService;
 /**
  * Servlet implementation class EnrollUserEndServlet
  */
-@WebServlet("/user/enrollend.do")
+@WebServlet("/user/enrollend.find")
 public class EnrollUserEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -38,6 +38,7 @@ public class EnrollUserEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		// 회원 가입 시 대표 반려견 사진 업로드 시 파일 저장하는 로직
 		String path = getServletContext().getRealPath("/upload/user");
 		File dir = new File(path);

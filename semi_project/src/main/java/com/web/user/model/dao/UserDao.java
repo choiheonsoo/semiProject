@@ -91,6 +91,58 @@ public class UserDao {
 		} return result;
 	}
 	
+	public int changeUserPw(Connection con, String id, String pw) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("changeUserPw"));
+			pstmt.setString(1, pw);
+			pstmt.setString(2, id);
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		} return result;
+	}
+	
+	
+	public String searchUserId(Connection con, String email, String name) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String userId = "";
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("searchUserId"));
+			pstmt.setString(1, email);
+			pstmt.setString(2, name);
+			rs=pstmt.executeQuery();
+			if(rs.next()) userId=rs.getString(1);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		} return userId;
+	}
+	
+	public User selectUser(Connection con, String id, String email) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		User user = null;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("findUser"));
+			pstmt.setString(1, id);
+			pstmt.setString(2, email);
+			rs = pstmt.executeQuery();
+			if(rs.next()) user=getUser(rs);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		} return user;
+	}
+	
 	private static User getUser(ResultSet rs) throws SQLException{
 		return User.builder()
 				.userId(rs.getString("user_id"))

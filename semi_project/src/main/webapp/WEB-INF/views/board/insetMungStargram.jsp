@@ -4,7 +4,7 @@
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/board/insertMungStargram.css">
 <section class="content">
-	 <h3>자유게시판</h3>
+	 <h3>멍스타그램</h3>
     <h6>게시글 등록하기</h6>
     <div class="br"></div>
     <div class="insertBoard1">
@@ -40,10 +40,6 @@
             });
             if($("input[name=title]").val()==""){
             	alert('제목을 입력하세요.');
-            	return false;
-            }
-            if($("input[name=content]").text()==""){
-            	alert('내용을 입력하세요.');
             	return false;
             }
             if (!imageSelected) {

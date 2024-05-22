@@ -107,14 +107,14 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 	 <div class="container">
         <h1>회원가입</h1>
         <p> * 표시는 필수 입력 값 입니다.</p>
-        <form id="signupForm" action="<%=request.getContextPath() %>/user/enrollend.do" method="POST" enctype="multipart/form-data">
+        <form id="signupForm" onsubmit="return checkInfo();" action="<%=request.getContextPath() %>/user/enrollend.find" method="POST" enctype="multipart/form-data">
         	<div class="enrollTab">
 	        	<div id="personInfo">
 		            <label for="userId">회원 아이디 *</label>
 		            <input type="text" id="userId" name="userId" placeholder=" 6글자 이상" minlength="6" required>
 		
 		            <label for="password">비밀번호 *</label>
-		            <input type="password" id="password" name="password" placeholder=" 특수기호 포함 8글자 이상" minlength="8" required>
+		            <input type="password" id="password" name="password" placeholder=" 영문자,숫자 및 특수기호 포함 8~15글자" minlength="8" required>
 		
 		            <label for="name">이름 *</label>
 		            <input type="text" id="name" name="name" minlength="2" required>
@@ -161,37 +161,55 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 </section>
 
 <script>
-	const $dogImg = document.querySelector("#dogImg");
-	// 이벤트가 선택됐을 때 발생하는 이벤트
-	$dogImg.addEventListener("change", (e) => {
-		document.getElementById("dogPrev").innerHTML="";
-		const reader = new FileReader();
-		reader.readAsDataURL(e.target.files[0])
+	if(<%=(String)request.getSession().getAttribute("isLogin")%> == null){
+		<%
+			request.getSession().invalidate();
+		%>
 		
-		// FileReader 가 이미지를 모두 읽어왔을 때(로딩 됐을 때) 발생하는 이벤트
-		reader.onload = function(event){
-			const $img = document.createElement("img");
-			// base64 인코드 된 정보를 img태그에 담음
-			$img.setAttribute("style", "width:98%");
-			$img.setAttribute("src", event.target.result);
-			document.getElementById("dogPrev").appendChild($img);
-		} 
-	})
-
-	document.querySelector("label[for=ishavingdog]").addEventListener("change",e=>{
-		const $inputs = document.querySelectorAll("label[for=ishavingdog]>input");
-		if($inputs[0].checked){
-			document.querySelectorAll("div#dogInfo *").forEach(e=>{
-				console.log(e);
-				e.style.display="block";
-			})
-		} else {
-			document.querySelectorAll("div#dogInfo *").forEach(e=>{
-				console.log(e);
-				e.style.display="none";
-			})
+		const $dogImg = document.querySelector("#dogImg");
+		// 이벤트가 선택됐을 때 발생하는 이벤트
+		$dogImg.addEventListener("change", (e) => {
+			document.getElementById("dogPrev").innerHTML="";
+			const reader = new FileReader();
+			reader.readAsDataURL(e.target.files[0])
+			
+			// FileReader 가 이미지를 모두 읽어왔을 때(로딩 됐을 때) 발생하는 이벤트
+			reader.onload = function(event){
+				const $img = document.createElement("img");
+				// base64 인코드 된 정보를 img태그에 담음
+				$img.setAttribute("style", "width:98%");
+				$img.setAttribute("src", event.target.result);
+				document.getElementById("dogPrev").appendChild($img);
+			} 
+		})
+	
+		document.querySelector("label[for=ishavingdog]").addEventListener("change",e=>{
+			const $inputs = document.querySelectorAll("label[for=ishavingdog]>input");
+			if($inputs[0].checked){
+				document.querySelectorAll("div#dogInfo *").forEach(e=>{
+					e.style.display="block";
+				})
+			} else {
+				document.querySelectorAll("div#dogInfo *").forEach(e=>{
+					e.style.display="none";
+				})
+			}
+		})
+		
+		const checkInfo=()=>{
+			const pw = document.getElementById("password").value;
+			const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+			if(!reg.test(pw)){
+				alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
+				return false;
+			} else {
+				true;
+			}
 		}
-	})
+	} else {
+		alert('잘못된 접근 입니다.');
+		location.assign("<%=request.getContextPath()%>");
+	}
 </script>
 
 

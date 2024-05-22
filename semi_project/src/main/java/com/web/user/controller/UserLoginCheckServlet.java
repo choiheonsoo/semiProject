@@ -43,6 +43,7 @@ public class UserLoginCheckServlet extends HttpServlet {
 			System.out.println(dogImg);
 			session.setAttribute("loginUser", user);
 			session.setAttribute("dogImg", dogImg);
+			session.setAttribute("isLogin", true);
 			request.setAttribute("msg", "어서오세요!");
 			request.setAttribute("loc", "/");
 			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
