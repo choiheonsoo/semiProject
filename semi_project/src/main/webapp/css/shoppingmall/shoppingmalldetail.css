@@ -366,10 +366,20 @@
 .pagebarnumbtn{
 	background:none;
 	border:1px solid #346aff;
+	margin-right:15px;
+	height:30px;
+	width:30px;
+	border-radius:5px;
+	transition:hover .1s ease;
+}
+.pagebarnumbtn:hover{
+	color:white;
+	background-color:#346aff;
 }
 .pagebarinequality{
 	background:none;
 	border:none;
+	margin-right:15px;
 }
 /* q&a 컨테이너 */
 .qnaContainer{
