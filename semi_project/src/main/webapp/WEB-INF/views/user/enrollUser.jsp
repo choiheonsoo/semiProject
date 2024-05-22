@@ -159,7 +159,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 			         </div>
 			       
 			    <label for="phone">휴대전화 *</label>
-			    <input type="tel" id="phone" name="phone" minlength="8" required>
+			    <input type="tel" id="phone" name="phone" placeholder="' - '을 제외하고 입력해주세요." minlength="8" required>
 			
 			    <label for="address">주소</label>
 			    <input type="text" id="address" name="address">
@@ -260,7 +260,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		const pw = document.getElementById("password").value;
 		const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 		const regid = /^[a-z]+[a-z0-9]{5,13}$/g;
-		const regphone = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
+		const regphone = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
 		if(!reg.test(pw)){
 			$("#password").val("");
 			$("#passwordck").val("");
@@ -274,7 +274,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 			$("#password").focus();
 			return false;
 		} else if(!regid.test($("#userId").val())){
-			$("#userId").val("");
+			$("#userId").val("").attr("readonly",false);
 			alert("아이디는 영문자로 시작하여 숫자를 포함하여 6~14글자로 설정해주세요.");
 			$("#userId").focus();
 			return false;
