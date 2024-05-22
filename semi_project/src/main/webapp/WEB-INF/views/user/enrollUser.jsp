@@ -41,6 +41,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		flex-direction: column;
 	}
 	form#signupForm input{
+		margin-bottom: 2%;
 		border-color: lightgray;
 		border-left-style: none;
 		border-right-style: none;
@@ -103,7 +104,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		width: 250px;
 		/* background-color: magenta; */
 	}
-	button#verifyBtn, button#checkMsgBtn{
+	button#verifyBtn, button#checkMsgBtn, button#verifyId{
 		padding: 5px;
 		font-size: 16px;
 		background-color: rgba(13,110,253,0.53);
@@ -115,7 +116,8 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		transition: background-color 0.3s ease;
 	}
 	button#verifyBtn:hover,
-	button#checkMsgBtn:hover{
+	button#checkMsgBtn:hover,
+	button#verifyId:hover{
 		background-color: rgba(13,110,253,0.84);
 	}
 	div#verifyBox{
@@ -132,10 +134,15 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
         	<div class="enrollTab">
 	        	<div id="personInfo">
 		            <label for="userId">회원 아이디 *</label>
-		            <input type="text" id="userId" name="userId" placeholder=" 6글자 이상" minlength="6" required>
-		
+		            <div>
+		            	<input type="text" id="userId" name="userId" placeholder=" 영문자, 숫자 6~14글자" minlength="6" required>
+		            	<button onclick="checkId();" id="verifyId">중복확인</button>
+					</div>
+					
 		            <label for="password">비밀번호 *</label>
 		            <input type="password" id="password" name="password" placeholder=" 영문자,숫자 및 특수기호 포함 8~15글자" minlength="8" required>
+		            <input type="password" id="passwordck" name="password" placeholder=" 비밀번호 확인" minlength="8" required>
+		            <span id="pwresult"></span>
 		
 		            <label for="name">이름 *</label>
 		            <input type="text" id="name" name="name" minlength="2" required>
@@ -144,12 +151,12 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		            <div>
 			            <input type="email" id="email" name="email" required>
 			            <button onclick="verify();" id="verifyBtn">메일발송</button>
-			         </div>
+			        </div>
 			         
 			         <div id="verifyBox">
 				        <input type="text" id="verifyText">
 				        <button id="checkMsgBtn">인증하기</button>
-			        </div>
+			         </div>
 			       
 			    <label for="phone">휴대전화 *</label>
 			    <input type="tel" id="phone" name="phone" minlength="8" required>
@@ -175,9 +182,9 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 					    <option value=<%=breed %>><%=breed %></option>
 					    <%} %>
 	            	</select>
-	            	<label for="dogWeight">반려견 몸무게 *</label>
+	            	<label for="dogWeight">반려견 몸무게</label>
 	            	<input type="text" name="dogWeight">
-	            	<label for="dogImg">대표 반려견 사진 *</label>
+	            	<label for="dogImg">대표 반려견 사진</label>
 	            	<input id="dogImg" type="file" name="dogImg" accept="image/*">
 	            	<div id="dogPrev">
 	            	</div>
@@ -191,73 +198,124 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 </section>
 
 <script>
-	if(<%=(String)request.getSession().getAttribute("isLogin")%> == null){
-		const $dogImg = document.querySelector("#dogImg");
-		// 이벤트가 선택됐을 때 발생하는 이벤트
-		$dogImg.addEventListener("change", (e) => {
-			document.getElementById("dogPrev").innerHTML="";
-			const reader = new FileReader();
-			reader.readAsDataURL(e.target.files[0])
-			
-			// FileReader 가 이미지를 모두 읽어왔을 때(로딩 됐을 때) 발생하는 이벤트
-			reader.onload = function(event){
-				const $img = document.createElement("img");
-				// base64 인코드 된 정보를 img태그에 담음
-				$img.setAttribute("style", "width:98%");
-				$img.setAttribute("src", event.target.result);
-				document.getElementById("dogPrev").appendChild($img);
-			} 
-		})
-	
-		document.querySelector("label[for=ishavingdog]").addEventListener("change",e=>{
-			const $inputs = document.querySelectorAll("label[for=ishavingdog]>input");
-			if($inputs[0].checked){
-				document.querySelectorAll("div#dogInfo *").forEach(e=>{
-					e.style.display="block";
-				})
-			} else {
-				document.querySelectorAll("div#dogInfo *").forEach(e=>{
-					e.style.display="none";
-				})
-			}
-		})
-	} else {
-		alert('잘못된 접근 입니다.');
-		location.assign("<%=request.getContextPath()%>");
-	}
-	const checkInfo=()=>{
-		const pw = document.getElementById("password").value;
-		const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-		if(!reg.test(pw)){
-			alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
-			return false;
-		} else {
-			true;	
-		}
-	}
-	
+	//이메일 인증 로직
 	const verify = () => {
 		$.post("<%=request.getContextPath()%>/user/sendemail.do",{
-			"email":$("#email").val()
+			"email":$("#email").val()	// 입력한 이메일을 서블릿으로 넘김(이메일로 메일 발신 및 session에 코드 저장)
 		})
-		.done((user)=>{
-			if(user==null){
-				$("#verifyBox").css("display", "block");
-				$("#checkMsgBtn").off('click').on('click', e => {
-		            $.post("<%=request.getContextPath()%>/user/verifyemail.do", {
-		                "inputCode": $("#verifyText").val()
-		            })
-		            .done((data)=> {
-		                if(data){
-		                	$("div.enrollTab>button").css("display", "block");
-		                }
-		            });
-		        });
+		.done((user)=>{	// user? 해당 서블릿에서 DB에 접속해서 가져온 입력한 email 값을 가진 유저
+			if(user==null){	// 사용중인 이메일이 아니라면,
+				alert("인증코드가 발송되었습니다.");
+				$("#verifyBox").css("display", "block");	// 인증번호 입력 박스 등장
+				$("#checkMsgBtn").off('click').on('click', e => {	// 챗 지피티의 도움... 재귀호출...
+			    	$.post("<%=request.getContextPath()%>/user/verifyemail.do", 
+			    		{"inputCode": $("#verifyText").val()})
+			        .done((data)=> {	// data ? Servlet에서 입력한 값.equals(session에 저장한 인증코드)
+			            if(data==true){	// 인증코드가 같을 경우
+			            	alert("인증이 완료되었습니다.")
+			               	$("div.enrollTab>button[type=submit]").css("display", "block");
+			            } else {
+			            	alert("올바른 인증코드가 아닙니다. 다시 시도해주세요.");
+			            }
+			         });
+			    });
 			} else {
 				alert("이미 사용 중인 이메일입니다.");
 			}
-	    });
-	}	
+		});
+	}
+	
+	const $dogImg = document.querySelector("#dogImg");
+	// 이벤트가 선택됐을 때 발생하는 이벤트
+	$dogImg.addEventListener("change", (e) => {
+		document.getElementById("dogPrev").innerHTML="";
+		const reader = new FileReader();
+		reader.readAsDataURL(e.target.files[0])
+				
+		// FileReader 가 이미지를 모두 읽어왔을 때(로딩 됐을 때) 발생하는 이벤트
+		reader.onload = function(event){
+			const $img = document.createElement("img");
+			// base64 인코드 된 정보를 img태그에 담음
+			$img.setAttribute("style", "width:98%");
+			$img.setAttribute("src", event.target.result);
+			document.getElementById("dogPrev").appendChild($img);
+		} 
+	});
+	
+	document.querySelector("label[for=ishavingdog]").addEventListener("change",e=>{
+		const $inputs = document.querySelectorAll("label[for=ishavingdog]>input");
+		if($inputs[0].checked){
+			document.querySelectorAll("div#dogInfo *").forEach(e=>{
+				e.style.display="block";
+			})
+		} else {
+			document.querySelectorAll("div#dogInfo *").forEach(e=>{
+				e.style.display="none";
+			})
+		}
+	});
+	
+	// 비밀번호 유효 검사
+	const checkInfo=()=>{
+		const pw = document.getElementById("password").value;
+		const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+		const regid = /^[a-z]+[a-z0-9]{5,13}$/g;
+		const regphone = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
+		if(!reg.test(pw)){
+			$("#password").val("");
+			$("#passwordck").val("");
+			alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
+			$("#password").focus();
+			return false;
+		} else if($("#password").val()!==$("#passwordck").val()){
+			$("#password").val("");
+			$("#passwordck").val("");
+			alert('비밀번호가 일치하지 않습니다.');
+			$("#password").focus();
+			return false;
+		} else if(!regid.test($("#userId").val())){
+			$("#userId").val("");
+			alert("아이디는 영문자로 시작하여 숫자를 포함하여 6~14글자로 설정해주세요.");
+			$("#userId").focus();
+			return false;
+		} else if(!regphone.test($("#phone").val())){
+			$("#phone").val("");
+			alert("올바른 핸드폰 번호를 입력해주세요.");
+			$("#phone").focus();
+			return false;
+		} else {
+			alert("산책하개의 회원이 되신 것을 환영합니다");
+			return true;
+		}
+		
+	}
+	
+	// 비밀번호 일치 검사
+	$("#passwordck").keyup(e=>{
+		$("#pwresult").html("");
+		if($("#password").val()===$("#passwordck").val()){
+			$("<p>").text('비밀번호가 일치합니다.').css('color','green').appendTo($("#pwresult"));
+		} else {
+			$("<p>").text('비밀번호가 불일치합니다.').css('color','red').appendTo($("#pwresult"));
+		}
+	})
+	
+	// 아이디 유효 검사
+	const checkId = () =>{
+		$.post("<%=request.getContextPath()%>/user/searchId.do",
+				{"userId":$("#userId").val()}
+		)
+		.done(id=>{
+			if(id.length>0){
+				alert('이미 사용 중인 아이디 입니다.');
+				document.getElementById("userId").value = "";
+			} else {
+				alert('사용 가능한 아이디 입니다.');
+				$("#userId").attr("readonly", true).css("fontWeight", "bolder");
+			}
+		})
+	}
+
 </script>
 
 

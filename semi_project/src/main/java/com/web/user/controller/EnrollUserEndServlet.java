@@ -46,16 +46,23 @@ public class EnrollUserEndServlet extends HttpServlet {
 		int maxSize=1024*1024*1;
 		MultipartRequest mr = new MultipartRequest(request, path, maxSize, "UTF-8", new DefaultFileRenamePolicy());
 		// String → java.util.Date
-		String dateString = mr.getParameter("birthday");
+		
+		String dateString ="";
+		if(mr.getParameter("birthday")!=null) {
+			dateString = mr.getParameter("birthday");
+		}
 		SimpleDateFormat birthSdf = new SimpleDateFormat("yyyy-MM-dd");
 		java.sql.Date sqlDate = null;
 		// java.util.Date → java.sql.Date
 		try {
-			Date utilDate = birthSdf.parse(dateString);
-			sqlDate = new java.sql.Date(utilDate.getTime());
-		}catch(ParseException e) {
-			e.printStackTrace();
-		}
+			if(dateString!=null) {
+				Date utilDate = birthSdf.parse(dateString);
+				sqlDate = new java.sql.Date(utilDate.getTime());
+			} else {
+				long currentTimeMills = System.currentTimeMillis();
+				sqlDate = new java.sql.Date(currentTimeMills);
+			}
+		}catch(ParseException e) { }
 
 		User user = User.builder().userId(mr.getParameter("userId"))
 								  .userName(mr.getParameter("name"))
