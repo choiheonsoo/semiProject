@@ -10,17 +10,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.web.dog.model.dto.Dog;
 import com.web.shoppingmall.model.dto.Color;
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductCategory;
 import com.web.shoppingmall.model.dto.ProductImg;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.ProductSize;
+import com.web.shoppingmall.model.dto.Review;
+import com.web.shoppingmall.model.dto.ReviewImg;
+import com.web.user.model.dto.User;
 
 /*
  * 쇼핑몰 dao
@@ -104,7 +107,6 @@ public class ShoppingmallDao {
 			pstmt.setInt(1, productKey);
 			pstmt.setInt(2, productKey);
 			pstmt.setInt(3, productKey);
-			pstmt.setInt(4, productKey);
 			rs=pstmt.executeQuery();
 			if(rs.next())
 				result=getProductForDetailpage(rs, result);
@@ -116,8 +118,38 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 상품옵션 객체를 반환하는 메소드
+	 * 	상품의 고유키와 사이즈로 검색하여 상품옵션객체를 가져온다
+	 * 	매개변수 : 상품고유키
+	 * 	반환 : 상품옵션 객체
+	 */
+	public ProductOption selectProductOptionByKey(Connection conn, int productKey){
+		ProductOption result=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectProductOptionByKey"));
+			pstmt.setInt(1, productKey);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result=new ProductOption().builder().stock(rs.getInt("STOCK")).build();
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 	
-	public List<ProductOption> selectColorBySize(Connection conn, int productKey, String size){
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 사이즈 옵션에 대한 상품옵션 객체리스트를 반환하는 메소드
+	 * 	상품의 고유키와 사이즈로 검색하여 상품옵션객체를 가져온다
+	 * 	매개변수 : 상품고유키, 사이즈
+	 * 	반환 : 상품옵션 리스트
+	 */
+	public List<ProductOption> selectProductOptionBySize(Connection conn, int productKey, String size){
 		List<ProductOption> result=new ArrayList<>();
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
@@ -137,10 +169,56 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에 대한 상품옵션 객체를 반환하는 메소드
+	 * 	상품의 고유키와 색상으로 검색하여 상품옵션객체를 가져온다
+	 * 	매개변수 : 상품고유키, 색상
+	 * 	반환 : 상품옵션 객체
+	 */
+	public ProductOption selectProductOptionByColor(Connection conn, int productKey, String color){
+		ProductOption result=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectProductOptionByColor"));
+			pstmt.setInt(1, productKey);
+			pstmt.setString(2, color);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result=new ProductOption().builder().stock(rs.getInt("STOCK")).build();
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
 	
-	
-	
-	
+	/*
+	 * 	쇼핑몰 상품 상세페이지의 상품에대한 리뷰객체리스트를 담고있는 회원객체리스트를 반환하는 메소드
+	 * 	상품의 고유키로 리뷰들을 검색하여 리뷰 리스트를 반환
+	 * 	매개변수 : 상품고유키
+	 * 	반환 : 리뷰 리스트
+	 */	
+	 public List<User> selectReviewByProductKey(Connection conn, int productKey){
+		 PreparedStatement pstmt=null;
+		 ResultSet rs=null;
+		 List<User> result=new ArrayList<>();
+		 try {
+			 pstmt=conn.prepareStatement(sql.getProperty("selectReviewByProductKey"));
+			 pstmt.setInt(1, productKey);
+			 rs=pstmt.executeQuery();
+			 while(rs.next()) {
+				 getUser(result, rs);
+			 }
+		 }catch(SQLException e) {
+			 e.printStackTrace();
+		 }finally {
+			 close(rs);
+			 close(pstmt);
+		 }return result;
+	 }
 	
 	
 	
@@ -210,5 +288,35 @@ public class ShoppingmallDao {
 		}while(rs.next());
 		p.setProductImgs(imgs);
 		return p;
+	}
+	
+	
+	private List<User> getUser(List<User> users, ResultSet rs) throws SQLException{
+		String userId=rs.getString("USER_ID");
+		if(users.stream().anyMatch(e->userId.equals(e.getUserId()))) {
+			users.stream().filter(e->userId.equals(e.getUserId())).forEach(u->{
+				u.getReviews().forEach(rr->{
+					try {
+						rr.getReviewImgs().add(new ReviewImg().builder().reviewImg(rs.getString("REVIEW_IMG")).build());
+					}catch(SQLException s) {
+						s.printStackTrace();
+					}
+				});
+			});
+		}else {
+			User u=new User().builder().userId(rs.getString("USER_ID")).dog(new ArrayList<Dog>()).reviews(new ArrayList<Review>()).build();
+			u.getDog().add(new Dog().builder().dogImg(rs.getString("DOG_IMG")).build());
+			Review r=new Review().builder()
+					.reviewKey(rs.getInt("REVIEW_KEY"))
+					.reviewDate(rs.getDate("REVIEW_DATE"))
+					.rating(rs.getInt("RATING"))
+					.reviewContent(rs.getString("REVIEW_CONTENT"))
+					.reviewImgs(new ArrayList<ReviewImg>())
+					.build();
+			r.getReviewImgs().add(new ReviewImg().builder().reviewImgKey(rs.getInt("REVIEW_IMG_KEY")).reviewImg(rs.getString("REVIEW_IMG")).build());
+			u.getReviews().add(r);
+			users.add(u);
+		}
+		return users;
 	}
 }

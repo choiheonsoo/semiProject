@@ -1,6 +1,11 @@
 package com.web.user.model.dto;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.web.dog.model.dto.Dog;
+import com.web.shoppingmall.model.dto.Review;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +29,6 @@ public class User {
 	private boolean status;
 	private Date birthDay;
 	
+	private List<Review> reviews;
+	private List<Dog> dog;
 }

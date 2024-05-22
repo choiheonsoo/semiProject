@@ -47,4 +47,27 @@ public class UserService {
 		} return result;
 	}
 	
+	public String searchUserId(String email, String name) {
+		Connection con = getConnection();
+		String userId = getUserDao().searchUserId(con, email, name);
+		return userId;
+	}
+	
+	public User selectUser(String id, String email) {
+		Connection con = getConnection();
+		User user = getUserDao().selectUser(con, id, email);
+		close(con);
+		return user;
+	}
+	
+	public int changeUserPw(String id, String pw) {
+		Connection con = getConnection();
+		int result = getUserDao().changeUserPw(con, id, pw);
+		if(result>0) {
+			close(con);
+		} else {
+			rollback(con);
+		}
+		return result;
+	}
 }

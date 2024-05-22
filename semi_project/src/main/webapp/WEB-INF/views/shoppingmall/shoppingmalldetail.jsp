@@ -3,25 +3,27 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product,java.util.Map,com.web.shoppingmall.model.dto.ProductImg,
 				 com.web.shoppingmall.model.dto.ProductOption,java.util.HashMap,java.util.ArrayList,java.util.Set,
-				 java.util.TreeSet" %>
+				 com.web.user.model.dto.User, com.web.shoppingmall.model.dto.Review, com.web.shoppingmall.model.dto.ReviewImg" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 	Product p=(Product)request.getAttribute("product");
 	String r=(String)request.getAttribute("r");
 	String imgName=null;
 	List<Map<String, String>> options=new ArrayList<>();
+	List<User> users=(List<User>)request.getAttribute("user");
 	boolean first=true;
 	if(p.getProductOption()!=null){
 		for(ProductOption po:p.getProductOption()){
-			Map<String, String> m=new HashMap<>();
-			if(po.getColor()!=null&&po.getProductSize()!=null){
+			//Map<size, color>
+			Map<String, String> m=new HashMap<>(); 
+			if(po.getColor().getColor()!=null&&po.getProductSize().getPSize()!=null){
 				m.put(po.getProductSize().getPSize(),po.getColor().getColor());
 				options.add(m);
-			}else if(po.getColor()==null&&po.getProductSize()!=null){
+			}else if(po.getColor().getColor()==null&&po.getProductSize().getPSize()!=null){
 				m.put(po.getProductSize().getPSize(),"NULL");
 				options.add(m);
-			}else if(po.getColor()!=null&&po.getProductSize()==null){
-				m.put("NULL",po.getProductSize().getPSize());
+			}else if(po.getColor().getColor()!=null&&po.getProductSize().getPSize()==null){
+				m.put("NULL",po.getColor().getColor());
 				options.add(m);
 			}
 		}
@@ -66,6 +68,7 @@
 						<button onclick='minus()'>-</button>
 						<span class="purchaseQuantity" id="purchaseQuantity">1</span>
 						<button onclick='plus()'>+</button>
+						<span class="stockalarm"></span>
 					</div>
 					<div class="totalPrice">
 						<span>총 결제가격 : <span class="totalPrice" id="totalPrice"><%=p.getPrice()*(100-p.getRateDiscount())/100 %></span>원</span> 
@@ -121,10 +124,13 @@
 	<div class="detailImgContainer">
 		<div class="detailImg">
 			<%if(p.getProductImgs().containsKey("description")){ %>
-			<div class="imgborder">
+			<div class="imgborder foldingoption">
 			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("description").getProductImg() %>" alt="상세설명이미지">
 			</div>
 			<%} %>
+			<div class="folding">
+				펼치기
+			</div>
 		</div>
 	</div>
 	<div class="reviewContainer">
@@ -133,92 +139,52 @@
 			<div class="reviewSortMenu">
 				<button>최신순</button>
 				<div>|</div>
-				<button>리뷰순</button>
+				<button>별점순</button>
 			</div>
-			<div class="reviewBox">
-				<div class="reviewWriter">
-					<div class="reviewWriterImg">
-						<img src="<%=request.getContextPath() %>/images/user.png" alt="회원프로필사진">
-					</div>
-					<div>
-						<span class="memberName">회원닉네임</span>
-						<span class="reviewDate">2024.05.13</span>
-						<div>
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
+			<%if(!users.isEmpty()){ %>
+				<%for(User u:users){ %>
+					<div class="reviewBox">
+						<div class="reviewWriter">
+							<div class="reviewWriterImg">
+									<%if(u.getDog().get(0).getDogImg()!=null){ %>
+									<img 
+									src="<%=request.getContextPath() %>/upload/user/<%=u.getDog().get(0).getDogImg()%>" 
+									alt="프로필">
+									<%}else{ %>
+										<img src="<%=request.getContextPath() %>/images/user.png" alt="프로필">
+									<%} %>
+							</div>
+							<div>
+								<span class="memberName"><%=u.getUserId() %></span>
+								<span class="reviewDate"><%=u.getReviews().get(0).getReviewDate() %></span>
+								<div class="stars">
+									<%for(int i=0;i<5;i++){ %>
+										<%if(i<u.getReviews().get(0).getRating()){ %>
+											<div class="star full-star"></div>
+						        		<%}else{ %>
+						        			<div class="star empty-star"></div>
+						        		<%} %>
+					        		<%} %>
+								</div>
+							</div>
+						</div>
+						<div class="reviewImgs">
+							<%for(Review re:u.getReviews()){ %>
+								<%for(ReviewImg ri:re.getReviewImgs()){ %>
+									<%if(ri.getReviewImg()!=null){ %>
+										<img src="<%=request.getContextPath() %>/upload/shoppingmall/review/<%=ri.getReviewImg() %>" alt="리뷰이미지">
+									<%} %>
+								<%} %>
+							<%} %>
+						</div>
+						<div class="reviewContent">
+							<span><%=u.getReviews().get(0).getReviewContent()%></span>
 						</div>
 					</div>
-				</div>
-				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-				</div>
-				<div class="reviewContent">
-					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
-				</div>
-			</div>
-			<div class="reviewBox">
-				<div class="reviewWriter">
-					<div class="reviewWriterImg">
-						<img src="<%=request.getContextPath() %>/images/user.png" alt="회원프로필사진">
-					</div>
-					<div>
-						<span class="memberName">회원닉네임</span>
-						<span class="reviewDate">2024.05.13</span>
-						<div>
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-						</div>
-					</div>
-				</div>
-				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-				</div>
-				<div class="reviewContent">
-					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
-				</div>
-			</div>
-			<div class="reviewBox">
-				<div class="reviewWriter">
-					<div class="reviewWriterImg">
-						<img src="<%=request.getContextPath() %>/images/user.png" alt="회원프로필사진">
-					</div>
-					<div>
-						<span class="memberName">회원닉네임</span>
-						<span class="reviewDate">2024.05.13</span>
-						<div>
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-							<img src="<%=request.getContextPath() %>/images/shoppingmall/star.png" alt="star">
-						</div>
-					</div>
-				</div>
-				<div class="reviewImgs">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-					<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/feed/royal_canin.jpg" alt="리뷰이미지">
-				</div>
-				<div class="reviewContent">
-					<span>이거 내가 먹어봤는데 맛있음 ㅇㅇ</span>
-				</div>
-			</div>
+				<%} %>
+			<%}else{ %>
+				<h3>리뷰가 없습니다.</h3>
+			<%} %>
 		</div>
 	</div>
 	<div class="qnaContainer">
@@ -227,7 +193,25 @@
 		</div>
 	</div>
 </section>
+	<div class="modalContainer modalhidden">
+		<div class="slideleftbtn">
+			<span><</span>
+		</div>
+		<div class="modalContent">
+			<span>></span>		
+			<img src"" alt"">
+			<span>></span>
+		</div>
+		<div class="sliderightbtn">
+			<span>></span>
+		</div>
+	</div>
 <script>
+	//모달창 관련
+	$(".reviewImgs").children().click(e=>{
+		$(".modalContainer").removeClass("modalhidden");
+	})
+	
 	//구매페이지 이동 함수
 	const movePaypage=()=>{
 		location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
@@ -248,14 +232,40 @@
 			count=parseInt(count)-1;
 			$("#purchaseQuantity").text(count);
 			$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
+			$(".stockalarm").text("");
 		}
 	}
 	//상품개수 플러스버튼 누를 시 실행되는 함수
 	const plus=()=>{
 		let count=$("#purchaseQuantity").text();
 		count=parseInt(count)+1;
-		$("#purchaseQuantity").text(count);
-		$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
+		const size=$("select[name=size]").val();
+		const color=$("select[name=color]").val();
+		console.log(count+"/"+size+"/"+color);
+		$.ajax({
+			url:"<%=request.getContextPath()%>/shoppingmall/productoption.do",
+    		type:"POST",
+    		data:{"productKey":<%=p.getProductKey()%>, "size":size, "color":color},
+    		success:(data)=>{
+    			console.log(data);
+    			let stock=0;
+    			if(Array.isArray(data)){
+	    			$.each(data,(i,v)=>{
+	    				if(v["color"]["color"]==color){
+	    					stock=v["stock"];
+	    				}
+	    			});
+    			}else{
+    				stock=data["stock"];
+    			}
+				if(count<=stock){
+					$("#purchaseQuantity").text(count);
+					$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
+				}else{
+					$(".stockalarm").text("재고가 "+stock+"개 남았습니다.");
+				}
+    		}
+		});
 	}
 	$(document).ready(()=>{
 		//메뉴 고정 함수
@@ -274,7 +284,7 @@
 	    
 	});
 	    //옵션 태그 추가
-	    <%if(options!=null){%>
+	    <%if(!options.isEmpty()){%>
 	    	const $optionDiv=$("<div>").addClass("option").append($("<span>").text("옵션선택 *"));
 	    	<%if(!options.stream().anyMatch(e->e.containsKey("NULL"))){%>
 	    		const $sizeSelect=$("<select>").attr("name","size").append($("<option>").attr({disabled:true,selected:true}).text("사이즈를 선택해주세요"));
@@ -299,7 +309,7 @@
     				const $colorSelect=$("<select>").attr("name","color").append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
     				<%for(Map<String,String> m:options){%>
     					<%for(Map.Entry<String, String> e:m.entrySet()){%>
-    						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>"));
+    						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>").text("<%=e.getValue()%>"));
     					<%};%>
     				<%}%>
     				$optionDiv.append($colorSelect);
@@ -310,16 +320,28 @@
 	    //사이즈 선택시 색상 옵션태그 추가하는 함수
 	    $("select[name='size']").change((e)=>{
 	    	const size=$(e.target).val();
-	    	console.log(size);
+	    	$("select[name=color]").html("");
 	    	$.ajax({
 	    		url:"<%=request.getContextPath()%>/shoppingmall/productoption.do",
 	    		type:"POST",
 	    		data:{"productKey":<%=p.getProductKey()%>, "size":size},
-	    		success:(response)=>{
-	    			console.log(response);
+	    		success:(data)=>{
+	    			console.log(data);
+	    			$.each(data,(i,v)=>{
+	    				console.log(v["stock"]+" / "+v["color"]["color"]);
+	    				$("select[name=color]").append($("<option>").attr("name",v["color"]["color"]).text(v["color"]["color"]));
+	    			});
 	    		}
-	    	})
+	    	});
 	    });
+	    
+	//옵션 바꿨을때 구매개수 초기화하기
+	$(".option>select").change(e=>{
+		$(".purchaseQuantity").text("1");
+		$(".stockalarm").text("");
+		$("#totalPrice").text("<%=p.getPrice()*(100-p.getRateDiscount())/100%>");
+	});
+	
 	//리뷰보기를 눌러서 넘어왔을 때 리뷰로 스크롤이동시키는 함수
 	$(window).on('load', ()=>{
 		<%if(r!=null){%>
@@ -342,6 +364,16 @@
 		$(".iborder").eq(0).addClass("selectedimg");
 	})
 
+	//펼치기 기능
+	$(".folding").click(e=>{
+		if($(e.target).text()=='펼치기'){
+			$(e.target).text("접기");
+			$(".imgborder").removeClass("foldingoption");
+		}else{
+			$(e.target).text("펼치기");
+			$(".imgborder").addClass("foldingoption");
+		}
+	})
 
 //결제테스트 코드
 /* function kakaopay(){
