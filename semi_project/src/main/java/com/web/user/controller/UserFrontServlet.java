@@ -14,6 +14,7 @@ import com.web.mail.action.ActionForward;
 import com.web.mail.action.FindPwAction;
 import com.web.mail.action.SendChangePwAction;
 import com.web.mail.action.UserChangePwAction;
+import com.web.mail.action.VerifyEmailAction;
 
 
 /**
@@ -70,7 +71,7 @@ public class UserFrontServlet extends HttpServlet {
     		} catch(Exception e) {
     			e.printStackTrace();
     		}
-    	}
+    	} 
     	
     	// 3th. 포워딩 처리
     	if(forward != null) {

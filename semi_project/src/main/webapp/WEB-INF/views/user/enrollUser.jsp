@@ -64,7 +64,8 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		margin-bottom: 3px;
 		font-weight: bold;
 	}
-	form#signupForm button{
+	form#signupForm>div.enrollTab>button{
+		display: none;
 		padding: 10px;
 		font-size: 16px;
 		background-color: #FFB914;
@@ -75,8 +76,9 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		color: white;
 		font-weight: bolder;
 		border-style: none;
+		transition: background-color 0.3s ease;
 	}
-	form#signupForm button:hover{
+	form#signupForm>div.enrollTab>button:hover{
 		background-color: #FF9100;
 	}
 	form#signupForm label[for="gender"]>span{
@@ -101,6 +103,25 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		width: 250px;
 		/* background-color: magenta; */
 	}
+	button#verifyBtn, button#checkMsgBtn{
+		padding: 5px;
+		font-size: 16px;
+		background-color: rgba(13,110,253,0.53);
+		border-radius: 15px;
+		cursor: pointer;
+		color: white;
+		font-weight: bolder;
+		border-style: none;
+		transition: background-color 0.3s ease;
+	}
+	button#verifyBtn:hover,
+	button#checkMsgBtn:hover{
+		background-color: rgba(13,110,253,0.84);
+	}
+	div#verifyBox{
+		margin-top: 4%;
+		display: none;
+	}
 </style>
 
 <section id="enrollContainer">
@@ -120,21 +141,30 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		            <input type="text" id="name" name="name" minlength="2" required>
 		
 		            <label for="email">이메일 *</label>
-		            <input type="email" id="email" name="email" required>
-		
-		            <label for="phone">휴대전화 *</label>
-		            <input type="tel" id="phone" name="phone" minlength="8" required>
-		
-		            <label for="address">주소</label>
-		            <input type="text" id="address" name="address">
-		
-		            <label for="birthday">생일</label>
-		            <input type="date" id="birthday" name="birthday">
-		                        
-		            <label for="ishavingdog">반려견 유무<br>
-		            	<input type="radio" name="ishavingdog" value="Y"><span> 예</span>
-		            	<input type="radio" name="ishavingdog" value="N" checked><span> 아니오</span>
-		            </label>
+		            <div>
+			            <input type="email" id="email" name="email" required>
+			            <button onclick="verify();" id="verifyBtn">메일발송</button>
+			         </div>
+			         
+			         <div id="verifyBox">
+				        <input type="text" id="verifyText">
+				        <button id="checkMsgBtn">인증하기</button>
+			        </div>
+			       
+			    <label for="phone">휴대전화 *</label>
+			    <input type="tel" id="phone" name="phone" minlength="8" required>
+			
+			    <label for="address">주소</label>
+			    <input type="text" id="address" name="address">
+			
+			    <label for="birthday">생일</label>
+			    <input type="date" id="birthday" name="birthday">
+			                        
+			    <label for="ishavingdog">반려견 유무<br>
+			           	<input type="radio" name="ishavingdog" value="Y"><span> 예</span>
+			          	<input type="radio" name="ishavingdog" value="N" checked><span> 아니오</span>
+			    </label>
+		            
 	            </div>	            
 	            <div id="dogInfo">
 	            	<label for="dogName">반려견 이름 *</label>
@@ -162,10 +192,6 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 
 <script>
 	if(<%=(String)request.getSession().getAttribute("isLogin")%> == null){
-		<%
-			request.getSession().invalidate();
-		%>
-		
 		const $dogImg = document.querySelector("#dogImg");
 		// 이벤트가 선택됐을 때 발생하는 이벤트
 		$dogImg.addEventListener("change", (e) => {
@@ -195,21 +221,43 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 				})
 			}
 		})
-		
-		const checkInfo=()=>{
-			const pw = document.getElementById("password").value;
-			const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-			if(!reg.test(pw)){
-				alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
-				return false;
-			} else {
-				true;
-			}
-		}
 	} else {
 		alert('잘못된 접근 입니다.');
 		location.assign("<%=request.getContextPath()%>");
 	}
+	const checkInfo=()=>{
+		const pw = document.getElementById("password").value;
+		const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+		if(!reg.test(pw)){
+			alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
+			return false;
+		} else {
+			true;	
+		}
+	}
+	
+	const verify = () => {
+		$.post("<%=request.getContextPath()%>/user/sendemail.do",{
+			"email":$("#email").val()
+		})
+		.done((user)=>{
+			if(user==null){
+				$("#verifyBox").css("display", "block");
+				$("#checkMsgBtn").off('click').on('click', e => {
+		            $.post("<%=request.getContextPath()%>/user/verifyemail.do", {
+		                "inputCode": $("#verifyText").val()
+		            })
+		            .done((data)=> {
+		                if(data){
+		                	$("div.enrollTab>button").css("display", "block");
+		                }
+		            });
+		        });
+			} else {
+				alert("이미 사용 중인 이메일입니다.");
+			}
+	    });
+	}	
 </script>
 
 
