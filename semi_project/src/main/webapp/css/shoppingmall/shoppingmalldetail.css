@@ -363,6 +363,23 @@
 	height:auto;
 }
 /* 리뷰 페이지바 */
+#reviewpagebar{
+	display:flex;
+	justify-content:center;
+}
+.pagebarnum{
+	border:1px solid #346aff;
+	margin-right:15px;
+	height:30px;
+	width:30px;
+	border-radius:5px;
+	transition:hover .1s ease;
+	background-color:#346aff;
+	color:white;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
 .pagebarnumbtn{
 	background:none;
 	border:1px solid #346aff;
@@ -377,6 +394,9 @@
 	background-color:#346aff;
 }
 .pagebarinequality{
+	margin-right:15px;
+}
+.pagebarinequalitybtn{
 	background:none;
 	border:none;
 	margin-right:15px;

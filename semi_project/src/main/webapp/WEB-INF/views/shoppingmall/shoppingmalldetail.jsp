@@ -188,7 +188,9 @@
 			<%} %>
 		</div>
 	</div>
-	<%=pageBar %>
+	<div id=pagebardiv>
+		<%=pageBar %>
+	</div>
 	<div class="qnaContainer">
 		<div>
 			<span class="qnaText">Q&A</span>
@@ -209,6 +211,29 @@
 		</div>
 	</div>
 <script>
+	//리뷰페이징처리 이벤트
+	$(".pagebarnumbtn, .pagebarinequalitybtn").click(e=>{
+		const btnText=$(e.target).text().trim();
+		const cPage=$(".pagebarnum").text().trim();
+		$.ajax({
+			url:"<%=request.getContextPath()%>/shoppingmall/reviewpagingajax.do",
+			type:"POST",
+			data:{"btnText":btnText, "totalData":<%=p.getTotalReviewCount()%>, "cPage":cPage, "productKey":<%=p.getProductKey()%>},
+			success:(response)=>{
+				const pagebar=response.pagebar;
+				$("#pagebardiv").empty().html(pagebar);
+				const data=response.user;
+				console.log(data);
+				$(".reviewContainer").find(".reviewBox").remove();
+				for(const user in data){
+					const $reviewWriter=$("<div>").addClass("reviewWriter");
+					const $reviewWriterImg=$("<div>").addClass("reviewWriterImg");
+					
+				}
+			}
+		});
+	});
+
 	//모달창 관련
 	//모달창 오픈
 	$(".reviewImgs").children().click(e=>{
@@ -222,6 +247,7 @@
 			}
 			$(".modalallimgsdiv").append($img);
 		})
+		$("html").css("overflow","hidden");
 		$(".modalContainer").removeClass("modalhidden");
 	});
 	//모달창 닫기
@@ -229,6 +255,7 @@
 		$(".modalContainer").addClass("modalhidden");
 		$(".modalmainimg").attr("src");
 		$(".modalallimgsdiv").html("");
+		$("html").css("overflow","");
 	});
 	//모달창 '>'사진 넘기기
 	$(".modalrightbtn").click(e=>{

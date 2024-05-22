@@ -80,8 +80,7 @@ public class ShoppingMallListServlet extends HttpServlet {
 		}
 		if(pageNo>totalPage) {
 			pageBar+="<p class='page1'>></p>";
-//			pageBar+="<p class='page1'>>></p>";
-			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(totalPage)+"&sort="+s+"'>>></a>";
+			pageBar+="<p class='page1'>>></p>";
 		}else {
 			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(pageNo)+"&sort="+s+"'>></a>";
 			pageBar+="<a class='page1' href='"+request.getRequestURI()+"?cPage="+(totalPage)+"&sort="+s+"'>>></a>";

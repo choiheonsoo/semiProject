@@ -201,13 +201,15 @@ public class ShoppingmallDao {
 	 * 	매개변수 : 상품고유키
 	 * 	반환 : 리뷰 리스트
 	 */	
-	 public List<User> selectReviewByProductKey(Connection conn, int productKey){
+	 public List<User> selectReviewByProductKey(Connection conn, int productKey, int cPage, int numPerpage){
 		 PreparedStatement pstmt=null;
 		 ResultSet rs=null;
 		 List<User> result=new ArrayList<>();
 		 try {
 			 pstmt=conn.prepareStatement(sql.getProperty("selectReviewByProductKey"));
 			 pstmt.setInt(1, productKey);
+			 pstmt.setInt(2, (cPage-1)*numPerpage+1);
+			 pstmt.setInt(3, cPage*numPerpage);
 			 rs=pstmt.executeQuery();
 			 while(rs.next()) {
 				 getUser(result, rs);

@@ -100,9 +100,9 @@ public class ShoppingmallService {
 	 * 	매개변수 : 상품고유키
 	 * 	반환 : 리뷰 리스트
 	 */	
-	 public List<User> selectReviewByProductKey(int productKey){
+	 public List<User> selectReviewByProductKey(int productKey, int cPage, int numPerpage){
 		 Connection conn=getConnection();
-		 List<User> result=getDao().selectReviewByProductKey(conn, productKey);
+		 List<User> result=getDao().selectReviewByProductKey(conn, productKey, cPage, numPerpage);
 		 close(conn);
 		 return result;
 	 }

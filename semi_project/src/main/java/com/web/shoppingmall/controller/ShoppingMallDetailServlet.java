@@ -36,9 +36,7 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		// 클릭한 상품 상세 페이지로 이동
 		int productKey=Integer.parseInt(request.getParameter("productKey"));
 		String r=request.getParameter("r");
-		
 		Product p=getService().selectProductByKey(productKey); //상품관련 정보를 담은 상품객체
-		List<User> u=getService().selectReviewByProductKey(productKey); //리뷰정보를 담은 회원객체리스트
 		int cPage=1;
 		int numPerpage=3;
 		int pageBarSize=5;
@@ -47,20 +45,27 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
 		int pageEnd=pageNo+pageBarSize-1;
 		
-		String pageBar="<div id='pagebar'>";
-		pageBar+="<button class='pagebarinequality'><<</button>";
-		pageBar+="<button class='pagebarinequality'><</button>";
+		String pageBar="<div id='reviewpagebar'>";
+		pageBar+="<p class='pagebarinequality'><<</p>";
+		pageBar+="<p class='pagebarinequality'><</p>";
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
 			if(pageNo==cPage) {
-				pageBar+="<button class='pagebarnumbtn'>"+pageNo+"</button>";
+				pageBar+="<p class='pagebarnum'>"+pageNo+"</p>";
 			}else {
 				pageBar+="<button class='pagebarnumbtn'>"+pageNo+"</button>";
 			}
 			pageNo++;
 		}
-		pageBar+="<button class='pagebarinequality'>></button>";
-		pageBar+="<button class='pagebarinequality'>>></button>";
+		if(pageNo>totalPage) {
+			pageBar+="<p class='pagebarinequality'>></p>";
+			pageBar+="<p class='pagebarinequality'>>></p>";
+		}else {
+			pageBar+="<button class='pagebarinequalitybtn'>></button>";
+			pageBar+="<button class='pagebarinequalitybtn'>>></button>";
+		}
 		pageBar+="</div>";
+		
+		List<User> u=getService().selectReviewByProductKey(productKey,cPage,numPerpage); //리뷰정보를 담은 회원객체리스트
 		
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("product", p);
