@@ -212,7 +212,7 @@
 	</div>
 <script>
 	//리뷰페이징처리 이벤트
-	$(".pagebarnumbtn, .pagebarinequalitybtn").click(e=>{
+	$(document).on('click', '.pagebarnumbtn, .pagebarinequalitybtn', e=>{
 		const btnText=$(e.target).text().trim();
 		const cPage=$(".pagebarnum").text().trim();
 		$.ajax({
@@ -223,14 +223,50 @@
 				const pagebar=response.pagebar;
 				$("#pagebardiv").empty().html(pagebar);
 				const data=response.user;
+				console.log(response);
 				console.log(data);
 				$(".reviewContainer").find(".reviewBox").remove();
-				for(const user in data){
+				$.each(data, (index,v)=>{
+					const $reviewBox=$("<div>").addClass("reviewBox");
 					const $reviewWriter=$("<div>").addClass("reviewWriter");
 					const $reviewWriterImg=$("<div>").addClass("reviewWriterImg");
 					const $profileimg=$("<img>");
-					if(user[])
-				}
+					$.each(v["dog"], (i,d)=>{
+						if("dogImg" in d){
+							$profileimg.attr("src","<%=request.getContextPath()%>/upload/user/"+d["dogImg"]);
+						}else{
+							$profileimg.attr("src","<%=request.getContextPath()%>/images/user.png");
+						}
+					});
+					$reviewWriterImg.append($profileimg);
+					$reviewWriter.append($reviewWriterImg);
+					const $profile=$("<div>");
+					
+					const $memberName=$("<span>").addClass("memberName").text(v["userId"]);
+					const $reviewDate=$("<span>").addClass("reviewDate").text(v["reviews"][0]["reviewDate"]);
+					const $stars=$("<div>").addClass("stars");
+					for(let i=0;i<5;i++){
+						if(i<v["reviews"][0]["rating"]){
+							const $fullstar=$("<div>").addClass("star full-star");
+							$stars.append($fullstar);
+						}else{
+							const $emptystar=$("<div>").addClass("star empty-star");
+							$stars.append($emptystar);
+						}
+					}
+					$profile.append($memberName).append($reviewDate).append($stars);
+					$reviewWriter.append($profile);
+					
+					const $reviewImgs=$("<div>").addClass("reviewImgs");
+					
+					
+					const $reviewContent=$("<div>").addClass("reviewContent");
+					const $content=$("<span>").text(v["reviews"][0]["reviewContent"]);
+					$reviewContent.append($content);
+					$reviewBox.append($reviewWriter).append($reviewImgs).append($reviewContent);
+					$(".reviewContainer>div").append($reviewBox);
+				})
+				
 			}
 		});
 	});
