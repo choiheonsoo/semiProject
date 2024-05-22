@@ -39,6 +39,30 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		
 		Product p=getService().selectProductByKey(productKey); //상품관련 정보를 담은 상품객체
 		List<User> u=getService().selectReviewByProductKey(productKey); //리뷰정보를 담은 회원객체리스트
+		int cPage=1;
+		int numPerpage=3;
+		int pageBarSize=5;
+		int totalData=p.getTotalReviewCount();
+		int totalPage=(int)Math.ceil((double)totalData/numPerpage);
+		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
+		int pageEnd=pageNo+pageBarSize-1;
+		
+		String pageBar="<div id='pagebar'>";
+		pageBar+="<button class=''><<</button>";
+		pageBar+="<button class=''><</button>";
+		while(!(pageNo>pageEnd||pageNo>totalPage)) {
+			if(pageNo==cPage) {
+				pageBar+="<button class=''>"+pageNo+"</button>";
+			}else {
+				pageBar+="<button class=''>"+pageNo+"</button>";
+			}
+			pageNo++;
+		}
+		pageBar+="<button class=''>></button>";
+		pageBar+="<button class=''>>></button>";
+		pageBar+="</div>";
+		
+		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("product", p);
 		request.setAttribute("user", u);
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalldetail.jsp").forward(request, response);

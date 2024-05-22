@@ -8,6 +8,7 @@
 <%
 	Product p=(Product)request.getAttribute("product");
 	String r=(String)request.getAttribute("r");
+	String pageBar=(String)request.getAttribute("pageBar");
 	String imgName=null;
 	List<Map<String, String>> options=new ArrayList<>();
 	List<User> users=(List<User>)request.getAttribute("user");
@@ -128,9 +129,9 @@
 			<img src="<%=request.getContextPath() %>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("description").getProductImg() %>" alt="상세설명이미지">
 			</div>
 			<%} %>
-			<div class="folding">
+			<button class="folding">
 				펼치기
-			</div>
+			</button>
 		</div>
 	</div>
 	<div class="reviewContainer">
@@ -187,6 +188,7 @@
 			<%} %>
 		</div>
 	</div>
+	<%=pageBar %>
 	<div class="qnaContainer">
 		<div>
 			<span class="qnaText">Q&A</span>
@@ -194,28 +196,76 @@
 	</div>
 </section>
 	<div class="modalContainer modalhidden">
-		<div class="slideleftbtn">
-			<span><</span>
-		</div>
 		<div class="modalContent">
-			<span>></span>		
-			<img src"" alt"">
-			<span>></span>
-		</div>
-		<div class="sliderightbtn">
-			<span>></span>
+			<button class="modalclosebtn">x</button>
+			<button class="modalleftbtn"><</button>
+			<button class="modalrightbtn">></button>
+			<div class="modalimgdiv">
+				<div class="modalmainimgdiv">
+					<img class="modalmainimg">
+				</div>
+				<div class="modalallimgsdiv"></div>
+			</div>
 		</div>
 	</div>
 <script>
 	//모달창 관련
+	//모달창 오픈
 	$(".reviewImgs").children().click(e=>{
+		const src=$(e.target).attr("src");
+		$(".modalmainimg").attr("src",src);
+		const imgs=$(e.target).parent();
+		imgs.children().each((i,e)=>{
+			const $img=$("<img>").addClass("modalreviewimg").attr("src",$(e).attr("src"));
+			if($(e).attr("src")==src){
+				$img.addClass("selectedreviewimg");
+			}
+			$(".modalallimgsdiv").append($img);
+		})
 		$(".modalContainer").removeClass("modalhidden");
-	})
+	});
+	//모달창 닫기
+	$(".modalclosebtn").click(e=>{
+		$(".modalContainer").addClass("modalhidden");
+		$(".modalmainimg").attr("src");
+		$(".modalallimgsdiv").html("");
+	});
+	//모달창 '>'사진 넘기기
+	$(".modalrightbtn").click(e=>{
+		const $next=$(".selectedreviewimg").next();
+		if($next.length>0){
+			$(".selectedreviewimg").removeClass("selectedreviewimg");
+			$next.addClass("selectedreviewimg");
+			$(".modalmainimg").attr("src",$next.attr("src"));
+		}else{
+			const $first=$(".selectedreviewimg").parent().children().first();
+			$(".selectedreviewimg").removeClass("selectedreviewimg");
+			$first.addClass("selectedreviewimg");
+			$(".modalmainimg").attr("src",$first.attr("src"));
+			
+		}
+	});
+	//모달창 '<'사진 넘기기
+	$(".modalleftbtn").click(e=>{
+		const $prev=$(".selectedreviewimg").prev();
+		console.log($prev);
+		if($prev.length>0){
+			$(".selectedreviewimg").removeClass("selectedreviewimg");
+			$prev.addClass("selectedreviewimg");
+			$(".modalmainimg").attr("src",$prev.attr("src"));
+		}else{
+			const $last=$(".selectedreviewimg").parent().children().last();
+			$(".selectedreviewimg").removeClass("selectedreviewimg");
+			$last.addClass("selectedreviewimg");
+			$(".modalmainimg").attr("src",$last.attr("src"));
+		}
+	});
 	
 	//구매페이지 이동 함수
 	const movePaypage=()=>{
 		location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
 	}
+	
 	//이미지 누르면 메인이미지 바뀌게하는 함수
 	$(".imgbordercontainer").mouseenter(e=>{
 		console.log($(e.target));
@@ -225,6 +275,7 @@
 		$(e.target).parent().parent().eq(0)
 		$(e.target).parent().siblings("img").attr("src",newimg);
 	});
+	
 	//상품개수 마이너스버튼 누를 시 실행되는 함수
 	const minus=()=>{
 		let count=$("#purchaseQuantity").text();
@@ -234,7 +285,8 @@
 			$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
 			$(".stockalarm").text("");
 		}
-	}
+	};
+	
 	//상품개수 플러스버튼 누를 시 실행되는 함수
 	const plus=()=>{
 		let count=$("#purchaseQuantity").text();
@@ -266,7 +318,8 @@
 				}
     		}
 		});
-	}
+	};
+	
 	$(document).ready(()=>{
 		//메뉴 고정 함수
 	    const scrollDiv = $('.moveMenuContainer');
@@ -281,7 +334,15 @@
 	            scrollDiv.removeClass('fixed');
 	        }
 	    });
-	    
+	    //모달창 이벤트 위임
+	    //모달창 메인이미지 밑의 작은이미지 클릭시 메인이미지로 바뀌는 이벤트
+	    $(".modalallimgsdiv").on("click",".modalreviewimg",e=>{
+	    	const src=$(e.target).attr("src");
+			console.log(src);
+			$(".modalmainimg").attr("src", src);
+			$(e.target).parent().children().removeClass("selectedreviewimg");
+			$(e.target).addClass("selectedreviewimg");
+	    })
 	});
 	    //옵션 태그 추가
 	    <%if(!options.isEmpty()){%>
@@ -317,6 +378,7 @@
     		<%}%>
     		$(".price").after($optionDiv);
 	    <%}%>
+	    
 	    //사이즈 선택시 색상 옵션태그 추가하는 함수
 	    $("select[name='size']").change((e)=>{
 	    	const size=$(e.target).val();
@@ -342,6 +404,7 @@
 		$("#totalPrice").text("<%=p.getPrice()*(100-p.getRateDiscount())/100%>");
 	});
 	
+	
 	//리뷰보기를 눌러서 넘어왔을 때 리뷰로 스크롤이동시키는 함수
 	$(window).on('load', ()=>{
 		<%if(r!=null){%>
@@ -366,7 +429,7 @@
 
 	//펼치기 기능
 	$(".folding").click(e=>{
-		if($(e.target).text()=='펼치기'){
+		if($(e.target).text().trim()=='펼치기'){
 			$(e.target).text("접기");
 			$(".imgborder").removeClass("foldingoption");
 		}else{
