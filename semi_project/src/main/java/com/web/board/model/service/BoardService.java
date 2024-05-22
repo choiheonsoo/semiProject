@@ -152,6 +152,7 @@ public class BoardService {
 		int result = getDao().insertBoardComment(conn, bc);
 		if(result>0) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 	
