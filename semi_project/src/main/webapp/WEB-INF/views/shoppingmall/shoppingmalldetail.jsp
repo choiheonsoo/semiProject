@@ -258,7 +258,12 @@
 					$reviewWriter.append($profile);
 					
 					const $reviewImgs=$("<div>").addClass("reviewImgs");
-					
+					for(const reviewImgs of v["reviews"][0]["reviewImgs"]){
+						if("reviewImg" in reviewImgs){
+							const $img=$("<img>").attr("src","<%=request.getContextPath()%>/upload/shoppingmall/review/"+reviewImgs["reviewImg"]);
+							$reviewImgs.append($img);
+						}
+					}
 					
 					const $reviewContent=$("<div>").addClass("reviewContent");
 					const $content=$("<span>").text(v["reviews"][0]["reviewContent"]);
