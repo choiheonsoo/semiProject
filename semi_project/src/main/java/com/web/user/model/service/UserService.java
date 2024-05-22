@@ -50,6 +50,7 @@ public class UserService {
 	public String searchUserId(String email, String name) {
 		Connection con = getConnection();
 		String userId = getUserDao().searchUserId(con, email, name);
+		close(con);
 		return userId;
 	}
 	

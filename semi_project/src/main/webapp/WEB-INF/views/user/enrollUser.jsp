@@ -64,7 +64,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		margin-bottom: 3px;
 		font-weight: bold;
 	}
-	form#signupForm button{
+	form#signupForm>div.enrollTab>button{
 		padding: 10px;
 		font-size: 16px;
 		background-color: #FFB914;
@@ -75,8 +75,9 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		color: white;
 		font-weight: bolder;
 		border-style: none;
+		transition: background-color 0.3s ease;
 	}
-	form#signupForm button:hover{
+	form#signupForm>div.enrollTab>button:hover{
 		background-color: #FF9100;
 	}
 	form#signupForm label[for="gender"]>span{
@@ -101,6 +102,20 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		width: 250px;
 		/* background-color: magenta; */
 	}
+	button#verifyBtn{
+		padding: 5px;
+		font-size: 16px;
+		background-color: rgba(13,110,253,0.53);
+		border-radius: 15px;
+		cursor: pointer;
+		color: white;
+		font-weight: bolder;
+		border-style: none;
+		transition: background-color 0.3s ease;
+	}
+	button#verifyBtn:hover{
+		background-color: rgba(13,110,253,0.84);
+	}
 </style>
 
 <section id="enrollContainer">
@@ -120,7 +135,10 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		            <input type="text" id="name" name="name" minlength="2" required>
 		
 		            <label for="email">이메일 *</label>
-		            <input type="email" id="email" name="email" required>
+		            <div>
+			            <input type="email" id="email" name="email" required>
+			            <button onclick="verify();" id="verifyBtn"> 인증하기 </button>
+		            </div>
 		
 		            <label for="phone">휴대전화 *</label>
 		            <input type="tel" id="phone" name="phone" minlength="8" required>
@@ -162,10 +180,6 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 
 <script>
 	if(<%=(String)request.getSession().getAttribute("isLogin")%> == null){
-		<%
-			request.getSession().invalidate();
-		%>
-		
 		const $dogImg = document.querySelector("#dogImg");
 		// 이벤트가 선택됐을 때 발생하는 이벤트
 		$dogImg.addEventListener("change", (e) => {
@@ -195,20 +209,24 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 				})
 			}
 		})
-		
-		const checkInfo=()=>{
-			const pw = document.getElementById("password").value;
-			const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-			if(!reg.test(pw)){
-				alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
-				return false;
-			} else {
-				true;
-			}
-		}
 	} else {
 		alert('잘못된 접근 입니다.');
 		location.assign("<%=request.getContextPath()%>");
+	}
+	const checkInfo=()=>{
+		const pw = document.getElementById("password").value;
+		const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+		if(!reg.test(pw)){
+			alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
+			return false;
+		} else {
+			true;
+		}
+	}
+	
+	const verify=()=>{
+		const inputEmail = $("#email").val();
+		location.assign("<%=request.getContextPath()%>/user/verifyemail.find?email="+inputEmail);
 	}
 </script>
 

@@ -14,6 +14,7 @@ import com.web.mail.action.ActionForward;
 import com.web.mail.action.FindPwAction;
 import com.web.mail.action.SendChangePwAction;
 import com.web.mail.action.UserChangePwAction;
+import com.web.mail.action.VerifyEmailAction;
 
 
 /**
@@ -65,6 +66,13 @@ public class UserFrontServlet extends HttpServlet {
     		}
     	} else if(command.equals("/user/sendpw.find")) {
     		action = new SendChangePwAction();
+    		try {
+    			forward = action.execute(req, resp);
+    		} catch(Exception e) {
+    			e.printStackTrace();
+    		}
+    	} else if(command.equals("/user/verifyemail.find")) {
+    		action = new VerifyEmailAction();
     		try {
     			forward = action.execute(req, resp);
     		} catch(Exception e) {
