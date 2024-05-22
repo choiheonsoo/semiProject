@@ -57,6 +57,7 @@ public class BoardService {
 		int result = getDao().insertBoard(conn,id, title, content);
 		if(result > 0 ) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 	
@@ -66,6 +67,7 @@ public class BoardService {
 		int result = getDao().updateFreeBoard(conn, bullNo, content);
 		if(result > 0 ) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 	
@@ -75,6 +77,7 @@ public class BoardService {
 		int result = getDao().deleteFreeBoard(conn, bullNo);
 		if(result > 0 ) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 	
@@ -92,6 +95,7 @@ public class BoardService {
 		int result = getDao().insertMungStargram(conn, b);
 		if(result > 0) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 	
@@ -101,6 +105,7 @@ public class BoardService {
 		int result = getDao().insertBoardImg(conn,bullNo, imgs);
 		if(result > 0) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 	
@@ -156,6 +161,7 @@ public class BoardService {
 		int result = getDao().deleteBoardComment(conn,bcNo);
 		if(result>0) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 }

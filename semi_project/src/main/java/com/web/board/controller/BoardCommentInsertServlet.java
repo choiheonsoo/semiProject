@@ -13,13 +13,13 @@ import static com.web.board.model.service.BoardService.getService;
  * Servlet implementation class FreeBoardCommentInsertServlet
  */
 @WebServlet("/board/insertboardcomment.do")
-public class FreeBoardCommentInsertServlet extends HttpServlet {
+public class BoardCommentInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FreeBoardCommentInsertServlet() {
+    public BoardCommentInsertServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,7 +32,6 @@ public class FreeBoardCommentInsertServlet extends HttpServlet {
 		int level = Integer.parseInt(request.getParameter("comment_level"));
 		int bullNo = Integer.parseInt(request.getParameter("bull_no"));
 		String subCommentStr = request.getParameter("sub_comment");
-		System.out.println(subCommentStr);
 		int subComment = subCommentStr.equals("0")?0:Integer.parseInt(subCommentStr);
 		String content = request.getParameter("content");
 		

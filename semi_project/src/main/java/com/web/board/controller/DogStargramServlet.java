@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.web.board.model.dto.Bulletin;
+import com.web.board.model.dto.BulletinComment;
 import com.web.board.model.dto.BulletinImg;
 import com.web.board.model.dto.BulletinLike;
 import com.web.dog.model.dto.Dog;
@@ -84,8 +85,6 @@ public class DogStargramServlet extends HttpServlet {
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("bulletins",bulletins);
 		request.setAttribute("imgs", bi);
-		
-		System.out.println(bi);
 		request.getRequestDispatcher("/WEB-INF/views/board/dogstargram.jsp").forward(request, response);
 	}
 

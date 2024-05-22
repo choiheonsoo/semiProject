@@ -211,6 +211,7 @@
 			$form=$(".freeboard-comment-insert").clone();
 			$form.find('input[name=comment_level]').val('2');
 			$form.find('input[name=sub_comment]').val(no);
+			$form.find('input[type=submit]').css('display','none');
 			$form.addClass('sub_comment');
 			$(e.target).parent().append($form);
 		}
