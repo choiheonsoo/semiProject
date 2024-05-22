@@ -1,6 +1,9 @@
 package com.web.shoppingmall.controller;
 
+import static com.web.shoppingmall.model.service.ShoppingmallService.getService;
+
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.web.shoppingmall.model.dto.Product;
-import static com.web.shoppingmall.model.service.ShoppingmallService.getService;
+import com.web.user.model.dto.User;
 /**
  * Servlet implementation class ShoppingMallDetailServlet
  * 쇼핑몰 상품 상세페이지 이동 서블릿
@@ -34,9 +37,10 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		int productKey=Integer.parseInt(request.getParameter("productKey"));
 		String r=request.getParameter("r");
 		
-		Product p=getService().selectProductByKey(productKey);
+		Product p=getService().selectProductByKey(productKey); //상품관련 정보를 담은 상품객체
+		List<User> u=getService().selectReviewByProductKey(productKey); //리뷰정보를 담은 회원객체리스트
 		request.setAttribute("product", p);
-		request.setAttribute("r", r);
+		request.setAttribute("user", u);
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalldetail.jsp").forward(request, response);
 	}
 

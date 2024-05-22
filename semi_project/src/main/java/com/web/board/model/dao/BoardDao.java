@@ -14,6 +14,8 @@ import java.util.Properties;
 
 import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.BulletinComment;
+import com.web.board.model.dto.BulletinImg;
+import com.web.board.model.dto.BulletinLike;
 import com.web.dog.model.dao.DogDao;
 import com.web.dog.model.dto.Dog;
 
@@ -35,12 +37,18 @@ public class BoardDao {
 	}
 	
 	//게시글 총 갯수 조회
-	public int selectBoardCount(Connection conn) {
+	public int selectBoardCount(Connection conn, int cateNum) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int result = 0;
 		try {
 			pstmt = conn.prepareStatement(sql.getProperty("selectBoardCount"));
+			pstmt.setInt(1, cateNum);
+			if(cateNum!=4) {
+				pstmt.setInt(2, 2);
+			}else {
+				pstmt.setInt(2, cateNum);
+			}
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
 				result = rs.getInt(1);
@@ -55,16 +63,22 @@ public class BoardDao {
 	}
 	
 	//게시글 전체 조회
-	public List<Bulletin> selectBoardAll(Connection conn, int cPage, int numPerpage, String type, String keyword){
+	public List<Bulletin> selectBoardAll(Connection conn, int cPage, int numPerpage, String type, String keyword,int cateNum){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<Bulletin> bulletins = new ArrayList<>();
 		try {
 			String newSql = sql.getProperty("selectBoardAll").replace("#type", type);
 			pstmt = conn.prepareStatement(newSql);
-			pstmt.setString(1,"%"+keyword+"%");
-			pstmt.setInt(2,(cPage-1)*numPerpage+1);
-			pstmt.setInt(3, numPerpage*cPage);
+			pstmt.setInt(1, cateNum);
+			if(cateNum!=4) {
+				pstmt.setInt(2, 2);
+			}else {
+				pstmt.setInt(2, cateNum);
+			}
+			pstmt.setString(3,"%"+keyword+"%");
+			pstmt.setInt(4,(cPage-1)*numPerpage+1);
+			pstmt.setInt(5, numPerpage*cPage);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				bulletins.add(getBulletin(rs));
@@ -189,6 +203,207 @@ public class BoardDao {
 		}return result;
 	}
 	
+	
+	// 게시글 등록하기
+	public int insertMungStargram(Connection conn, Bulletin b) {
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    int result = 0;
+	    try {
+	        pstmt = conn.prepareStatement(sql.getProperty("insertMungStargram"));
+	        pstmt.setInt(1, b.getCategoryNo());
+	        pstmt.setString(2, b.getUserId());
+	        pstmt.setString(3, b.getTitle());
+	        pstmt.setString(4, b.getContent());
+	        result = pstmt.executeUpdate();
+
+	        // 게시글 등록 후 시퀀스 값을 가져옴
+	        int bullNo = selectSeqBoard(conn);
+	        
+	        // 이미지 등록
+	        if (bullNo > 0) {
+	            result += insertBoardImg(conn, bullNo, b.getImgs());
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        close(rs);
+	        close(pstmt);
+	    }
+	    return result;
+	}
+
+	// 게시글 시퀀스 조회하기
+	public int selectSeqBoard(Connection conn) {
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    int result = 0;
+	    try {
+	        pstmt = conn.prepareStatement(sql.getProperty("selectSeqBoard"));
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            result = rs.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        close(rs);
+	        close(pstmt);
+	    }
+	    return result;
+	}
+
+	// 게시글 이미지 등록하기
+	public int insertBoardImg(Connection conn, int bullNo, List<BulletinImg> imgs) {
+	    PreparedStatement pstmt = null;
+	    int result = 0;
+	    try {
+	        pstmt = conn.prepareStatement(sql.getProperty("insertBoardImg"));
+	        for (BulletinImg img : imgs) {
+	            pstmt.setInt(1, bullNo);
+	            pstmt.setString(2, img.getBullImg());
+	            result += pstmt.executeUpdate();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        close(pstmt);
+	    }
+	    return result;
+	}
+	
+	//게시글 이미지 불러오기
+	public List<BulletinImg> selectBoardImg(Connection conn){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<BulletinImg> imgs = new ArrayList<>();
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("selectBoardImg"));
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				imgs.add(getImg(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return imgs;
+	}
+	//좋아요 테이블 전부 가져오기
+	public List<BulletinLike> selectBoardLikeAll(Connection conn){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<BulletinLike> bk = new ArrayList<>();
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("selectBoardLikeAll"));
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				bk.add(getLike(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return bk;
+	}
+	//좋아요 여부 확인하기
+	public boolean selectBoardLike(Connection conn, int no, String id) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		boolean result = false;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("selectBoardLike"));
+			pstmt.setInt(1, no);
+			pstmt.setString(2, id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				if(rs.getInt(1)>0) {
+					result = true;
+				}
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	//좋아요 증가, 감소
+	public void boardLikeCount(Connection conn, int no, boolean result) {
+		PreparedStatement pstmt = null;
+		int rs = 0;
+		try {
+			if(result) {
+				pstmt = conn.prepareStatement(sql.getProperty("boardLikeCountDown"));
+			}else {
+				pstmt = conn.prepareStatement(sql.getProperty("boardLikeCountUp"));
+			}
+			pstmt.setInt(1, no);
+			rs=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+	}
+	//좋아요 생성
+	public void insertBoardLike(Connection conn, int no, String id) {
+		PreparedStatement pstmt =null;
+		int rs = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("insertBoardLike"));
+			pstmt.setInt(1, no);
+			pstmt.setString(2, id);
+			rs=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+	}
+	//좋아요 지우기
+	public void deleteBoardLike(Connection conn, int no, String id) {
+		PreparedStatement pstmt =null;
+		int rs = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("deleteBoardLike"));
+			pstmt.setInt(1, no);
+			pstmt.setString(2, id);
+			rs=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+	}
+	
+	//좋아요 총 갯수
+	public int boardLikeTotalCount(Connection conn, int no) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("boardLikeTotalCount"));
+			pstmt.setInt(1, no);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return result;
+	}
+	
 	//댓글 등록하기
 	public int insertBoardComment(Connection conn, BulletinComment bc) {
 		PreparedStatement pstmt = null;
@@ -225,6 +440,25 @@ public class BoardDao {
 		return result;
 	}
 	
+	
+	//게시글 좋아요 생성
+	private static BulletinLike getLike(ResultSet rs) throws SQLException{
+		return BulletinLike.builder()
+							.bulletinLikeKey(rs.getInt("bulletin_like_key"))
+							.bullNo(rs.getInt("bull_no"))
+							.userId(rs.getString("user_id"))
+							.build();
+	}
+	//게시글 이미지 생성
+	private static BulletinImg getImg(ResultSet rs) throws SQLException{
+		return BulletinImg.builder()
+							.bulletinImgKey(rs.getInt("bulletin_img_key"))
+							.bullNo(rs.getInt("bull_no"))
+							.bullImg(rs.getString("bull_img"))
+							.build();
+	}
+	
+	//댓글 생성
 	private static BulletinComment getComments(ResultSet rs) throws SQLException{
 			 String delCStr = rs.getString("bc_del_c");
 			 char delC = (delCStr != null && !delCStr.isEmpty()) ? delCStr.charAt(0) : 'N';
@@ -239,6 +473,7 @@ public class BoardDao {
 				.commentLevel(rs.getInt("comment_level"))
 				.build();
 	}
+	//게시글 생성
 	private static Bulletin getBulletin(ResultSet rs) throws SQLException{
 		return Bulletin.builder()
 				.bullNo(rs.getInt("b_bull_no"))
@@ -250,6 +485,7 @@ public class BoardDao {
 				.hits(rs.getInt("hits"))
 				.likeC(rs.getInt("like_c"))
 				.comments(new ArrayList<>())
+				.likes(new ArrayList<>())
 				.build();
 	}
 }

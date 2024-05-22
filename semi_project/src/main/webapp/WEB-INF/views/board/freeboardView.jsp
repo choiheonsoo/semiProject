@@ -125,7 +125,7 @@
         %>
 	</div>
 	<form class="freeboard-comment-insert" action="<%=request.getContextPath() %>/board/insertboardcomment.do">
-		<input type="hidden" name="user_id" value=<%=loginUser.getUserId() %>>
+		<input type="hidden" name="user_id" value=<%=loginUser!=null?loginUser.getUserId():"" %>>
 		<input type="hidden" name="comment_level" value="1">
 		<input type="hidden" name="bull_no" value="<%=b.getBullNo() %>">
 		<input type="hidden" name="sub_comment" value="0">
