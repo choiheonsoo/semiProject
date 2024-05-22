@@ -228,7 +228,8 @@
 				for(const user in data){
 					const $reviewWriter=$("<div>").addClass("reviewWriter");
 					const $reviewWriterImg=$("<div>").addClass("reviewWriterImg");
-					
+					const $profileimg=$("<img>");
+					if(user[])
 				}
 			}
 		});
