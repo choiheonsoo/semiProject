@@ -49,7 +49,22 @@ public class UserDao {
 		}
 		return user;
 	}
-	
+	public User searchUserByEmail(Connection con, String email) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		User user = null;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("searchUserByEmail"));
+			pstmt.setString(1, email);
+			rs = pstmt.executeQuery();
+			if(rs.next()) user=getUser(rs);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		} return user;
+	}
 	public int enrollUser(Connection con, User user) {
 		PreparedStatement pstmt = null;
 		int result = 0;

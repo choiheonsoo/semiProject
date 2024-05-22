@@ -65,6 +65,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		font-weight: bold;
 	}
 	form#signupForm>div.enrollTab>button{
+		display: none;
 		padding: 10px;
 		font-size: 16px;
 		background-color: #FFB914;
@@ -102,7 +103,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		width: 250px;
 		/* background-color: magenta; */
 	}
-	button#verifyBtn{
+	button#verifyBtn, button#checkMsgBtn{
 		padding: 5px;
 		font-size: 16px;
 		background-color: rgba(13,110,253,0.53);
@@ -113,8 +114,13 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		border-style: none;
 		transition: background-color 0.3s ease;
 	}
-	button#verifyBtn:hover{
+	button#verifyBtn:hover,
+	button#checkMsgBtn:hover{
 		background-color: rgba(13,110,253,0.84);
+	}
+	div#verifyBox{
+		margin-top: 4%;
+		display: none;
 	}
 </style>
 
@@ -137,22 +143,28 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		            <label for="email">이메일 *</label>
 		            <div>
 			            <input type="email" id="email" name="email" required>
-			            <button onclick="verify();" id="verifyBtn"> 인증하기 </button>
-		            </div>
-		
-		            <label for="phone">휴대전화 *</label>
-		            <input type="tel" id="phone" name="phone" minlength="8" required>
-		
-		            <label for="address">주소</label>
-		            <input type="text" id="address" name="address">
-		
-		            <label for="birthday">생일</label>
-		            <input type="date" id="birthday" name="birthday">
-		                        
-		            <label for="ishavingdog">반려견 유무<br>
-		            	<input type="radio" name="ishavingdog" value="Y"><span> 예</span>
-		            	<input type="radio" name="ishavingdog" value="N" checked><span> 아니오</span>
-		            </label>
+			            <button onclick="verify();" id="verifyBtn">메일발송</button>
+			         </div>
+			         
+			         <div id="verifyBox">
+				        <input type="text" id="verifyText">
+				        <button id="checkMsgBtn">인증하기</button>
+			        </div>
+			       
+			    <label for="phone">휴대전화 *</label>
+			    <input type="tel" id="phone" name="phone" minlength="8" required>
+			
+			    <label for="address">주소</label>
+			    <input type="text" id="address" name="address">
+			
+			    <label for="birthday">생일</label>
+			    <input type="date" id="birthday" name="birthday">
+			                        
+			    <label for="ishavingdog">반려견 유무<br>
+			           	<input type="radio" name="ishavingdog" value="Y"><span> 예</span>
+			          	<input type="radio" name="ishavingdog" value="N" checked><span> 아니오</span>
+			    </label>
+		            
 	            </div>	            
 	            <div id="dogInfo">
 	            	<label for="dogName">반려견 이름 *</label>
@@ -220,14 +232,32 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 			alert("비밀번호는 특수기호와 숫자 및 영문자를 포함하여 8~15글자로 설정해주세요.");
 			return false;
 		} else {
-			true;
+			true;	
 		}
 	}
 	
-	const verify=()=>{
-		const inputEmail = $("#email").val();
-		location.assign("/user/verifyemail.find?email="+inputEmail);
-	}
+	const verify = () => {
+		$.post("<%=request.getContextPath()%>/user/sendemail.do",{
+			"email":$("#email").val()
+		})
+		.done((user)=>{
+			if(user==null){
+				$("#verifyBox").css("display", "block");
+				$("#checkMsgBtn").off('click').on('click', e => {
+		            $.post("<%=request.getContextPath()%>/user/verifyemail.do", {
+		                "inputCode": $("#verifyText").val()
+		            })
+		            .done((data)=> {
+		                if(data){
+		                	$("div.enrollTab>button").css("display", "block");
+		                }
+		            });
+		        });
+			} else {
+				alert("이미 사용 중인 이메일입니다.");
+			}
+	    });
+	}	
 </script>
 
 

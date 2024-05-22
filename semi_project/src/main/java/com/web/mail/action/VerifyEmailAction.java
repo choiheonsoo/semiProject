@@ -13,7 +13,7 @@ public class VerifyEmailAction implements Action {
 	@Override
 	public ActionForward execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		ActionForward forward = null;
-		System.out.println("여기 왔나용?");
+		
 		// 브라우저에서 건너온 세션 확인 → 로그인 상태라면 접근 불가능
 		HttpSession session = req.getSession(true);	// 세션 만들어서
 		if((String)session.getAttribute("isLogin")!=null) {
@@ -29,9 +29,10 @@ public class VerifyEmailAction implements Action {
 			String email=req.getParameter("email");
 			NaverMailSend mailSend = new NaverMailSend();	// 메일 발송
 			String authenCode = mailSend.sendEmail(email);	// session에 저장할 인증코드
-			session.setAttribute(email, authenCode);
+			session.setAttribute("authenCode", authenCode);
 			forward = new ActionForward();
-			forward.setPath("/my_project/user/verifyemail.find");
+			forward.setPath(req.getContextPath()+"/webapp/WEB-INF/views/user/verifyEmail.jsp");
+			
 			forward.setRedirect(false);
 		}
 		return forward;

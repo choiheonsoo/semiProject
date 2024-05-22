@@ -18,7 +18,12 @@ public class UserService {
 		close(conn);
 		return user;
 	}
-	
+	public User searchUserByEmail(String email) {
+		Connection con = getConnection();
+		User user = getUserDao().searchUserByEmail(con, email);
+		close(con);
+		return user;
+	}
 	public String getDogImg(String id) {
 		Connection con = getConnection();
 		String dogImg = getDogDao().getDogImg(con,id);

@@ -71,14 +71,7 @@ public class UserFrontServlet extends HttpServlet {
     		} catch(Exception e) {
     			e.printStackTrace();
     		}
-    	} else if(command.equals("/user/verifyemail.find")) {
-    		action = new VerifyEmailAction();
-    		try {
-    			forward = action.execute(req, resp);
-    		} catch(Exception e) {
-    			e.printStackTrace();
-    		}
-    	}
+    	} 
     	
     	// 3th. 포워딩 처리
     	if(forward != null) {
