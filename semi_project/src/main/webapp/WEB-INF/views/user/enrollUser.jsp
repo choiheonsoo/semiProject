@@ -226,7 +226,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 	
 	const verify=()=>{
 		const inputEmail = $("#email").val();
-		location.assign("<%=request.getContextPath()%>/user/verifyemail.find?email="+inputEmail);
+		location.assign("/user/verifyemail.find?email="+inputEmail);
 	}
 </script>
 

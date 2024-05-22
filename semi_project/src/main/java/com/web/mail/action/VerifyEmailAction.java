@@ -13,7 +13,7 @@ public class VerifyEmailAction implements Action {
 	@Override
 	public ActionForward execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		ActionForward forward = null;
-		
+		System.out.println("여기 왔나용?");
 		// 브라우저에서 건너온 세션 확인 → 로그인 상태라면 접근 불가능
 		HttpSession session = req.getSession(true);	// 세션 만들어서
 		if((String)session.getAttribute("isLogin")!=null) {
@@ -34,7 +34,7 @@ public class VerifyEmailAction implements Action {
 			forward.setPath("/my_project/user/verifyemail.find");
 			forward.setRedirect(false);
 		}
-		return null;
+		return forward;
 	}
 
 }
