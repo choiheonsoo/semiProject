@@ -42,6 +42,7 @@ public class ReviewPagingAjaxServlet extends HttpServlet {
 		int totalPage=(int)Math.ceil((double)totalData/numPerpage);
 		int cPage=Integer.parseInt(request.getParameter("cPage"));
 		
+		//페이지바 버튼에 따른 페이지 판단
 		String btnText=request.getParameter("btnText");
 		if(btnText.equals("<<")) {
 			cPage=1;
@@ -82,8 +83,20 @@ public class ReviewPagingAjaxServlet extends HttpServlet {
 			pageBar+="<button class='pagebarinequalitybtn'>>></button>";
 		}
 		pageBar+="</div>";
-		int productKey=Integer.parseInt(request.getParameter("productKey"));
-		List<User> u=getService().selectReviewByProductKey(productKey, cPage, numPerpage);
+		int productKey=Integer.parseInt(request.getParameter("productKey")); //상품의 고유키
+		
+		//정렬이 최신순인지 별점순인지 판단
+		String sort=request.getParameter("sort");
+		if(sort.equals("최신순")) {
+			//최신순
+			sort="REVIEW_DATE DESC";
+		}else {
+			//별점순
+			sort="RATING DESC";
+		}
+		
+		
+		List<User> u=getService().selectReviewByProductKey(productKey, cPage, numPerpage, sort);
 		Map<String,Object> m=new HashMap<>();
 		m.put("pagebar", pageBar);
 		m.put("user", u);

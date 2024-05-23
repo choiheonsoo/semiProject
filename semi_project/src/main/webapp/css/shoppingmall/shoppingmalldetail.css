@@ -313,6 +313,15 @@
 	background-color:white;
 	border:none;
 }
+.datesort{
+	color:lightgray;
+}
+.ratingsort{
+	color:lightgray;
+}
+.selectedReviewSortbtn{
+	color:black;	
+}
 .reviewSortMenu div{
 	margin-left:1%;
 	margin-right:1%;
@@ -366,6 +375,7 @@
 #reviewpagebar{
 	display:flex;
 	justify-content:center;
+	align-items:center;
 }
 .pagebarnum{
 	border:1px solid #346aff;
@@ -379,6 +389,7 @@
 	display:flex;
 	justify-content:center;
 	align-items:center;
+	margin-bottom:0;
 }
 .pagebarnumbtn{
 	background:none;
@@ -395,6 +406,7 @@
 }
 .pagebarinequality{
 	margin-right:15px;
+	margin-bottom:0;
 }
 .pagebarinequalitybtn{
 	background:none;
