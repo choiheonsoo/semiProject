@@ -173,7 +173,7 @@
 					var activeExists = false;
 					//메뉴 버튼 눌렀을 때
 					$(".post_menu").click(function(no){
-						$('.post_footer_menu').toggleClass('visible');
+						$('.post_footer_menu').toggle('visible');
 					});
 					//삭제 버튼 눌렀을 때
 					$("#post_delete").click(e=>{
@@ -229,10 +229,22 @@
 					   		$div.append($('<p>').addClass('main_comment_id').text('<%=loginUser.getUserId()%>'));
 					   		$div.append($('<p>').addClass('main_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
-					   		$("#post_comment").append($('<button>').text('댓글달기'));
+					   		var mainComment=value.mainComment;
+						   	  var button = $('<button>').text('댓글달기');
+						        button.on('click', function(event) {
+						            sub_comment(event, mainComment);
+						        });
+						        $("#post_comment").append(button);
+					   		
 						}else if(value.commentLevel==2){
 							let $div = $('<div id="sub_comment">');
 					   		let $img = $('<img>').attr("scr","<%=request.getContextPath()%>/images/user/user.png").addClass('sub_comment_img');
+					   		$.each(data.dog,function(i,value1){
+								if(value.userId==value1.userId){
+							   		$img.attr("src","<%=request.getContextPath()%>/upload/user/"+value1.dogImg);
+							   		return false;
+								}
+							});
 					   		$.each(data.dog,function(i,value1){
 								if(value.userId==value1.userId){
 							   		$img.attr("src","<%=request.getContextPath()%>/upload/user/"+value1.dogImg);
@@ -246,6 +258,69 @@
 						}
 						
 					});
+					
+					
+					//대댓글 ajax로
+					const sub_comment = (event, mainComment) => {
+				    var commentForm = $("#post_footer_insert_comment1");
+				
+				    // 댓글 폼이 있는지 확인
+				    if (commentForm.length === 0) {
+				        var msg = `<div id="post_footer_insert_comment1">
+				                        <form id="comment_form">
+				                            <input type="hidden" name="user_id" value="<%=loginUser.getUserId()%>">
+				                            <input type="hidden" name="comment_level" value="2"> 
+				                            <input type="hidden" name="sub_comment" value="0">
+				                            <input type="text" id="post_comment_reply" name="content" placeholder="댓글 달기">
+				                            <input type="submit" style="display:none">
+				                        </form>
+				                    </div>`;
+				        var newElement = $(msg);
+				
+				        $(event.target).after(newElement);
+				
+				        // 댓글 폼이 추가되면 이벤트 주기
+				        newElement.find('form').submit(e => {
+				            var replyContent = newElement.find('#post_comment_reply').val();
+				            $.ajax({  
+				                type: "POST",
+				                url: "<%=request.getContextPath() %>/board/insertboardcomment.do",
+				                data: {
+				                    user_id: '<%=loginUser.getUserId()%>',
+				                    comment_level: 2,
+				                    bull_no: data.b.bullNo,
+				                    sub_comment: mainComment,
+				                    content: replyContent
+				                },
+				                success: function(response) {
+				                    alert("댓글 등록 성공");
+				                    newElement.find('#post_comment_reply').val('');
+				                    let $div = $('<div id="sub_comment">');
+				                    let $img = $('<img>').attr("src","<%=request.getContextPath()%>/images/user/user.png").addClass('sub_comment_img');
+				                    $.each(data.dog,function(i,value1){
+				                        if('<%=loginUser.getUserId()%>'==value1.userId){
+				                            $img.attr("src","<%=request.getContextPath()%>/upload/user/"+value1.dogImg);
+				                            return false;
+				                        }
+				                    });
+				                    $div.append($img);
+				                    $div.append($('<p>').addClass('sub_comment_id').text('<%=loginUser.getUserId()%>'));
+				                    $div.append($('<p>').addClass('sub_comment_content').text(replyContent));
+				                    $("#post_comment").append($div);
+				                },
+				                error: function() {
+				                    alert('댓글 등록에 실패했습니다.');
+				                }
+				            });
+				            e.preventDefault();
+				            return false;
+				        });
+				    } else {
+				        // 이미 댓글 폼이 있으면 지움
+				        commentForm.remove();
+				    }
+				}
+
 					
 					//댓글 동록
 					$('#post_footer_insert_comment>form').submit(e=>{
@@ -288,5 +363,7 @@
 			});
 			$('.popup').toggle();
 		}
+			
+		
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

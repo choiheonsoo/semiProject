@@ -85,7 +85,7 @@
 			</div>
 		</div>
 		<div class="userInfo">
-			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/pickitems.do?userId=<%=loginUser.getUserId()%>')">
+			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/wishlist.do')">
 				<img src="<%=request.getContextPath() %>/images/member/heartIcon.png" alt="찜" width="40" height="40">
 				<p>찜 한 상품</p>
 			</div>

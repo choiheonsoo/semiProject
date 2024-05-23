@@ -201,12 +201,13 @@ public class ShoppingmallDao {
 	 * 	매개변수 : 상품고유키
 	 * 	반환 : 리뷰 리스트
 	 */	
-	 public List<User> selectReviewByProductKey(Connection conn, int productKey, int cPage, int numPerpage){
+	 public List<User> selectReviewByProductKey(Connection conn, int productKey, int cPage, int numPerpage, String sort){
 		 PreparedStatement pstmt=null;
 		 ResultSet rs=null;
 		 List<User> result=new ArrayList<>();
+		 String newSql=sql.getProperty("selectReviewByProductKey").replace(":SORT", sort);
 		 try {
-			 pstmt=conn.prepareStatement(sql.getProperty("selectReviewByProductKey"));
+			 pstmt=conn.prepareStatement(newSql);
 			 pstmt.setInt(1, productKey);
 			 pstmt.setInt(2, (cPage-1)*numPerpage+1);
 			 pstmt.setInt(3, cPage*numPerpage);
@@ -230,7 +231,7 @@ public class ShoppingmallDao {
 	 * 	매개변수 : ResultSet
 	 * 	반환 : 상품 객체
 	 */
-	private Product getProductForListpage(ResultSet rs) throws SQLException{
+	public static Product getProductForListpage(ResultSet rs) throws SQLException{
 		Map<String, ProductImg> imgs=new HashMap<>();
 		imgs.put("thumbnail", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
 		return new Product().builder()

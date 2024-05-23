@@ -34,8 +34,8 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 클릭한 상품 상세 페이지로 이동
-		int productKey=Integer.parseInt(request.getParameter("productKey"));
-		String r=request.getParameter("r");
+		int productKey=Integer.parseInt(request.getParameter("productKey")); //해당 상품키
+		String r=request.getParameter("r"); //r값으로 리뷰부분으로 스크롤 바로 내리는지 판단
 		Product p=getService().selectProductByKey(productKey); //상품관련 정보를 담은 상품객체
 		int cPage=1;
 		int numPerpage=3;
@@ -65,7 +65,7 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		}
 		pageBar+="</div>";
 		
-		List<User> u=getService().selectReviewByProductKey(productKey,cPage,numPerpage); //리뷰정보를 담은 회원객체리스트
+		List<User> u=getService().selectReviewByProductKey(productKey,cPage,numPerpage,"REVIEW_DATE DESC"); //리뷰정보를 담은 회원객체리스트
 		
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("product", p);

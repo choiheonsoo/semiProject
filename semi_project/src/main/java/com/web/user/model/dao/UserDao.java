@@ -77,6 +77,7 @@ public class UserDao {
 			pstmt.setString(5, user.getPhone());
 			pstmt.setString(6, user.getAddress());
 			pstmt.setDate(7, user.getBirthDay());
+			pstmt.setString(8, user.getZipCode());
 			result = pstmt.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -188,6 +189,7 @@ public class UserDao {
 				.point(rs.getInt("point"))
 				.status(rs.getBoolean("status"))
 				.birthDay(rs.getDate("birth_day"))
+				.zipCode(rs.getString("zipcode"))
 				.build();
 	}
 }

@@ -313,6 +313,15 @@
 	background-color:white;
 	border:none;
 }
+.datesort{
+	color:lightgray;
+}
+.ratingsort{
+	color:lightgray;
+}
+.selectedReviewSortbtn{
+	color:black;	
+}
 .reviewSortMenu div{
 	margin-left:1%;
 	margin-right:1%;
@@ -366,6 +375,7 @@
 #reviewpagebar{
 	display:flex;
 	justify-content:center;
+	align-items:center;
 }
 .pagebarnum{
 	border:1px solid #346aff;
@@ -379,6 +389,7 @@
 	display:flex;
 	justify-content:center;
 	align-items:center;
+	margin-bottom:0;
 }
 .pagebarnumbtn{
 	background:none;
@@ -395,6 +406,7 @@
 }
 .pagebarinequality{
 	margin-right:15px;
+	margin-bottom:0;
 }
 .pagebarinequalitybtn{
 	background:none;
@@ -403,21 +415,37 @@
 }
 /* q&a 컨테이너 */
 .qnaContainer{
-	margin-top:3%;
 	height:auto;
 	display:flex;
 	justify-content:center;
+	margin-top:3%;
+	align-items:center;
 }
-.qnaContainer>div{
+.qnaPostContainer{
 	width:90%;
-	height:auto;
-	border:1px solid red;
 	display:flex;
 	flex-direction:column;
+	
 }
-/* qnatext */
+.qnaHead{
+	display:flex;
+	justify-content: space-between;
+    align-items: center;
+}
+.qnaPostBox{
+	display: flex;
+    justify-content: space-between;
+    border-bottom: lightgray;
+}
+.qnaTitle{
+	display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 85%;
+}
+
 .qnaText{
-	font-size:30px;
+	font-size:50px;
 	font-weight:900;
 }
 
