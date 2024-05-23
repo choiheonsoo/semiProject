@@ -212,7 +212,10 @@
 			</div>
 			<div class="qnaPostBox">
 				<div class="qnaTitle">
-					<div class="qnatag">
+					<div class="arrow">
+						<img src="<%=request.getContextPath()%>/images/shoppingmall/down-right-arrow.png">
+					</div>
+					<div class="answertag">
 						답변
 					</div>
 					<div class="qnaContent">
@@ -224,6 +227,9 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="qnapagebar">
+		
 	</div>
 </section>
 	<div class="modalContainer modalhidden">
@@ -238,6 +244,19 @@
 				<div class="modalallimgsdiv"></div>
 			</div>
 		</div>
+	</div>
+	<div class="qnamodalContainer qnamodalhidden">
+		<div class="qnacontentdiv">
+			<div class="qnatextdiv">
+				<textarea class="qnatextarea"></textarea>
+			</div>
+			<div class="qnabtndiv">
+				<button class="qnabtn">문의 등록하기</button>
+			</div>	
+		</div>
+	</div>
+	<div class="topbtn tophidden">
+		top
 	</div>
 <script>
 	//리뷰페이징처리 이벤트

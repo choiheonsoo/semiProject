@@ -21,6 +21,7 @@ import com.web.shoppingmall.model.dto.ProductCategory;
 import com.web.shoppingmall.model.dto.ProductImg;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.ProductSize;
+import com.web.shoppingmall.model.dto.Qna;
 import com.web.shoppingmall.model.dto.Review;
 import com.web.shoppingmall.model.dto.ReviewImg;
 import com.web.user.model.dto.User;
@@ -215,6 +216,21 @@ public class ShoppingmallDao {
 			 while(rs.next()) {
 				 getUser(result, rs);
 			 }
+		 }catch(SQLException e) {
+			 e.printStackTrace();
+		 }finally {
+			 close(rs);
+			 close(pstmt);
+		 }return result;
+	 }
+	 
+	 public List<Qna> selectQnaByProductKey(Connection conn, int productKey, int cPage, int numPerpage){
+		 List<Qna> result=new ArrayList<>();
+		 PreparedStatement pstmt=null;
+		 ResultSet rs=null;
+		 try {
+			 pstmt=conn.prepareStatement(sql.getProperty("selectQnaByProductKey"));
+			 
 		 }catch(SQLException e) {
 			 e.printStackTrace();
 		 }finally {

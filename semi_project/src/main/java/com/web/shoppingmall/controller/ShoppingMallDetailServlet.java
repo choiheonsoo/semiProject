@@ -38,8 +38,8 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		String r=request.getParameter("r"); //r값으로 리뷰부분으로 스크롤 바로 내리는지 판단
 		Product p=getService().selectProductByKey(productKey); //상품관련 정보를 담은 상품객체
 		int cPage=1;
-		int numPerpage=3;
 		int pageBarSize=5;
+		int numPerpage=3;
 		int totalData=p.getTotalReviewCount();
 		int totalPage=(int)Math.ceil((double)totalData/numPerpage);
 		int pageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
@@ -64,7 +64,12 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 			pageBar+="<button class='pagebarinequalitybtn'>>></button>";
 		}
 		pageBar+="</div>";
-		
+		int qnaNumPerpage=3;
+//		int qnaTotalData=getse.getTotalQnaCount();
+		int qnaTotalPage=(int)Math.ceil((double)totalData/numPerpage);
+		int qnaPageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
+		int qnaPageEnd=pageNo+pageBarSize-1;
+
 		List<User> u=getService().selectReviewByProductKey(productKey,cPage,numPerpage,"REVIEW_DATE DESC"); //리뷰정보를 담은 회원객체리스트
 		
 		request.setAttribute("pageBar", pageBar);
