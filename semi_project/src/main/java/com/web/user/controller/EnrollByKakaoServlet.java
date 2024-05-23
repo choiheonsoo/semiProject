@@ -38,7 +38,7 @@ public class EnrollByKakaoServlet extends HttpServlet {
 		}		
 		Gson gson = new Gson();
 		gson.toJson(sb, response.getWriter());
-		System.out.println(sb);	// {"id":3490408708,"email":"dkrl3113"}
+		
 		
 	}
 
