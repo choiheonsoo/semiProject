@@ -231,7 +231,7 @@ public class ShoppingmallDao {
 	 * 	매개변수 : ResultSet
 	 * 	반환 : 상품 객체
 	 */
-	private Product getProductForListpage(ResultSet rs) throws SQLException{
+	public static Product getProductForListpage(ResultSet rs) throws SQLException{
 		Map<String, ProductImg> imgs=new HashMap<>();
 		imgs.put("thumbnail", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
 		return new Product().builder()

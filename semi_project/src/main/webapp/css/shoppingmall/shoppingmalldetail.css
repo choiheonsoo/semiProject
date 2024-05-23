@@ -415,21 +415,37 @@
 }
 /* q&a 컨테이너 */
 .qnaContainer{
-	margin-top:3%;
 	height:auto;
 	display:flex;
 	justify-content:center;
+	margin-top:3%;
+	align-items:center;
 }
-.qnaContainer>div{
+.qnaPostContainer{
 	width:90%;
-	height:auto;
-	border:1px solid red;
 	display:flex;
 	flex-direction:column;
+	
 }
-/* qnatext */
+.qnaHead{
+	display:flex;
+	justify-content: space-between;
+    align-items: center;
+}
+.qnaPostBox{
+	display: flex;
+    justify-content: space-between;
+    border-bottom: lightgray;
+}
+.qnaTitle{
+	display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 85%;
+}
+
 .qnaText{
-	font-size:30px;
+	font-size:50px;
 	font-weight:900;
 }
 

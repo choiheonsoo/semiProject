@@ -192,8 +192,37 @@
 		<%=pageBar %>
 	</div>
 	<div class="qnaContainer">
-		<div>
-			<span class="qnaText">Q&A</span>
+		<div class="qnaPostContainer">
+			<div class="qnaHead">
+				<span class="qnaText">Q&A</span>
+				<button class="enrollQna">문의하기</button>
+			</div>
+			<div class="qnaPostBox">
+				<div class="qnaTitle">
+					<div class="qnatag">
+						질문
+					</div>
+					<div class="qnaContent">
+						블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라
+					</div>
+				</div>
+				<div class="qnadate">
+					<span>2024.05.04</span>
+				</div>
+			</div>
+			<div class="qnaPostBox">
+				<div class="qnaTitle">
+					<div class="qnatag">
+						답변
+					</div>
+					<div class="qnaContent">
+						블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라
+					</div>
+				</div>
+				<div class="qnadate">
+					<span>2024.05.04</span>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
