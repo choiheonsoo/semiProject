@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.web.shoppingmall.model.dto.Product;
+import com.web.shoppingmall.model.dto.Qna;
 import com.web.user.model.dto.User;
 /**
  * Servlet implementation class ShoppingMallDetailServlet
@@ -39,6 +40,7 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		Product p=getService().selectProductByKey(productKey); //상품관련 정보를 담은 상품객체
 		int cPage=1;
 		int pageBarSize=5;
+		
 		int numPerpage=3;
 		int totalData=p.getTotalReviewCount();
 		int totalPage=(int)Math.ceil((double)totalData/numPerpage);
@@ -46,6 +48,7 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 		int pageEnd=pageNo+pageBarSize-1;
 		
 		String pageBar="<div id='reviewpagebar'>";
+		
 		pageBar+="<p class='pagebarinequality'><<</p>";
 		pageBar+="<p class='pagebarinequality'><</p>";
 		while(!(pageNo>pageEnd||pageNo>totalPage)) {
@@ -64,17 +67,45 @@ public class ShoppingMallDetailServlet extends HttpServlet {
 			pageBar+="<button class='pagebarinequalitybtn'>>></button>";
 		}
 		pageBar+="</div>";
-		int qnaNumPerpage=3;
-//		int qnaTotalData=getse.getTotalQnaCount();
-		int qnaTotalPage=(int)Math.ceil((double)totalData/numPerpage);
-		int qnaPageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
-		int qnaPageEnd=pageNo+pageBarSize-1;
-
-		List<User> u=getService().selectReviewByProductKey(productKey,cPage,numPerpage,"REVIEW_DATE DESC"); //리뷰정보를 담은 회원객체리스트
 		
+		
+		int qnaNumPerpage=5;
+		int qnaTotalData=getService().getTotalQnaCount(productKey);
+		int qnaTotalPage=(int)Math.ceil((double)qnaTotalData/qnaNumPerpage);
+		int qnaPageNo=((cPage-1)/pageBarSize)*pageBarSize+1;
+		int qnaPageEnd=qnaPageNo+pageBarSize-1;
+		
+		String qnaPageBar="<div id='qnapagebar'>";
+		qnaPageBar+="<p class='qnapagebarinequality'><<</p>";
+		qnaPageBar+="<p class='qnapagebarinequality'><</p>";
+		while(!(qnaPageNo>qnaPageEnd||qnaPageNo>qnaTotalPage)) {
+			if(qnaPageNo==cPage) {
+				qnaPageBar+="<p class='qnapagebarnum'>"+qnaPageNo+"</p>";
+			}else {
+				qnaPageBar+="<button class='qnapagebarnumbtn'>"+qnaPageNo+"</button>";
+			}
+			qnaPageNo++;
+		}
+		if(qnaPageNo>qnaTotalPage) {
+			qnaPageBar+="<p class='qnapagebarinequality'>></p>";
+			if(cPage<totalPage) {
+				qnaPageBar+="<button class='qnapagebarinequalitybtn'>>></button>";
+			}else {
+				qnaPageBar+="<p class='qnapagebarinequality'>>></p>";
+			}
+		}else {
+			qnaPageBar+="<button class='qnapagebarinequalitybtn'>></button>";
+			qnaPageBar+="<button class='qnapagebarinequalitybtn'>>></button>";
+		}
+		qnaPageBar+="</div>";
+		
+		List<User> u=getService().selectReviewByProductKey(productKey, cPage, numPerpage, "REVIEW_DATE DESC"); //리뷰정보를 담은 회원객체리스트
+		List<Qna> q=getService().selectQnaByProductKey(productKey, cPage, qnaNumPerpage);
 		request.setAttribute("pageBar", pageBar);
+		request.setAttribute("qnaPageBar", qnaPageBar);
 		request.setAttribute("product", p);
 		request.setAttribute("user", u);
+		request.setAttribute("qna", q);
 		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/shoppingmalldetail.jsp").forward(request, response);
 	}
 

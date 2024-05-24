@@ -372,6 +372,9 @@
 	height:auto;
 }
 /* 리뷰 페이지바 */
+.pagebardiv{
+	margin-top:10px;
+}
 #reviewpagebar{
 	display:flex;
 	justify-content:center;
@@ -449,13 +452,22 @@
     justify-content: space-between;
     border-bottom: 1px solid lightgray;
 }
-.qnaTitle{
+.qnaAnswerBox{
 	display: flex;
     justify-content: space-between;
+    border-bottom: 1px solid lightgray;
+}
+.qnaTitle{
+	display: flex;
+    justify-content: flex-start;
     align-items: center;
     width: 85%;
+    margin-bottom:5px;
+    margin-top:5px;
 }
-
+.qnaContent{
+	width:75%;
+}
 .qnaText{
 	font-size:50px;
 	font-weight:900;
@@ -476,13 +488,59 @@
 }
 .arrow{
 	display: flex;
-    width: 50px;
+    width: 30px;
     height: 25px;
     margin-left:15px;
 }
 .arrow img{
 	width:20px;
 	height:20px;
+}
+/* qna 페이지바 */
+.qnapagebarContainer{
+	margin-top:10px;
+	margin-bottom:10%;
+}
+#qnapagebar{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+.qnapagebarnum{
+	border:1px solid #346aff;
+	margin-right:15px;
+	height:30px;
+	width:30px;
+	border-radius:5px;
+	transition:hover .1s ease;
+	background-color:#346aff;
+	color:white;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin-bottom:0;
+}
+.qnapagebarnumbtn{
+	background:none;
+	border:1px solid #346aff;
+	margin-right:15px;
+	height:30px;
+	width:30px;
+	border-radius:5px;
+	transition:hover .1s ease;
+}
+.qnapagebarnumbtn:hover{
+	color:white;
+	background-color:#346aff;
+}
+.qnapagebarinequality{
+	margin-right:15px;
+	margin-bottom:0;
+}
+.qnapagebarinequalitybtn{
+	background:none;
+	border:none;
+	margin-right:15px;
 }
 /* modal */
 /* 리뷰 이미지 모달 */
@@ -630,21 +688,23 @@ textarea:focus {
 	background-color:#346aff;
 	color:white;
 }
-
 /* top버튼 */
 .topbtn{
 	position: fixed;
-    top: 80%;
-    left: 90%;
+    top: 75%;
+    left: 96%;
     width: 50px;
+    border:none;
     height: 50px;
-    border: 1px solid #346aff;
-    border-radius: 5px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: blue;
+    color:white;
+    font-weight:900;
 }
 .topbtn:hover{
-	background-color:#346aff;
+	background-color:rgb(0,0,0,0.8);
 	color:white;
 }

@@ -7,19 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 /*
- * 	상품 문의(Q&A)글 클래스
+ * 	문의글 답변글에 대한 정보를 담는 클래스
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Qna {
-	private int qnaKey;
-	private int productKey;
-	private String userId;
-	private String qnaContent;
-	private Date qnaDate;
-	
-	private QnaAnswer answer;
+public class QnaAnswer {
+	private int qnaAnswerKey;
+	private String qnaAnswerContent;
+	private Date qnaAnswerDate;
 }
