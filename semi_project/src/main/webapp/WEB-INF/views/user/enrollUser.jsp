@@ -70,7 +70,6 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		font-weight: bold;
 	}
 	form#signupForm>div.enrollTab>button{
-		display: none;
 		padding: 10px;
 		font-size: 16px;
 		background-color: #FFB914;
@@ -244,8 +243,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 					    		{"inputCode": $("#verifyText").val()})
 					        .done((data)=> {	// data ? Servlet에서 입력한 값.equals(session에 저장한 인증코드)
 					            if(data==true){	// 인증코드가 같을 경우
-					            	alert("인증이 완료되었습니다.")
-					               	$("div.enrollTab>button[type=submit]").css("display", "block");
+					            	alert("인증이 완료되었습니다.");
 					            } else {
 					            	alert("올바른 인증코드가 아닙니다. 다시 시도해주세요.");
 					            }
@@ -293,7 +291,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		const checkInfo=()=>{
 			const pw = document.getElementById("password").value;
 			const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-			const regid = /^[a-z]+[a-z0-9]{5,13}$/g;
+			const regid = /^[a-z][a-z0-9]{5,13}$/;
 			const regphone = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
 			if(!reg.test(pw)){
 				$("#password").val("");
@@ -307,11 +305,6 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 				alert('비밀번호가 일치하지 않습니다.');
 				$("#password").focus();
 				return false;
-			} else if(!regid.test($("#userId").val())){
-				$("#userId").val("").attr("readonly",false);
-				alert("아이디는 영문자로 시작하여 숫자를 포함하여 6~14글자로 설정해주세요.");
-				$("#userId").focus();
-				return false;
 			} else if(!regphone.test($("#phone").val())){
 				$("#phone").val("");
 				alert("올바른 핸드폰 번호를 입력해주세요.");
@@ -321,10 +314,17 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 				alert("산책하개의 회원이 되신 것을 환영합니다");
 				return true;
 			}
-			
 		}
 		
 		// 비밀번호 일치 검사
+		$("#password").keyup(e=>{
+			$("#pwresult").html("");
+			if($("#password").val()===$("#passwordck").val()){
+				$("<p>").text('비밀번호가 일치합니다.').css('color','green').appendTo($("#pwresult"));
+			} else {
+				$("<p>").text('비밀번호가 불일치합니다.').css('color','red').appendTo($("#pwresult"));
+			}
+		})
 		$("#passwordck").keyup(e=>{
 			$("#pwresult").html("");
 			if($("#password").val()===$("#passwordck").val()){
@@ -337,18 +337,25 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 		// 아이디 유효 검사
 		document.addEventListener("DOMContentLoaded", function() {
 			const checkId = () =>{
-				$.post("<%=request.getContextPath()%>/user/searchId.do",
-						{"userId":$("#userId").val()}
-				)
-				.done(id=>{
-					if(id.length>0){
-						alert('이미 사용 중인 아이디 입니다.');
-						document.getElementById("userId").value = "";
-					} else {
-						alert('사용 가능한 아이디 입니다.');
-						$("#userId").attr("readonly", true).css("fontWeight", "bolder");
-					}
-				})
+				const regid = /^[a-z][a-z0-9]{5,13}$/;
+				if(!regid.test($("#userId").val())){
+					$("#userId").val("").attr("readonly",false);
+					alert("아이디는 영문자로 시작하여 숫자를 포함하여 6~14글자로 설정해주세요.");
+					$("#userId").focus();
+				} else {
+					$.post("<%=request.getContextPath()%>/user/searchId.do",
+							{"userId":$("#userId").val()}
+					)
+					.done(id=>{
+						if(id.length>0){
+							alert('이미 사용 중인 아이디 입니다.');
+							document.getElementById("userId").value = "";
+						} else {
+							alert('사용 가능한 아이디 입니다.');
+							$("#userId").attr("readonly", true).css("fontWeight", "bolder");
+						}
+					})
+				}
 			}
 			document.getElementById("verifyId").onclick = checkId;
         });
