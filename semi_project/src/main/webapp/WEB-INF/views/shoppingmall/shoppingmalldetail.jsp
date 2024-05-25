@@ -325,7 +325,20 @@
 		</div>
 	</div>
 <script>
-
+	//구매버튼 누르기
+	const movePaypage=()=>{
+		<%if(loginUser!=null){%>
+			//로그인 한 상태
+			const size=$("select[name=size]").val();
+			const color=$("select[name=color]").val();
+			const quantity=$("purchaseQuantity").text();
+			location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>&size='+size+'&color='+color+'&quantity='+quantity);
+		<%}else{%>
+			//로그인 안 한 상태
+			$(".loginalertmodal").remove("loginalertmodalhidden");
+		<%}%>
+	}
+	
 	$(document).ready(()=>{
 		let btn=null;
 		
@@ -684,11 +697,6 @@
 		}
 	});
 	
-	//구매페이지 이동 함수
-	const movePaypage=()=>{
-		location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
-	}
-	
 	//이미지 누르면 메인이미지 바뀌게하는 함수
 	$(".imgbordercontainer").mouseenter(e=>{
 		console.log($(e.target));
@@ -771,7 +779,7 @@
 	    <%if(!options.isEmpty()){%>
 	    	const $optionDiv=$("<div>").addClass("option").append($("<span>").text("옵션선택 *"));
 	    	<%if(!options.stream().anyMatch(e->e.containsKey("NULL"))){%>
-	    		const $sizeSelect=$("<select>").attr("name","size").append($("<option>").attr({disabled:true,selected:true}).text("사이즈를 선택해주세요"));
+	    		const $sizeSelect=$("<select>").attr("name","size");//.append($("<option>").attr({disabled:true,selected:true}).text("사이즈를 선택해주세요"));
     			<%List<String> key=new ArrayList<>();%>
 	    		<%for(Map<String,String> m:options){
 	    			for(String k:m.keySet()){
@@ -785,12 +793,19 @@
 		    		$optionDiv.append($sizeSelect);
 	    		<%};%>
 	    		<%if(!options.stream().anyMatch(e->e.containsValue("NULL"))){%>
-	    			const $colorSelect=$("<select>").attr("name","color").append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
-	    			$optionDiv.append($colorSelect);
+	    			const $colorSelect=$("<select>").attr("name","color");//.append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
+	    			<%for(Map<String,String> m:options){%>
+	    				<%for(Map.Entry<String,String> e:m.entrySet()){%>
+	    					<%if(e.getKey().equals(options.get(0).keySet().iterator().next())){%>
+	    						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>").text("<%=e.getValue()%>"));
+	    						$optionDiv.append($colorSelect);
+	    					<%}%>
+	    				<%}%>
+	    			<%}%>
 	    		<%}%>
 	    	<%}else{%>
 	    		<%if(!options.stream().anyMatch(e->e.containsValue("NULL"))){%>
-    				const $colorSelect=$("<select>").attr("name","color").append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
+    				const $colorSelect=$("<select>").attr("name","color");//.append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
     				<%for(Map<String,String> m:options){%>
     					<%for(Map.Entry<String, String> e:m.entrySet()){%>
     						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>").text("<%=e.getValue()%>"));
