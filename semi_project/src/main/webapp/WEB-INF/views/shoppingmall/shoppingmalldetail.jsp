@@ -246,6 +246,7 @@
 		top
 	</button>
 </section>
+	<!-- 리뷰 이미지 모달창 -->
 	<div class="modalContainer modalhidden">
 		<div class="modalContent">
 			<button class="modalclosebtn">x</button>
@@ -259,24 +260,73 @@
 			</div>
 		</div>
 	</div>
+	<!-- 문의 등록하기 모달창 -->
 	<div class="qnamodalContainer qnamodalhidden">
-		<div class="qnacontentdiv">
-			<div class="qnatextdiv">
-				<textarea class="qnatextarea"></textarea>
+		<div class="qnaheaddiv">
+			<div class="modalhead">
+				<h2 class="qtext">문의하기</h2>
+				<h2 class="qnamodalclosebtn">x</h2>
+			</div>
+			<div class="qnacontentdiv">
+				<div class="contenthead">
+					<span>문의내용</span>
+				</div>
+				<div class="qnatextdiv">
+					<textarea class="qnatextarea"></textarea>
+				</div>
 			</div>
 			<div class="qnabtndiv">
 				<button class="qnabtn">문의 등록하기</button>
 			</div>	
 		</div>
 	</div>
+	<!-- 로그인 하라는 알림 모달창 -->
+	<div class="loginalertmodal loginalertmodalhidden">
+		<div class="alertdiv">
+			<div class="alerttextdiv">
+				<span>로그인이 필요한 서비스입니다.<br>
+				로그인 하시겠습니까?</span>
+			</div>
+			<div class="alertbtndiv">
+				<button class="alertnobtn">아니오</button>
+				<button class="alertyesbtn">예</button>
+			</div>
+		</div>
+	</div>
 <script>
+	//문의하기 등록버튼 눌러서 등록하기
+	$(".qnabtn").click(e=>{
+		if(loginUser!=null){
+			//로그인 한 상태
+			if($(".qnatextarea").val()==""){
+				alert("내용을 입력해주세요!");
+			}else{
+				$.ajax({
+					url:"<%=request.getContextPath()%>/shoppingmall/enrollqna.do?productKey="
+				})
+			}
+		}else{
+			// 로그인 안한 상태. 로그인 하라고 창 띄우기
+			$(".loginalertmodal").removeClass("loginalertmodalhidden");
+		}
+	});
+	
 	//문의하기 버튼 누를시 문의글등록모달창 띄우기
 	$(".enrollQna").click(e=>{
 		$(".qnamodalContainer").removeClass("qnamodalhidden");
 	})
-	//문의하기 등록모달창 x 버튼누르면 모달창 닫기
-	$(".closeqnamodal").click(e=>{
-		$(".qnamodalContainer").addClass("qnamidalhidden");
+	//문의하기 모달창 x 버튼누르면 모달창 닫기
+	$(".qnamodalclosebtn").click(e=>{
+		$(".qnamodalContainer").addClass("qnamodalhidden");
+	})
+	
+	//로그인 알림 모달창 '아니오' 버튼 눌렀을 때
+	$(".alertnobtn").click(e=>{
+		$(".loginalertmodal").addClass("loginalertmodalhidden");
+	})
+	//로그인 알림 모달창 '예' 버튼 눌렀을 때
+	$(".alertyesbtn").click(e=>{
+		location.assign("<%=request.getContextPath()%>/user/login.do");
 	})
 
 	//top 버튼 스크롤 이벤트
@@ -422,7 +472,7 @@
 		})
 		$("html").css("overflow","hidden");
 		$(".modalContainer").removeClass("modalhidden");		
-	})
+	});
 
 	//모달창 닫기
 	$(".modalclosebtn").click(e=>{
