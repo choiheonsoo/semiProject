@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductOption;
+import com.web.shoppingmall.model.dto.Qna;
 import com.web.user.model.dto.User;
 /*
  * 	쇼핑몰 관련 서비스 클래스
@@ -100,10 +101,34 @@ public class ShoppingmallService {
 	 * 	매개변수 : 상품고유키
 	 * 	반환 : 리뷰 리스트
 	 */	
-	 public List<User> selectReviewByProductKey(int productKey, int cPage, int numPerpage){
+	 public List<User> selectReviewByProductKey(int productKey, int cPage, int numPerpage, String sort){
 		 Connection conn=getConnection();
-		 List<User> result=getDao().selectReviewByProductKey(conn, productKey, cPage, numPerpage);
+		 List<User> result=getDao().selectReviewByProductKey(conn, productKey, cPage, numPerpage, sort);
 		 close(conn);
 		 return result;
 	 }
+	 
+	 /*
+	  * 상품 상세페이지의 해당 상품 qna 개수를 구해오는 함수
+	  * 매개변수 : 상품 고유키
+	  * 반환 : qna 총 개수
+	  */
+	 public int getTotalQnaCount(int productKey) {
+		 Connection conn=getConnection();
+		 int result=getDao().getTotalQnaCount(conn, productKey);
+		 close(conn);
+		 return result;
+	 }
+	 
+	/*
+	 * 	상품 상세페이지의 해당 상품의 Qna글을 반환
+	 * 	매개변수 : 상품 고유키, 현재페이지, numPerpage
+	 * 	반환 : Qna 리스트
+	 */
+	public List<Qna> selectQnaByProductKey(int productKey, int cPage, int qnaNumPerpage){
+		Connection conn=getConnection();
+		List<Qna> result=getDao().selectQnaByProductKey(conn, productKey, cPage, qnaNumPerpage);
+		close(conn);
+		return result;
+	}
 }

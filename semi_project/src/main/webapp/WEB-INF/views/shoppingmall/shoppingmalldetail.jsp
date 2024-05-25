@@ -3,7 +3,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List,com.web.shoppingmall.model.dto.Product,java.util.Map,com.web.shoppingmall.model.dto.ProductImg,
 				 com.web.shoppingmall.model.dto.ProductOption,java.util.HashMap,java.util.ArrayList,java.util.Set,
-				 com.web.user.model.dto.User, com.web.shoppingmall.model.dto.Review, com.web.shoppingmall.model.dto.ReviewImg" %>
+				 com.web.user.model.dto.User, com.web.shoppingmall.model.dto.Review, com.web.shoppingmall.model.dto.ReviewImg,
+				 com.web.shoppingmall.model.dto.Qna, com.web.shoppingmall.model.dto.QnaAnswer" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 	Product p=(Product)request.getAttribute("product");
@@ -29,6 +30,8 @@
 			}
 		}
 	}
+	List<Qna> qnas=(List<Qna>)request.getAttribute("qna");
+	String qnaPageBar=(String)request.getAttribute("qnaPageBar");
 %>
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/shoppingmall/shoppingmalldetail.css">
@@ -105,7 +108,7 @@
         		<%} %>
 			</div>
 			<div>
-				<span><%=p.getAvgRating() %></span>
+				<span><%=Math.round(p.getAvgRating() * 10.0) / 10.0%></span>
 			</div>
 		</div>
 		<div class="reviews">
@@ -138,9 +141,9 @@
 		<div>
 			<span>전체 리뷰</span>
 			<div class="reviewSortMenu">
-				<button>최신순</button>
+				<button class="datesort selectedReviewSortbtn">최신순</button>
 				<div>|</div>
-				<button>별점순</button>
+				<button class="ratingsort">별점순</button>
 			</div>
 			<%if(!users.isEmpty()){ %>
 				<%for(User u:users){ %>
@@ -188,14 +191,60 @@
 			<%} %>
 		</div>
 	</div>
-	<div id=pagebardiv>
+	<div class="pagebardiv">
 		<%=pageBar %>
 	</div>
 	<div class="qnaContainer">
-		<div>
-			<span class="qnaText">Q&A</span>
+		<div class="qnaPostContainer">
+			<div class="qnaHead">
+				<span class="qnaText">Q&A</span>
+				<button class="enrollQna">문의하기</button>
+			</div>
+			<div class="qnaBox">
+			<%if(qnas!=null){ %>
+				<%for(Qna q: qnas){ %>
+					<div class="qnaPostBox">
+						<div class="qnaTitle">
+							<div class="qnatag">
+								질문
+							</div>
+							<div class="qnaContent">
+								<%=q.getQnaContent() %>
+							</div>
+						</div>
+						<div class="qnadate">
+							<span><%=q.getQnaDate() %></span>
+						</div>
+					</div>
+					<%if(q.getAnswer()!=null){ %>
+					<div class="qnaAnswerBox">
+						<div class="qnaTitle">
+							<div class="arrow">
+								<img src="<%=request.getContextPath()%>/images/shoppingmall/down-right-arrow.png">
+							</div>
+							<div class="answertag">
+								답변
+							</div>
+							<div class="qnaContent">
+								<%=q.getAnswer().getQnaAnswerContent() %>
+							</div>
+						</div>
+						<div class="qnadate">
+							<span><%=q.getAnswer().getQnaAnswerDate() %></span>
+						</div>
+					</div>
+					<%} %>
+				<%} %>
+			<%} %>
+			</div>
 		</div>
 	</div>
+	<div class="qnapagebarContainer">
+		<%=qnaPageBar %>
+	</div>
+	<button class="topbtn tophidden">
+		top
+	</button>
 </section>
 	<div class="modalContainer modalhidden">
 		<div class="modalContent">
@@ -210,21 +259,103 @@
 			</div>
 		</div>
 	</div>
+	<div class="qnamodalContainer qnamodalhidden">
+		<div class="qnacontentdiv">
+			<div class="qnatextdiv">
+				<textarea class="qnatextarea"></textarea>
+			</div>
+			<div class="qnabtndiv">
+				<button class="qnabtn">문의 등록하기</button>
+			</div>	
+		</div>
+	</div>
 <script>
+	//문의하기 버튼 누를시 문의글등록모달창 띄우기
+	$(".enrollQna").click(e=>{
+		$(".qnamodalContainer").removeClass("qnamodalhidden");
+	})
+	//문의하기 등록모달창 x 버튼누르면 모달창 닫기
+	$(".closeqnamodal").click(e=>{
+		$(".qnamodalContainer").addClass("qnamidalhidden");
+	})
+
+	//top 버튼 스크롤 이벤트
+	$(".topbtn").click(e=>{
+		$("html, body").scrollTop(0);
+	});
+	
+	//qna페이징처리 이벤트
+	$(document).on("click", ".qnapagebarnumbtn, .qnapagebarinequalitybtn", e=>{
+		const currPage=$(".qnapagebarnum").text().trim(); //현재 선택되어있는 페이지넘버
+		console.log(currPage);
+		let btnText=$(e.target).text().trim();
+		console.log(btnText);
+		$.ajax({
+			url:"<%=request.getContextPath()%>/shoppingmall/qnapagingajax.do",
+			type:"POST",
+			data:{"currPage":currPage, "btnText":btnText, "productKey":<%=p.getProductKey()%>},
+			success:(response)=>{
+				console.log(response);
+				const pagebar=response.pagebar;
+				$(".qnapagebarContainer").empty().html(pagebar);
+				const qnas=response.qna;
+				$(".qnaBox").empty();
+				$.each(qnas, (i,v)=>{
+					const qnaPostBox=$("<div>").addClass("qnaPostBox");
+					const qnaTitle=$("<div>").addClass("qnaTitle");
+					const qnatag=$("<div>").addClass("qnatag").text("질문");
+					const qnaContent=$("<div>").addClass("qnaContent").text(v["qnaContent"]);
+					const qnadate=$("<div>").addClass("qnadate");
+					const date=$("<span>").text(v["qnaDate"]);
+					qnadate.append(date);
+					qnaTitle.append(qnatag).append(qnaContent);
+					qnaPostBox.append(qnaTitle).append(qnadate);
+					$(".qnaBox").append(qnaPostBox);
+					if(v["answer"]["qnaAnswerKey"]!=0){
+						const answerPostBox=$("<div>").addClass("qnaAnswerBox");
+						const answerTitle=$("<div>").addClass("qnaTitle");
+						const arrow=$("<div>").addClass("arrow");
+						const arrowImg=$("<img>").attr("src","<%=request.getContextPath()%>/images/shoppingmall/down-right-arrow.png");
+						const answertag=$("<div>").addClass("answertag").text("답변");
+						const answerContent=$("<div>").addClass("qnaContent").text(v["answer"]["qnaAnswerContent"]);
+						const answerdate=$("<div>").addClass("qnadate");
+						const adate=$("<span>").text(v["answer"]["qnaAnswerDate"]);
+						arrow.append(arrowImg);
+						answerdate.append(adate);
+						answerTitle.append(arrow).append(answertag).append(answerContent);
+						answerPostBox.append(answerTitle).append(answerdate);	
+						$(".qnaBox").append(answerPostBox);
+					}
+				});
+			}
+		});
+	});
+	
 	//리뷰페이징처리 이벤트
-	$(document).on('click', '.pagebarnumbtn, .pagebarinequalitybtn', e=>{
-		const btnText=$(e.target).text().trim();
-		const cPage=$(".pagebarnum").text().trim();
+	$(document).on('click', '.pagebarnumbtn, .pagebarinequalitybtn, .datesort, .ratingsort', e=>{
+		let btnText=$(e.target).text().trim(); //어떤 버튼을 눌렀는지 판단하기위한 버튼text값
+		const cPage=$(".pagebarnum").text().trim(); //현재페이지 가져오기
+		let sort='최신순'; //기본은 최신순정렬
+		if($(e.target).text().trim()=="별점순"){ //별점순 정렬 시
+			sort='별점순'; //별점순 정렬
+			btnText="1"; //정렬메뉴를 누르면 1페이지가 나오게하기 위함
+			$(".datesort").removeClass("selectedReviewSortbtn");
+			$(e.target).addClass("selectedReviewSortbtn");
+		}else if($(e.target).text().trim()=="최신순"){
+			btnText="1"; // 최신순 정렬메뉴를 눌렀을 시 1페이지가 나오게하기 위함
+			$(".ratingsort").removeClass("selectedReviewSortbtn");
+			$(e.target).addClass("selectedReviewSortbtn");
+		}else{
+			sort=$(".selectedReviewSortbtn").text().trim(); //정렬버튼이 아닌 버튼들 <<,<,>,>>,숫자버튼
+		}
 		$.ajax({
 			url:"<%=request.getContextPath()%>/shoppingmall/reviewpagingajax.do",
 			type:"POST",
-			data:{"btnText":btnText, "totalData":<%=p.getTotalReviewCount()%>, "cPage":cPage, "productKey":<%=p.getProductKey()%>},
+			data:{"btnText":btnText, "totalData":<%=p.getTotalReviewCount()%>, "cPage":cPage, "productKey":<%=p.getProductKey()%>, "sort":sort},
 			success:(response)=>{
 				const pagebar=response.pagebar;
-				$("#pagebardiv").empty().html(pagebar);
+				$(".pagebardiv").empty().html(pagebar);
 				const data=response.user;
-				console.log(response);
-				console.log(data);
 				$(".reviewContainer").find(".reviewBox").remove();
 				$.each(data, (index,v)=>{
 					const $reviewBox=$("<div>").addClass("reviewBox");
@@ -278,7 +409,7 @@
 
 	//모달창 관련
 	//모달창 오픈
-	$(".reviewImgs").children().click(e=>{
+	$(document).on("click", ".reviewImgs>img", e=>{
 		const src=$(e.target).attr("src");
 		$(".modalmainimg").attr("src",src);
 		const imgs=$(e.target).parent();
@@ -290,8 +421,9 @@
 			$(".modalallimgsdiv").append($img);
 		})
 		$("html").css("overflow","hidden");
-		$(".modalContainer").removeClass("modalhidden");
-	});
+		$(".modalContainer").removeClass("modalhidden");		
+	})
+
 	//모달창 닫기
 	$(".modalclosebtn").click(e=>{
 		$(".modalContainer").addClass("modalhidden");
