@@ -272,6 +272,68 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
+	/*
+	 * 	Q&A 문의글을 DB에 저장하는 메소드
+	 * 	매개변수 : Qna 객체
+	 * 	반환 : 결과 result
+	 */
+	public int insertQna(Connection conn, Qna q) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("insertQna"));
+			pstmt.setInt(1, q.getProductKey());
+			pstmt.setString(2, q.getUserId());
+			pstmt.setString(3, q.getQnaContent());
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	/*
+	 *  문의글을 DB에서 삭제
+	 *  매개변수 : 문의글 고유키
+	 *  반환 : 결과 result
+	 */
+	public int deleteQna(Connection conn, int qnaKey) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("deleteQna"));
+			pstmt.setInt(1, qnaKey);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	/*
+	 * 	문의글 수정 기능
+	 * 	매개변수 : 문의글 고유키, 바꿀 글내용
+	 *  반환 : 결과 result
+	 */
+	public int updateQna(Connection conn, int qnaKey, String content) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("updateQna"));
+			pstmt.setString(1, content);
+			pstmt.setInt(2, qnaKey);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	
+	
 	
 	/*
 	 * 	쇼핑몰 리스트 페이지에 필요한 상품의 정보만 담아서 Product 객체를 반환하는 메소드

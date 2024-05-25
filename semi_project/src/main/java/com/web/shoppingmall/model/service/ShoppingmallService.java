@@ -131,4 +131,40 @@ public class ShoppingmallService {
 		close(conn);
 		return result;
 	}
+	
+	/*
+	 * 	상품에 대한 문의글 등록
+	 * 	매개변수 : Qna 객체
+	 * 	반환 : 결과 result
+	 */
+	public int insertQna(Qna q) {
+		Connection conn=getConnection();
+		int result=getDao().insertQna(conn, q);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	문의글을 삭제
+	 * 	매개변수 : 문의글 고유키
+	 * 	반환 : 결과 result
+	 */
+	public int deleteQna(int qnaKey) {
+		Connection conn=getConnection();
+		int result=getDao().deleteQna(conn, qnaKey);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	문의글 수정
+	 * 	매개변수 : 문의글 고유키, 바꿀 글내용
+	 * 	반환 : 결과 result
+	 */
+	public int updateQna(int qnaKey, String content) {
+		Connection conn=getConnection();
+		int result=getDao().updateQna(conn, qnaKey, content);
+		close(conn);
+		return result;
+	}
 }

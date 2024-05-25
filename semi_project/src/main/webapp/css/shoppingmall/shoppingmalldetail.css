@@ -496,6 +496,24 @@
 	width:20px;
 	height:20px;
 }
+.qnadeletebtn{
+	color:#346aff;
+	cursor:pointer;
+	background:none;
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+.qnadeletebtn:hover{
+	border-bottom:1px solid #346aff;
+}
+.qnaupdatebtn{
+	color:#346aff;
+	cursor:pointer;
+	background:none;
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+.qnaupdatebtn:hover{
+	border-bottom:1px solid #346aff;
+}
 /* qna 페이지바 */
 .qnapagebarContainer{
 	margin-top:10px;
@@ -720,9 +738,15 @@ textarea:focus {
     border-radius: 5px;
     width: 25%;
     height: 70%;
+    background-color:#346aff;
+	color:white;
 }
-.qnabtn:hover{
-	background-color:#346aff;
+.qnamodalupdatebtn{
+	border: 1px solid #346aff;
+    border-radius: 5px;
+    width: 25%;
+    height: 70%;
+    background-color:#346aff;
 	color:white;
 }
 /* top버튼 */
@@ -793,6 +817,40 @@ textarea:focus {
     width: 70px;
 }
 .alertyesbtn{
+	margin-right: 3%;
+    border: 1px solid #346aff;
+    background: #346aff;
+    border-radius: 5px;
+    width: 70px;
+    color: white;
+}
+
+/* 삭제여부 묻는 모달창 */
+.deletemodal{
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	display:flex;
+	flex-direction:row;
+	justify-content:center;
+	align-items:center;
+	z-index:1100;
+	text-align:center;
+	background-color:rgba(0,0,0,0.3);
+}
+.deletemodalhidden{
+	display:none;
+}
+.deletenobtn{
+	margin-right: 3%;
+    border: 1px solid #346aff;
+    background: none;
+    border-radius: 5px;
+    width: 70px;
+}
+.deleteyesbtn{
 	margin-right: 3%;
     border: 1px solid #346aff;
     background: #346aff;
