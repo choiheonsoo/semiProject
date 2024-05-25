@@ -353,6 +353,25 @@
 	font-size:14px;
 	color:lightgray;
 }
+/* 리뷰 수정,삭제 버튼 */
+.reviewdeletebtn{
+	color:#346aff;
+	cursor:pointer;
+	background:none;
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+.reviewdeletebtn:hover{
+	border-bottom:1px solid #346aff;
+}
+.reviewupdatebtn{
+	color:#346aff;
+	cursor:pointer;
+	background:none;
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+.reviewupdatebtn:hover{
+	border-bottom:1px solid #346aff;
+}
 /* 리뷰 사진들 */
 .reviewImgs{
 	display:flex;

@@ -167,4 +167,18 @@ public class ShoppingmallService {
 		close(conn);
 		return result;
 	}
+	
+	/*
+	 * 	리뷰글 삭제
+	 * 	매개변수 : 리뷰 고유키
+	 *	반환 : 결과 result
+	 */
+	public int deleteReview(int reviewKey) {
+		Connection conn=getConnection();
+		int result=getDao().deleteReview(conn, reviewKey);
+		close(conn);
+		return result;
+	}
+	
+	
 }

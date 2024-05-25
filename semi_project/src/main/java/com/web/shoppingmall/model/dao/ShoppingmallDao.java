@@ -332,6 +332,25 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
+	/*
+	 * 	리뷰 삭제 메소드
+	 * 	매개변수 : 리뷰 고유키
+	 * 	반환 : 결과 result
+	 */
+	public int deleteReview(Connection conn, int reviewKey) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("deleteReview"));
+			pstmt.setInt(1, reviewKey);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
 	
 	
 	

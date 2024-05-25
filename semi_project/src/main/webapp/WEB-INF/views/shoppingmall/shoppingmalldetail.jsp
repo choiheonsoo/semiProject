@@ -162,6 +162,14 @@
 							<div>
 								<span class="memberName"><%=u.getUserId() %></span>
 								<span class="reviewDate"><%=u.getReviews().get(0).getReviewDate() %></span>
+								<%if(loginUser!=null){%>
+									<%if(u.getUserId().equals(loginUser.getUserId())){ %>
+									<input type="hidden" value="<%=u.getReviews().get(0).getReviewKey() %>" id="rk">
+									<span class="reviewupdatebtn">수정</span>
+									|
+									<span class="reviewdeletebtn">삭제</span>
+									<%} %>
+								<%} %>
 								<div class="stars">
 									<%for(int i=0;i<5;i++){ %>
 										<%if(i<u.getReviews().get(0).getRating()){ %>
@@ -374,9 +382,27 @@
 			});
 		}else{
 			//리뷰 삭제일 때
-			//const reviewKey;
+			const reviewKey=$("#rk").val();
+			$.ajax({
+				url:"<%=request.getContextPath()%>/shoppingmall/deletereview.do",
+				type:"POST",
+				data:{"reviewKey":reviewKey},
+				success:(response)=>{
+					if(response.result!=0){
+						//삭제 성공
+						location.reload();
+						alert("리뷰 삭제 성공!");
+					}else{
+						//삭제 실패
+						alert("리뷰 삭제 실패!");
+					}
+				},
+				error:()=>{
+					alert("오류");
+				}
+			});
 		}
-	}	
+	};
 	//qna 수정하기
 	$(document).on("click", ".qnaupdatebtn", (e)=>{
 		$(".qnamodalContainer").removeClass("qnamodalhidden");
