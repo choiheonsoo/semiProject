@@ -6,6 +6,8 @@
 	User loginUser = (User)session.getAttribute("loginUser");
 	//UserLoginCheckServlet.do에서 로그인 한 유저의 아이디에 해당되는 대표이미지의 파일명(Renamed)를 담는 변수 설정
 	String dogImg = (String)session.getAttribute("dogImg");
+	//User가 로그인 했는지 확인하는 값
+	boolean isLogin = (Boolean)session.getAttribute("isLogin");
 %>
 <!DOCTYPE html>
 <html>

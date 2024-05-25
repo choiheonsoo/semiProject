@@ -17,7 +17,7 @@ section.updateDog {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     max-width: 800px;
-    margin: 20px auto;
+    margin: 30px auto;
     height: auto;
 }
 
