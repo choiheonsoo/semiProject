@@ -17,7 +17,7 @@ section.updateDog {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     max-width: 800px;
-    margin: 20px auto;
+    margin: 30px auto;
     height: auto;
 }
 
@@ -137,10 +137,10 @@ section.updateDog {
 						<label for="dogName">반려견 이름 *</label>
 					    <input type="text" name="addDogName">
 					    <label for="dogBreed">반려견 견종 *</label>
-					    <select name="addDogBreedKey" class="dogBreed">
-					    	<option value="진도">진도</option>
-					    	<option value="믹스">세상에 하나뿐인 믹스</option>
-					    	<option value="치와와">치와와</option>
+					    <select name="dogBreedKey" class="dogBreed">
+					    	<%for(String breed:breeds){ %>
+					    	<option value=<%=breed %>><%=breed %></option>
+					    	<%} %>
 					    </select>
 					    <label for="addDogWeight">반려견 몸무게 *</label>
 					    <input type="text" name="addDogWeight">

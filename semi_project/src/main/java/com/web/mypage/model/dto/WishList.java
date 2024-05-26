@@ -1,21 +1,21 @@
-package com.web.shoppingmall.model.dto;
+package com.web.mypage.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/*
- * 	상품 이미지 클래스
- */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ProductImg {
-	private int productImgKey;
+public class WishList {
+	private double rateDiscount;
 	private int productKey;
+	private String productName;
+	private int price;
 	private String productImg;
+	private int wishListKey;
 	private String thumnail;
-	private String descriptionImg;
+	private int productCategoryKey;
 }

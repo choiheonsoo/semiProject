@@ -21,6 +21,8 @@ import com.web.shoppingmall.model.dto.ProductCategory;
 import com.web.shoppingmall.model.dto.ProductImg;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.ProductSize;
+import com.web.shoppingmall.model.dto.Qna;
+import com.web.shoppingmall.model.dto.QnaAnswer;
 import com.web.shoppingmall.model.dto.Review;
 import com.web.shoppingmall.model.dto.ReviewImg;
 import com.web.user.model.dto.User;
@@ -201,12 +203,13 @@ public class ShoppingmallDao {
 	 * 	매개변수 : 상품고유키
 	 * 	반환 : 리뷰 리스트
 	 */	
-	 public List<User> selectReviewByProductKey(Connection conn, int productKey, int cPage, int numPerpage){
+	 public List<User> selectReviewByProductKey(Connection conn, int productKey, int cPage, int numPerpage, String sort){
 		 PreparedStatement pstmt=null;
 		 ResultSet rs=null;
 		 List<User> result=new ArrayList<>();
+		 String newSql=sql.getProperty("selectReviewByProductKey").replace(":SORT", sort);
 		 try {
-			 pstmt=conn.prepareStatement(sql.getProperty("selectReviewByProductKey"));
+			 pstmt=conn.prepareStatement(newSql);
 			 pstmt.setInt(1, productKey);
 			 pstmt.setInt(2, (cPage-1)*numPerpage+1);
 			 pstmt.setInt(3, cPage*numPerpage);
@@ -221,6 +224,133 @@ public class ShoppingmallDao {
 			 close(pstmt);
 		 }return result;
 	 }
+	 
+	/*
+	 * 	쇼핑몰 상품 상세페이지에 해당 상품의 qna 총 개수를 구해오는 메소드
+	 * 	매개변수 : 상품 고유키
+	 * 	반환 : qna 총 개수
+	 */
+	public int getTotalQnaCount(Connection conn, int productKey) {
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("getTotalQnaCount"));
+			pstmt.setInt(1, productKey);
+			rs=pstmt.executeQuery();
+			if(rs.next()) result=rs.getInt(1);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	
+	/*
+	 * 	상품 상세페이지의 qna정보를 DB에서 가져와서 반환하는 메소드
+	 * 	매개변수 : 상품 고유키, 현재 페이지, numPerpage
+	 */
+	public List<Qna> selectQnaByProductKey(Connection conn, int productKey, int cPage, int numPerpage){
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<Qna> result=new ArrayList<>();
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectQnaByProductKey"));
+			pstmt.setInt(1, productKey);
+			pstmt.setInt(2, (cPage-1)*numPerpage+1);
+			pstmt.setInt(3, cPage*numPerpage);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(getQna(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	
+	/*
+	 * 	Q&A 문의글을 DB에 저장하는 메소드
+	 * 	매개변수 : Qna 객체
+	 * 	반환 : 결과 result
+	 */
+	public int insertQna(Connection conn, Qna q) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("insertQna"));
+			pstmt.setInt(1, q.getProductKey());
+			pstmt.setString(2, q.getUserId());
+			pstmt.setString(3, q.getQnaContent());
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	/*
+	 *  문의글을 DB에서 삭제
+	 *  매개변수 : 문의글 고유키
+	 *  반환 : 결과 result
+	 */
+	public int deleteQna(Connection conn, int qnaKey) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("deleteQna"));
+			pstmt.setInt(1, qnaKey);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	/*
+	 * 	문의글 수정 기능
+	 * 	매개변수 : 문의글 고유키, 바꿀 글내용
+	 *  반환 : 결과 result
+	 */
+	public int updateQna(Connection conn, int qnaKey, String content) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("updateQna"));
+			pstmt.setString(1, content);
+			pstmt.setInt(2, qnaKey);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	/*
+	 * 	리뷰 삭제 메소드
+	 * 	매개변수 : 리뷰 고유키
+	 * 	반환 : 결과 result
+	 */
+	public int deleteReview(Connection conn, int reviewKey) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("deleteReview"));
+			pstmt.setInt(1, reviewKey);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
 	
 	
 	
@@ -230,7 +360,7 @@ public class ShoppingmallDao {
 	 * 	매개변수 : ResultSet
 	 * 	반환 : 상품 객체
 	 */
-	private Product getProductForListpage(ResultSet rs) throws SQLException{
+	public static Product getProductForListpage(ResultSet rs) throws SQLException{
 		Map<String, ProductImg> imgs=new HashMap<>();
 		imgs.put("thumbnail", ProductImg.builder().productImg(rs.getString("PRODUCT_IMG")).build());
 		return new Product().builder()
@@ -320,5 +450,20 @@ public class ShoppingmallDao {
 			users.add(u);
 		}
 		return users;
+	}
+	
+	private Qna getQna(ResultSet rs) throws SQLException{
+		return new Qna().builder()
+				.qnaKey(rs.getInt("QNA_KEY"))
+				.qnaContent(rs.getString("QNA_CONTENT"))
+				.productKey(rs.getInt("PRODUCT_KEY"))
+				.userId(rs.getString("USER_ID"))
+				.qnaDate(rs.getDate("QNA_DATE"))
+				.answer(new QnaAnswer().builder()
+										.qnaAnswerKey(rs.getInt("QNA_ANSWER_KEY"))
+										.qnaAnswerContent(rs.getString("QNA_ANSWER_CONTENT"))
+										.qnaAnswerDate(rs.getDate("QNA_ANSWER_DATE"))
+										.build())
+				.build();
 	}
 }

@@ -236,76 +236,10 @@
 			location.assign("<%=request.getContextPath()%>/user/findpw.find?m_email="+$searchEmail.val()+"&m_id="+$searchId.val());
 		})
 	}
-			
-			
-			
-			
-			// DB에 등록된 이메일이 있는지 확인하는 로직
-			<%-- $.post("<%=request.getContextPath()%>/user/findpw.find",
-					{"m_email":$searchEmail.val(),
-					 "m_id":$searchId.val()})
-			.done(send=>{
-				console.log(1);
-				alert(send.message);
-				window.location.href = sned.redirect;
-		        // window.location.href = data.redirect;
-		        // UserChangePw 30번째 코드에서 설정한 changePwForm.jsp의 html 코드들을 적용해서 ajax 통신으로 처리하고 싶어하는 중...ㅠㅠ 
-		        // https://persimmon-ary-stepbystep.tistory.com/47 → action 클래스 보는 중
-			})
-			.done(data=>{
-				console.log(2);
-				$.post("<%=request.getContextPath()%>/user/changepw.find",
-						{
-							"authenticationCode":(String)(request.getSession().getAttribute("authenticationCode")),
-							"m_id":(String)(request.getSession().getAttribute("m_id"))
-						})
-				.done(pw=>{
-					console.log(3);
-					console.log(pw);
-				})
-			}) --%>
-			
-			
-			// 입력한 인증번호가 같다면 실행해야할 로직
-			/*
-			if(!userInfoAdded){
-				const $changeBtn = $("<button class='checkBtn'>변경하실 비밀번호 입력</button>");
-				$targetDiv.append($changeBtn);
-				userInfoAdded=true;
-				let clickChange = false;
-				$changeBtn.click(e=>{
-					if(!clickChange){
-						clickChange=true;
-						// 이름 맞는지 확인 후 맞다면,
-						const $ckResult = $("<p>");
-						
-						const $newPw = $("<input class='searchInfo' type=password placeholder='변경하실 비밀번호'>")
-						const $newPwCk = $("<input class='searchInfo' type=password placeholder='비밀번호 확인'>")
-						const $sendChange = $("<button id='kakaobtn'>변경하기</button>");
-						$sendChange.css({"background-color":"#ffeda4", "border":"none", "margin-top":"0"});
-						$newPwCk.keyup(e=>{
-							if($newPw.val()==$newPwCk.val()){
-								$ckResult.css("color","green").text("비밀번호가 일치합니다.")
-							} else {
-								$ckResult.css("color","red").text("비밀번호가 불일치합니다.")
-							}
-						})
-						$targetDiv.append($newPw).append($newPwCk);
-						$targetDiv.append($ckResult).append($sendChange);
-						
-						// 이름이 없다면
-					}
-				})
-			}
-			*/
+	
 		
 </script>
-<!-- <script>
-카카오톡의 입장에서 개발자들이 만든 그룹을 Client가 어떠한 그룹을 보는 건지 확인하기 위하여 JavaScript 키를 가져온다.
-초기화의 기능이 아님.
-	Kakao.init('a5195f24115fc28a6fae3a6191e0f7b0');
-	console.log(Kakao.isInitialized());
-</script> -->
+
 <script type="text/javascript">
     // Kakao SDK 초기화(JavaScript 키를 사용하여 초기화)
     Kakao.init('a5195f24115fc28a6fae3a6191e0f7b0');
@@ -321,10 +255,11 @@
                     success: function (response) {
                         console.log(response); 
                         const id = response.id; 
-                        const email = response.kakao_account.email.split('@')[0]; 
+                        const email = response.kakao_account.email; 
                         const userInfo = {
-                            id: id,
-                            email: email
+                            "id": email.split('@')[0],
+                            "email": email,
+                            "num":id
                         };
                         // Ajax를 사용하여 JSON 데이터를 서버로 전송
                         fetch("<%=request.getContextPath()%>/user/enrollbykakao.do",{
@@ -337,6 +272,10 @@
                         .then(response=>response.json())
                         .then(data=>{
                         	console.log(data);
+                        	$.post("<%=request.getContextPath()%>/user/new_user.do",
+                        			{"kakaoInfo":data})
+                        	.done(
+                        			)
                         })
                         .catch(error =>{
                         	console.error("Error-", error);

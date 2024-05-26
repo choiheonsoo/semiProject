@@ -22,7 +22,7 @@ import com.web.user.model.service.UserService;
 /**
  * Servlet implementation class EnrollUserEndServlet
  */
-@WebServlet("/user/enrollend.find")
+@WebServlet("/user/enrollend.do")
 public class EnrollUserEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -38,7 +38,7 @@ public class EnrollUserEndServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		request.setCharacterEncoding("UTF-8");
 		// 회원 가입 시 대표 반려견 사진 업로드 시 파일 저장하는 로직
 		String path = getServletContext().getRealPath("/upload/user");
 		File dir = new File(path);
@@ -46,9 +46,9 @@ public class EnrollUserEndServlet extends HttpServlet {
 		int maxSize=1024*1024*1;
 		MultipartRequest mr = new MultipartRequest(request, path, maxSize, "UTF-8", new DefaultFileRenamePolicy());
 		// String → java.util.Date
-		
+		System.out.println(mr.getParameter("birthday"));
 		String dateString ="";
-		if(mr.getParameter("birthday")!=null) {
+		if(mr.getParameter("birthday")!=null || mr.getParameter("birthday")=="") {
 			dateString = mr.getParameter("birthday");
 		}
 		SimpleDateFormat birthSdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -63,17 +63,20 @@ public class EnrollUserEndServlet extends HttpServlet {
 				sqlDate = new java.sql.Date(currentTimeMills);
 			}
 		}catch(ParseException e) { }
-
+		
+		String[] address = mr.getParameterValues("address");
+		
 		User user = User.builder().userId(mr.getParameter("userId"))
 								  .userName(mr.getParameter("name"))
 								  .phone(mr.getParameter("phone"))
 								  .email(mr.getParameter("email"))
 								  .password(mr.getParameter("password"))
-								  .address(mr.getParameter("address"))
+								  .address(mr.getParameterValues("address")[1]==null?address[0]:address[0]+","+address[1])
 								  .mateCount(0)	// default값 설정
 								  .point(0) // default값 설정
 								  .status(false) // default값 설정
 								  .birthDay(sqlDate)
+								  .zipCode(mr.getParameter("zipCode"))
 								  .build();
 		
 		int result = UserService.getUserService().enrollUser(user);

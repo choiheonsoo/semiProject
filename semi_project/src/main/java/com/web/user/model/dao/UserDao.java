@@ -8,8 +8,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
+import com.web.user.model.dto.ShippingAddress;
 import com.web.user.model.dto.User;
 
 public class UserDao {
@@ -38,8 +40,8 @@ public class UserDao {
 			pstmt.setString(1, id);
 			pstmt.setString(2, password);
 			rs=pstmt.executeQuery();
-			if(rs.next()) {
-				user=getUser(rs);
+			while(rs.next()) {
+				user=getUser(rs, user);
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -57,7 +59,7 @@ public class UserDao {
 			pstmt = con.prepareStatement(sql.getProperty("searchUserByEmail"));
 			pstmt.setString(1, email);
 			rs = pstmt.executeQuery();
-			if(rs.next()) user=getUser(rs);
+			if(rs.next()) user=getUser(rs, user);
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -77,6 +79,7 @@ public class UserDao {
 			pstmt.setString(5, user.getPhone());
 			pstmt.setString(6, user.getAddress());
 			pstmt.setDate(7, user.getBirthDay());
+			pstmt.setString(8, user.getZipCode());
 			result = pstmt.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -167,7 +170,7 @@ public class UserDao {
 			pstmt.setString(1, id);
 			pstmt.setString(2, email);
 			rs = pstmt.executeQuery();
-			if(rs.next()) user=getUser(rs);
+			if(rs.next()) user=getUser(rs, user);
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -176,8 +179,22 @@ public class UserDao {
 		} return user;
 	}
 	
-	private static User getUser(ResultSet rs) throws SQLException{
-		return User.builder()
+	private static User getUser(ResultSet rs, User user) throws SQLException{
+//		return User.builder()
+//				.userId(rs.getString("user_id"))
+//				.userName(rs.getString("user_name"))
+//				.phone(rs.getString("phone"))
+//				.email(rs.getString("email"))
+//				.address(rs.getString("address"))
+//				.password(rs.getString("password"))
+//				.mateCount(rs.getInt("mate_count"))
+//				.point(rs.getInt("point"))
+//				.status(rs.getBoolean("status"))
+//				.birthDay(rs.getDate("birth_day"))
+//				.zipCode(rs.getString("zipcode"))
+//				.build();
+		if(user==null) {
+			user=User.builder()
 				.userId(rs.getString("user_id"))
 				.userName(rs.getString("user_name"))
 				.phone(rs.getString("phone"))
@@ -188,6 +205,26 @@ public class UserDao {
 				.point(rs.getInt("point"))
 				.status(rs.getBoolean("status"))
 				.birthDay(rs.getDate("birth_day"))
+				.zipCode(rs.getString("zipcode"))
+				.build();
+			user.setShippingAddress(new ArrayList<>());
+			user.getShippingAddress().add(getShippingAddress(rs));
+		}else {
+			user.getShippingAddress().add(getShippingAddress(rs));
+		}
+		return user;
+	}
+	
+	private static ShippingAddress getShippingAddress(ResultSet rs) throws SQLException{
+		return new ShippingAddress().builder()
+				.shippingAddressKey(rs.getInt("SHIPPING_ADDRESS_KEY"))
+				.shippingAddressName(rs.getString("SHIPPING_ADDRESS_NAME"))
+				.recipientName(rs.getString("RECIPIENT_NAME"))
+				.zipcode(rs.getString("ZIPCODE"))
+				.shippingAddress(rs.getString("SHIPPING_ADDRESS"))
+				.shippingPhone(rs.getString("SHIPPING_PHONE"))
+				.shippingEmail(rs.getString("SHIPPING_EMAIL"))
+				.defaultShippingAddress(rs.getString("DEFAULT_SHIPPING_ADDRESS"))
 				.build();
 	}
 }

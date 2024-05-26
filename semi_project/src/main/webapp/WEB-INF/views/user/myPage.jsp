@@ -85,15 +85,15 @@
 			</div>
 		</div>
 		<div class="userInfo">
-			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/pickitems.do?userId=<%=loginUser.getUserId()%>')">
+			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/wishlist.do')">
 				<img src="<%=request.getContextPath() %>/images/member/heartIcon.png" alt="찜" width="40" height="40">
 				<p>찜 한 상품</p>
 			</div>
-			<div style="cursor: pointer;">
+			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/cart.do')">
 				<img src="<%=request.getContextPath() %>/images/member/cart.png" alt="장바구니" width="40" height="40">
 				<p>장바구니</p>
 			</div>
-			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/writen.do?userId=<%=loginUser.getUserId()%>')">
+			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/writen.do')">
 				<img src="<%=request.getContextPath() %>/images/member/board.png" alt="내가 쓴 글" width="40" height="40">
 				<p>내가 쓴 글</p>
 			</div>
