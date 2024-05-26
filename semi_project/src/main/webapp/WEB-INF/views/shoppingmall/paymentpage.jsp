@@ -87,7 +87,7 @@
 							<%=products.get(i).getProductOption().get(0).getColor().getColor() %>, <%=products.get(i).getProductOption().get(0).getProductSize().getPSize() %>
 						</div>
 						<div class="productQuantity">
-							<%=quantitys.get(i) %>
+							수량 <%=quantitys.get(i) %>개
 						</div>
 					</div>
 					<%} %>
@@ -96,7 +96,12 @@
 			</div>
 		</div>
 		<div class="paymentContainer">
-			
+			<div>
+				<h2>결제정보</h2>
+				<div>
+				
+				</div>
+			</div>
 		</div>
 		<div class="btnContainer">
 			<button class="paymentBtn">결제하기</button>

@@ -41,7 +41,6 @@ public class PurchaseServlet extends HttpServlet {
 		for(int i=0;;i++) {
 			String productName = request.getParameter("products[" + i + "].productName");
 			if (productName == null) {
-		        // productKey가 null이면 상품 정보가 더 이상 없으므로 반복 종료
 		        break;
 			}
 			int productKey=Integer.parseInt(request.getParameter("products["+i+"].productKey"));
@@ -50,6 +49,7 @@ public class PurchaseServlet extends HttpServlet {
 		    int quantity = Integer.parseInt(request.getParameter("products[" + i + "].quantity"));
 		    int discount = Integer.parseInt(request.getParameter("products[" + i + "].discount"));
 		    int price = Integer.parseInt(request.getParameter("products[" + i + "].price"));
+		    if(quantity!=0) {
 		    Product p=new Product().builder().productKey(productKey).productName(productName).rateDiscount(discount).price(price).build();
 		    ProductOption po=new ProductOption().builder().color(new Color().builder().color(color).build())
 		    		.productSize(new ProductSize().builder().pSize(size).build()).build();
@@ -58,6 +58,7 @@ public class PurchaseServlet extends HttpServlet {
 		    p.setProductOption(pos);
 		    products.add(p);
 		    quantitys.add(quantity);
+		    }
 		}
 		
         // 객체 배열을 request 객체에 속성으로 추가
