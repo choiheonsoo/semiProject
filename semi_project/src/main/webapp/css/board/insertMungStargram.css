@@ -54,6 +54,7 @@ h6{
 	height:80%;
 	background-color:whitesmoke;
 	border-radius:8px;
+	overflow: hidden;
 }
 .menu2>.btn-container{
 	width:100%;
@@ -89,4 +90,11 @@ h6{
 	border:1px solid lightgray;
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
+}
+.content>p{
+	text-align: center;
+	color:red;
+	position: relative;
+	bottom:5px;
+	font-size:13px;
 }

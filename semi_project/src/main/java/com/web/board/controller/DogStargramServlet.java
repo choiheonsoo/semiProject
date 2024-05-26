@@ -80,6 +80,8 @@ public class DogStargramServlet extends HttpServlet {
 		List<Dog> dogs = getService().getDog();
 		List<BulletinImg> bi = getService().selectBoardImg();
 		List<BulletinLike> bk = getService().selectBoardLike();
+		List<BulletinComment> bc = getService().selectBoardComment();
+		request.setAttribute("bc", bc);
 		request.setAttribute("bk", bk);
 		request.setAttribute("dogs", dogs);
 		request.setAttribute("pageBar", pageBar);
