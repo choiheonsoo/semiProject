@@ -16,6 +16,8 @@ import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.BulletinComment;
 import com.web.board.model.dto.BulletinImg;
 import com.web.board.model.dto.BulletinLike;
+import com.web.board.model.dto.MateApply;
+import com.web.board.model.dto.WalkingMate;
 import com.web.dog.model.dao.DogDao;
 import com.web.dog.model.dto.Dog;
 
@@ -404,6 +406,26 @@ public class BoardDao {
 		return result;
 	}
 	
+	//총 댓글 조회하기
+	public List<BulletinComment> selectBoardComment(Connection conn){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<BulletinComment> result = new ArrayList<>();
+
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("selectBoardComment"));
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(getComments(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return result;
+	}
 	//댓글 등록하기
 	public int insertBoardComment(Connection conn, BulletinComment bc) {
 		PreparedStatement pstmt = null;
@@ -416,6 +438,9 @@ public class BoardDao {
 			pstmt.setString(4,bc.getContent());
 			pstmt.setInt(5,bc.getCommentLevel());
 			result= pstmt.executeUpdate();
+			if(result>0) {
+				result = selectSeqComment(conn);
+			}
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -440,6 +465,162 @@ public class BoardDao {
 		return result;
 	}
 	
+	//댓글 시퀀스 조회하기
+		public int selectSeqComment(Connection conn) {
+		    PreparedStatement pstmt = null;
+		    ResultSet rs = null;
+		    int result = 0;
+		    try {
+		        pstmt = conn.prepareStatement(sql.getProperty("selectSeqComment"));
+		        rs = pstmt.executeQuery();
+		        if (rs.next()) {
+		            result = rs.getInt(1);
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    } finally {
+		        close(rs);
+		        close(pstmt);
+		    }
+		    return result;
+		}
+		
+	//산책메이트 전체 조회(페이징처리 x)
+	public List<WalkingMate> selectWalkingMateAllpageX(Connection conn){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<WalkingMate> boards = new ArrayList<>();
+		try {
+			pstmt =conn.prepareStatement(sql.getProperty("selectWalkingMateAllpageX"));
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				boards.add(getWalkingMate(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return boards;
+	}
+	
+	//산책메이트 전체 조회
+	public List<WalkingMate> selectWalkingMateAll(Connection conn, int cPage, int numPerpage){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<WalkingMate> boards = new ArrayList<>();
+		try {
+			pstmt =conn.prepareStatement(sql.getProperty("selectWalkingMateAll"));
+			pstmt.setInt(1, (cPage-1)*numPerpage+1);
+			pstmt.setInt(2, numPerpage*cPage);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				boards.add(getWalkingMate(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return boards;
+	}
+	//산책메이트 게시글 수
+	public int selectWalkingMateCount(Connection conn) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("selectWalkingMateCount"));
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	//산책메이트 신청자 전체 조회
+	public List<MateApply> selectMateApplyAll(Connection conn){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<MateApply> apply = new ArrayList<>();
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectMateApplyAll"));
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				apply.add(getMateApply(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return apply;
+	}
+	
+	//산책메이트 게시글 등록
+	public int insertWalkingMate(Connection conn, WalkingMate wm) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("insertWalkingMate"));
+			pstmt.setString(1, wm.getUserId());
+			pstmt.setString(2,wm.getPlace());
+			pstmt.setTimestamp(3, wm.getPlaceTime());
+			pstmt.setString(4, wm.getTitle());
+			pstmt.setString(5, wm.getContent());
+			pstmt.setInt(6,wm.getRecruitmentNumber());
+			pstmt.setDouble(7,wm.getLatitue());
+			pstmt.setDouble(8,wm.getLogitude());
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	//산책메이트 게시글 삭제
+	public int deleteWalkingMate(Connection conn, int no) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt =conn.prepareStatement(sql.getProperty("deleteWalkingMate"));
+			pstmt.setInt(1,no);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	//산책메이트 신청
+	public int insertApply(Connection conn, int no, String id) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("insertApply"));
+			pstmt.setInt(1, no);
+			pstmt.setString(2, id);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
 	
 	//게시글 좋아요 생성
 	private static BulletinLike getLike(ResultSet rs) throws SQLException{
@@ -487,5 +668,33 @@ public class BoardDao {
 				.comments(new ArrayList<>())
 				.likes(new ArrayList<>())
 				.build();
+	}
+	
+	//산책메이트 게시글 생성
+	public WalkingMate getWalkingMate(ResultSet rs) throws SQLException {
+		return WalkingMate.builder()
+							.walkingMateNo(rs.getInt("walking_mate_no"))
+							.userId(rs.getString("user_id"))
+							.place(rs.getString("place"))
+							.placeTime(rs.getTimestamp("place_time"))
+							.title(rs.getString("title"))
+							.content(rs.getString("content"))
+							.rDate(rs.getDate("r_date"))
+							.delC(rs.getString("del_c").charAt(0))
+							.recruitmentNumber(rs.getInt("recruitment_number"))
+							.latitue(rs.getDouble("latitude"))
+							.logitude(rs.getDouble("longitude"))
+							.build();
+	}
+	
+	//산책메이트 신청자 생성
+	public MateApply getMateApply(ResultSet rs) throws SQLException{
+		return MateApply.builder()
+						.mateApplyKey(rs.getInt("mate_apply_key"))
+						.BoardNo(rs.getInt("board_no"))
+						.userId(rs.getString("user_id"))
+						.accept(rs.getString("accept").charAt(0))
+						.applyDate(rs.getDate("apply_date"))
+						.build();
 	}
 }

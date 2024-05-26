@@ -137,7 +137,7 @@ section.updateDog {
 						<label for="dogName">반려견 이름 *</label>
 					    <input type="text" name="addDogName">
 					    <label for="dogBreed">반려견 견종 *</label>
-					    <select name="dogBreedKey" class="dogBreed">
+					    <select name="addDogBreedKey" class="dogBreed">
 					    	<%for(String breed:breeds){ %>
 					    	<option value=<%=breed %>><%=breed %></option>
 					    	<%} %>

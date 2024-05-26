@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
+
 import com.web.board.model.dto.BulletinComment;
 import static com.web.board.model.service.BoardService.getService;
 /**
@@ -34,7 +36,7 @@ public class BoardCommentInsertServlet extends HttpServlet {
 		String subCommentStr = request.getParameter("sub_comment");
 		int subComment = subCommentStr.equals("0")?0:Integer.parseInt(subCommentStr);
 		String content = request.getParameter("content");
-		
+		String type = request.getParameter("type");
 		BulletinComment bc = BulletinComment.builder()
 											.bullNo(bullNo)
 											.userId(id)
@@ -44,11 +46,20 @@ public class BoardCommentInsertServlet extends HttpServlet {
 											.subComment(subComment)
 											.build();
 		int result = getService().insertBoardComment(bc);
-		String msg = result>0?"댓글 등록 성공" : "댓글 등록 실패";
-		String loc = "/board/boardview.do?no="+bullNo;
-		request.setAttribute("msg",msg);
-		request.setAttribute("loc", loc);
-		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		
+		if(type!=null&&type.equals("mungstargram")) {
+			JSONObject jo = new JSONObject();
+			jo.put("commentNo", result);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(jo.toString());
+		}else {
+			String msg = result>0?"댓글 등록 성공" : "댓글 등록 실패";
+			String loc = "/board/boardview.do?no="+bullNo;
+			request.setAttribute("msg",msg);
+			request.setAttribute("loc", loc);
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		}
 	}
 
 	/**

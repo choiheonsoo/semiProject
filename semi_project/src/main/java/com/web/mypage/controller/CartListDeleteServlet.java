@@ -1,8 +1,6 @@
 package com.web.mypage.controller;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,16 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.web.mypage.service.MypageService;
 
 /**
- * Servlet implementation class WishListDeleteServlet
+ * Servlet implementation class CartListDeleteServlet
  */
-@WebServlet("/user/wishlistdelete.do")
-public class WishListDeleteServlet extends HttpServlet {
+@WebServlet("/user/cartlistdelete.do")
+public class CartListDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public WishListDeleteServlet() {
+    public CartListDeleteServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,12 +28,13 @@ public class WishListDeleteServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String targetItems = request.getParameter("targetItems");
-		int result = MypageService.getService().deleteWishListItems(targetItems);
+		int cartKey = Integer.parseInt(request.getParameter("cartkey"));
+		System.out.println(cartKey);
+		int result = MypageService.getService().deleteCartListItem(cartKey);
 		String msg = "";
-		String loc = "/user/wishlist.do";
+		String loc = "/user/cart.do";
 		if(result>0) {
-			msg = "선택하신 항목이 찜에서 삭제됐습니다.";
+			msg = "선택하신 항목이 장바구니에서 삭제됐습니다.";
 		} else {
 			msg = "선택하신 항목을 삭제하는데 실패했습니다.";
 		}

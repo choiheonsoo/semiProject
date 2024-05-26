@@ -1,4 +1,4 @@
-@charset "UTF-8";@charset "UTF-8";
+@charset "UTF-8";
 h3:first-child{
 	margin-top:40px;
 	text-align: center;
@@ -54,7 +54,6 @@ h6{
 	height:80%;
 	background-color:whitesmoke;
 	border-radius:8px;
-	overflow: hidden;
 }
 .menu2>.btn-container{
 	width:100%;
@@ -62,7 +61,10 @@ h6{
 	display:flex;
 	background-color: lightgray;
 }
-.btn-container>input{
+.btn-container> * {
+	margin-right:1%;
+}
+.btn-container>input:not(input[type='datetime-local'],input[type='number']){
 	width:5%;
 	height:70%;
 	margin-top:auto;
@@ -72,9 +74,24 @@ h6{
 	background-color:rgb(0,0,0,0.8);
 	color:white;
 }
-.btn-container>input[type="file"]{
-	width:auto;
-	margin-left:10px;
+.btn-container>input[type='datetime-local']{
+	width:20%;
+	height:70%;
+	margin-top:auto;
+	margin-bottom:auto;
+	background-color:rgb(0,0,0,0.3);
+}
+.btn-container>label{
+	margin-top:auto;
+	margin-bottom:auto;
+	font-size:12px;
+	font-weight: 900;
+}
+.btn-container>input[type='number']{
+	width:5%;
+	margin-top:auto;
+	margin-bottom:auto;
+	background-color:rgb(0,0,0,0.3);
 }
 .btn-container>input:first-child{
 	margin-left:88%;
@@ -91,10 +108,15 @@ h6{
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
 }
-.content>p{
-	text-align: center;
-	color:red;
-	position: relative;
-	bottom:5px;
-	font-size:13px;
+
+#wrap{
+	 display:none;
+	 border:1px solid;
+	 width:30%;
+	 height:50%;
+	 margin:5px 0;
+	 position:absolute;
+}
+.btn-container>p{
+	margin:auto 0 auto 0;
 }

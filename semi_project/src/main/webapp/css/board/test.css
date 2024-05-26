@@ -220,13 +220,13 @@
   background-color: rgba(0, 0, 0, 0.2);
   z-index: 9999; 
 }
-#close_popup{
+.close_popup{
 	position: absolute;
 	right:0;
 	right:20%;
 	top:12%;
 }
-#close_popup:hover{
+.close_popup:hover{
 	cursor: pointer;
 }
 #post_view_info{

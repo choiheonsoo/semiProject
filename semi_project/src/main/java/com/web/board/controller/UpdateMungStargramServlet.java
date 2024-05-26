@@ -1,4 +1,6 @@
-package com.web.mypage.controller;
+package com.web.board.controller;
+
+import static com.web.board.model.service.BoardService.getService;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,19 +11,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.web.mypage.service.MypageService;
-
+import com.web.board.model.dto.Bulletin;
+import com.web.board.model.dto.BulletinImg;
 /**
- * Servlet implementation class WishListDeleteServlet
+ * Servlet implementation class UpdateMungStargramServlet
  */
-@WebServlet("/user/wishlistdelete.do")
-public class WishListDeleteServlet extends HttpServlet {
+@WebServlet("/board/updatemungstargram.do")
+public class UpdateMungStargramServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public WishListDeleteServlet() {
+    public UpdateMungStargramServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,18 +32,12 @@ public class WishListDeleteServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String targetItems = request.getParameter("targetItems");
-		int result = MypageService.getService().deleteWishListItems(targetItems);
-		String msg = "";
-		String loc = "/user/wishlist.do";
-		if(result>0) {
-			msg = "선택하신 항목이 찜에서 삭제됐습니다.";
-		} else {
-			msg = "선택하신 항목을 삭제하는데 실패했습니다.";
-		}
-		request.setAttribute("msg",msg);
-		request.setAttribute("loc",loc);
-		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		int no = Integer.parseInt(request.getParameter("no"));
+		Bulletin b = getService().selectBoardNo(no, true);
+		List<BulletinImg> img = getService().selectBoardImg();
+		request.setAttribute("b", b);
+		request.setAttribute("img", img);
+		request.getRequestDispatcher("/WEB-INF/views/board/updateMungStargram.jsp").forward(request, response);
 	}
 
 	/**
