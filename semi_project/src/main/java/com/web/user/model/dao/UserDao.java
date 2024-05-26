@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import com.web.user.model.dto.ShippingAddress;
@@ -178,21 +179,62 @@ public class UserDao {
 			close(pstmt);
 		} return user;
 	}
+	// 관리자 기능 : 전체 회원 조회
+	public List<User> searchAllUser(Connection con){
+		List<User> users = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("searchAllUser"));
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				users.add(getUser(rs));
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		} return users;
+	}
+	// 페이징 처리를 위한 가져오는 메소드
+	public List<User> searchAllUser(Connection con, int cPage, int numPerpage){
+		List<User> users = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("searchUser"));
+			pstmt.setInt(1, (cPage-1)*numPerpage+1);
+			pstmt.setInt(2, cPage*numPerpage);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				users.add(getUser(rs));
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		} return users;
+	}
+	
+	private static User getUser(ResultSet rs) throws SQLException{
+		return User.builder()
+				.userId(rs.getString("user_id"))
+				.userName(rs.getString("user_name"))
+				.phone(rs.getString("phone"))
+				.email(rs.getString("email"))
+				.address(rs.getString("address"))
+				.password(rs.getString("password"))
+				.mateCount(rs.getInt("mate_count"))
+				.point(rs.getInt("point"))
+				.status(rs.getBoolean("status"))
+				.birthDay(rs.getDate("birth_day"))
+				.zipCode(rs.getString("zipcode"))
+				.build();
+	}
 	
 	private static User getUser(ResultSet rs, User user) throws SQLException{
-//		return User.builder()
-//				.userId(rs.getString("user_id"))
-//				.userName(rs.getString("user_name"))
-//				.phone(rs.getString("phone"))
-//				.email(rs.getString("email"))
-//				.address(rs.getString("address"))
-//				.password(rs.getString("password"))
-//				.mateCount(rs.getInt("mate_count"))
-//				.point(rs.getInt("point"))
-//				.status(rs.getBoolean("status"))
-//				.birthDay(rs.getDate("birth_day"))
-//				.zipCode(rs.getString("zipcode"))
-//				.build();
 		if(user==null) {
 			user=User.builder()
 				.userId(rs.getString("user_id"))

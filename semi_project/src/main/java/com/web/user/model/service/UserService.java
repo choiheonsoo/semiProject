@@ -1,9 +1,13 @@
 package com.web.user.model.service;
 
-import static com.web.common.JDBCTemplate.*;
-import static com.web.user.model.dao.UserDao.getUserDao;
+import static com.web.common.JDBCTemplate.close;
+import static com.web.common.JDBCTemplate.getConnection;
+import static com.web.common.JDBCTemplate.rollback;
 import static com.web.dog.model.dao.DogDao.getDogDao;
+import static com.web.user.model.dao.UserDao.getUserDao;
+
 import java.sql.Connection;
+import java.util.List;
 
 import com.web.user.model.dto.User;
 public class UserService {
@@ -82,5 +86,21 @@ public class UserService {
 			rollback(con);
 		}
 		return result;
+	}
+	
+	// 관리자 페이지 기능
+	// 회원 전체 조회
+	public List<User> searchAllUser(){
+		Connection con = getConnection();
+		List<User> users = getUserDao().searchAllUser(con);
+		close(con);
+		return users;
+	}
+	
+	public List<User> searchAllUser(int cPage, int numPerpage){
+		Connection con = getConnection();
+		List<User> users = getUserDao().searchAllUser(con, cPage, numPerpage);
+		close(con);
+		return users;
 	}
 }

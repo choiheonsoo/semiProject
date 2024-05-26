@@ -1,8 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="com.web.user.model.dto.User"%>
 <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/logo.png">
 <!DOCTYPE html>
-<html lang="en">
+<script src="<%=request.getContextPath()%>/js/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +19,6 @@ body {
     padding: 0;
     display: flex;
 }
-
 .sidebar {
     width: 250px;
     background-color: #333;
@@ -31,6 +33,7 @@ body {
     padding: 0.3em;
     margin: 0;
     background-color: #444;
+    cursor: pointer;
 }
 .sidebar button{
 	background-color: #444;
@@ -47,9 +50,11 @@ body {
     transition: background-color 0.3s ease;
 }
 .sidebar button:hover{
-	background-color: #847070;
+	background-color: #b5258b;
 }
 .nav {
+	display: flex;
+	flex-direction: column;
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -60,17 +65,17 @@ body {
     position: relative;
 }
 
-.nav a {
+.nav p {
     color: #fff;
     text-decoration: none;
     display: block;
     padding: 0.75em 1em;
+    margin-bottom: 5px; 
+    cursor: pointer;
 }
-
-.nav a:hover {
+.nav p:hover {
     background-color: #575757;
 }
-
 .sub-nav {
     max-height: 0;
     overflow: hidden;
@@ -78,80 +83,84 @@ body {
     padding-left: 20px;
     transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
-
 .nav li:hover .sub-nav {
     max-height: 500px;
     padding: 10px 0;
     transition: max-height 0.5s ease-in, padding 0.5s ease-in;
 }
-
 .sub-nav li {
     border: none;
 }
-
-.sub-nav a {
+.sub-nav p {
     padding: 0.5em 1em;
     background-color: #444;
+    margin: 0;
+    cursor: pointer;
 }
-
-.sub-nav a:hover {
+.sub-nav p:hover {
     background-color: #575757;
 }
-
 .content {
     margin-left: 250px;
     padding: 2em;
     background-color: #bcbcbc;
     flex-grow: 1;
 }
-
 .content h1 {
     margin-top: 0;
 }
 </style>
 <body>
     <div class="sidebar">
-        <h2>»êÃ¥ÇÏ°³</h2>
-        <h2>Admin Page</h2>
+        <h2 onclick="location.assign('#')">ì‚°ì±…í•˜ê°œ <br> Admin Page</h2>
         <ul class="nav">
             <li>
-                <a href="#user-management">È¸¿ø°ü¸®</a>
+                <p>íšŒì›ê´€ë¦¬</p>
                 <ul class="sub-nav">
-                    <li><a href="#user-view">È¸¿ø Á¶È¸</a></li>
-                    <li><a href="#user-deletion">È¸¿ø Å»Åğ</a></li>
+                    <li><p id="searchMember">íšŒì› ì¡°íšŒ</p></li>
+                    <li><p>íšŒì› í‡´ì¶œ</p></li>
                 </ul>
             </li>
             <li>
-                <a href="#product-management">»óÇ°°ü¸®</a>
+                <p>ìƒí’ˆê´€ë¦¬</p>
                 <ul class="sub-nav">
-                    <li><a href="#product-registration">»óÇ° µî·Ï</a></li>
-                    <li><a href="#product-edit">»óÇ° ¼öÁ¤</a></li>
-                    <li><a href="#product-deletion">»óÇ° »èÁ¦</a></li>
-                    <li><a href="#qna-management">QnA °ü¸®</a></li>
+                    <li><p>ìƒí’ˆ ë“±ë¡</p></li>
+                    <li><p>ìƒí’ˆ ìˆ˜ì •</p></li>
+                    <li><p>ìƒí’ˆ ì‚­ì œ</p></li>
+                    <li><p>QnA ê´€ë¦¬</p></li>
                 </ul>
             </li>
             <li>
-                <a href="#board-management">°Ô½ÃÆÇ °ü¸®</a>
+                <p>ê²Œì‹œíŒ ê´€ë¦¬</p>
                 <ul class="sub-nav">
-                    <li><a href="#free-board">ÀÚÀ¯°Ô½ÃÆÇ</a></li>
-                    <li><a href="#notice-board">°øÁö»çÇ×°Ô½ÃÆÇ</a></li>
-                    <li><a href="#mungstagram-board">¸Û½ºÅ¸±×·¥ °Ô½ÃÆÇ</a></li>
-                    <li><a href="#walkmate-board">»êÃ¥¸ŞÀÌÆ® °Ô½ÃÆÇ</a></li>
-                    <li><a href="#hotplace-board">ÇÖÇÃ·¹ÀÌ½º °Ô½ÃÆÇ</a></li>
+                    <li><p>ììœ ê²Œì‹œíŒ</p></li>
+                    <li><p>ê³µì§€ì‚¬í•­ê²Œì‹œíŒ</p></li>
+                    <li><p>ë©ìŠ¤íƒ€ê·¸ë¨ ê²Œì‹œíŒ</p></li>
+                    <li><p>ì‚°ì±…ë©”ì´íŠ¸ ê²Œì‹œíŒ</p></li>
+                    <li><p>í•«í”Œë ˆì´ìŠ¤ ê²Œì‹œíŒ</p></li>
                 </ul>
             </li>
             <li>
-                <a href="#order-management">ÁÖ¹®°ü¸®</a>
+                <p>ì£¼ë¬¸ê´€ë¦¬</p>
                 <ul class="sub-nav">
-                    <li><a href="#shipping-status">¹è¼Û»óÅÂ º¯°æ</a></li>
-                    <li><a href="#refund-cancellation">È¯ºÒ/Ãë¼Ò °ü¸®</a></li>
+                    <li><p>ë°°ì†¡ìƒíƒœ ë³€ê²½</p></li>
+                    <li><p>í™˜ë¶ˆ/ì·¨ì†Œ ê´€ë¦¬</p></li>
                 </ul>
             </li>
         </ul>
-        <button>·Î±×¾Æ¿ô</button>
+        <button>ë¡œê·¸ì•„ì›ƒ</button>
     </div>
     <div class="content">
-        
+        <img src="<%=request.getContextPath() %>/images/admin/adminpage.jpg" style="width:100%; height:93vh; opacity:0.3;">
     </div>
 </body>
+<script>
+	// íšŒì› ì¡°íšŒ
+	$("#searchMember").click(e=>{
+		$.get("<%=request.getContextPath()%>/admin/searchmember.do")
+		.done(data=>{
+			$("div.content").html(data);
+		})
+	})
+</script>
 </html>
