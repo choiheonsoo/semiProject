@@ -19,7 +19,7 @@
 	</div>
 	<div class="board">
 		<ul class=board-header>
-			<li class="board-num">번호</li>
+			<!-- <li class="board-num">번호</li> -->
 			<li class="board-header-title">제목</li>
 			<li class="board-writer">작성자</li>
 			<li class="board-date">작성일</li>
@@ -28,7 +28,7 @@
 		<%for(Bulletin b : bulletins){ 
 			if(b.getCategoryNo()==2){%>
 				<ul class="board-body" style="background-color:black; color:red;">
-					<li class="board-num"><%=b.getBullNo() %></li>
+					<%-- <li class="board-num"><%=count++%></li> --%>
 					<li class="board-body-title"><a style="color:red" href="<%=request.getContextPath()%>/board/boardview.do?no=<%=b.getBullNo() %>"><%=b.getTitle() %></a></li>
 					<li class="board-writer"><%=b.getUserId() %></li>
 					<li class="board-date"><%=b.getRDate() %></li>
@@ -39,7 +39,7 @@
 		<%for(Bulletin b : bulletins){ 
 			if(b.getCategoryNo()==3){%>
 				<ul class="board-body">
-					<li class="board-num"><%=b.getBullNo() %></li>
+					<%-- <li class="board-num"><%=b.getBullNo() %></li> --%>
 					<li class="board-body-title"><a href="<%=request.getContextPath()%>/board/boardview.do?no=<%=b.getBullNo() %>"><%=b.getTitle() %></a></li>
 					<li class="board-writer"><%=b.getUserId() %></li>
 					<li class="board-date"><%=b.getRDate() %></li>

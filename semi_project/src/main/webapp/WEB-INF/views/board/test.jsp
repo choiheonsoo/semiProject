@@ -171,7 +171,7 @@
 			constentType : "application/json",
 			success:function(data){
 				alert("댓글 삭제 성공하였습니다.");
-				$('.reply_'+no).hide();
+				location.reload();
 			},
 			error:function(){
 				alert("댓글 삭제 실패하였습니다.");
@@ -251,11 +251,8 @@
 					//<!--ajax로 댓글 조회 하는 ...-->
 					$.each(data.b.comments,function(i,value){
 						if(value.commentLevel==1){
-					   		var mainComment=value.mainComment;
 							//대댓글 작성 시 메인 댓글 아래 추가하기 위해 class에 mainComment값 넣음
 							let $div = $('<div id="main_comment" class="'+value.mainComment+'">');
-							$div.addClass('reply_'+value.mainComment);
-							$div.addClass('main_comment_'+mainComment);
 					   		let $img = $('<img>').attr("scr","<%=request.getContextPath()%>/images/user/user.png").addClass('main_comment_img');
 					   		$.each(data.dog,function(i,value1){
 								if(value.userId==value1.userId){
@@ -267,13 +264,12 @@
 					   		$div.append($('<p>').addClass('main_comment_id').text('<%=loginUser.getUserId()%>'));
 					   		$div.append($('<p>').addClass('main_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
+					   		var mainComment=value.mainComment;
 						   	var button = $('<button>').text('댓글달기');
-						    button.addClass('reply_'+value.mainComment);
 						      button.on('click', function(event) {
 						          sub_comment(event, mainComment);
 						      });
 						    var delbutton = $('<button>').text("삭제하기");
-						    delbutton.addClass('reply_'+value.mainComment);
 						    delbutton.on('click',function(event){
 						    	del_comment(event, mainComment, data.b.bullNo);
 						    });
@@ -282,8 +278,6 @@
 					   		
 						}else if(value.commentLevel==2){
 							let $div = $('<div id="sub_comment">');
-							$div.addClass('reply_'+value.mainComment);
-							$div.addClass('main_comment_'+mainComment);
 					   		let $img = $('<img>').attr("scr","<%=request.getContextPath()%>/images/user/user.png").addClass('sub_comment_img');
 					   		$.each(data.dog,function(i,value1){
 								if(value.userId==value1.userId){
@@ -302,7 +296,6 @@
 					   		$div.append($('<p>').addClass('sub_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
 					   		var delbutton = $('<button>').text('삭제하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
-					   		delbutton.addClass('reply_'+value.mainComment);
 					   		delbutton.on('click',function(event){
 					   			del_comment(event,value.mainComment,data.b.bullNo);
 					   		});
@@ -311,9 +304,11 @@
 						
 					});
 					
+					
 					//대댓글 ajax로
 					const sub_comment = (event, mainComment) => {
 				    var commentForm = $("#post_footer_insert_comment1");
+				
 				    // 댓글 폼이 있는지 확인
 				    if (commentForm.length === 0) {
 				        var msg = `<div id="post_footer_insert_comment1">
@@ -328,7 +323,7 @@
 				
 				        $(event.target).after(newElement);
 				
-				        //대댓글 댓글 폼이 추가되면 이벤트 주기
+				        // 댓글 폼이 추가되면 이벤트 주기
 				        newElement.find('form').submit(e => {
 				            var replyContent = newElement.find('#post_comment_reply').val();
 				            $.ajax({  
@@ -339,15 +334,12 @@
 				                    comment_level: 2,
 				                    bull_no: data.b.bullNo,
 				                    sub_comment: mainComment,
-				                    content: replyContent,
-				                	type:'mungstargram'    
+				                    content: replyContent
 				                },
 				                success: function(response) {
-				                    $("#post_footer_insert_comment1").remove();
 				                    alert("댓글 등록 성공");
 				                    newElement.find('#post_comment_reply').val('');
 				                    let $div = $('<div id="sub_comment">');
-				                    $div.addClass('reply_'+response.commentNo);
 				                    let $img = $('<img>').attr("src","<%=request.getContextPath()%>/images/user/user.png").addClass('sub_comment_img');
 				                    $.each(data.dog,function(i,value1){
 				                        if('<%=loginUser.getUserId()%>'==value1.userId){
@@ -358,14 +350,7 @@
 				                    $div.append($img);
 				                    $div.append($('<p>').addClass('sub_comment_id').text('<%=loginUser.getUserId()%>'));
 				                    $div.append($('<p>').addClass('sub_comment_content').text(replyContent));
-				                    var delbutton = $('<button>').text("삭제하기");
-				                    delbutton.addClass('reply_'+response.commentNo);
-				                    delbutton.css('margin-left','35px');
-								    delbutton.on('click',function(event){
-								    	del_comment(event, response.commentNo, data.b.bullNo);
-								    });
-				                    $(".main_comment_"+mainComment).next().next().after($div);
-				                    $div.after(delbutton);
+				                    $("#main_comment."+mainComment).next().after($div);
 				                },
 				                error: function() {
 				                    alert('댓글 등록에 실패했습니다.');
@@ -394,38 +379,23 @@
 								bull_no:data.b.bullNo,
 								sub_comment:'0',
 								content:replyContent,
-								type:'mungstargram'
 							},
 							success:function(response){
 								alert("댓글 등록 성공");
-		                        $('#post_comment_reply').val('');
-		                        let $div = $('<div id="main_comment">');
-		                        $div.addClass('main_comment_'+response.commentNo);
-		                        $div.addClass("reply_"+response.commentNo);
-		                        let $img = $('<img>').attr("scr","<%=request.getContextPath()%>/upload/user/user.png").addClass('main_comment_img');
-		                        $.each(data.dog,function(i,value){
-			                        if(value.userId=="<%=loginUser.getUserId()%>"){
-			                            $img.attr("src","<%=request.getContextPath()%>/upload/user/"+value.dogImg);
-			                            return false;
-			                        }
-		                        });
-		                        $div.append($img);
-		                        $div.append($('<p>').addClass('main_comment_id').text('<%=loginUser.getUserId()%>'));
-		                        $div.append($('<p>').addClass('main_comment_content').text(replyContent));
-		                        $("#post_comment").append($div);
-
-						   		var button = $('<button>').text('댓글달기');
-						   		button.addClass('reply_'+response.commentNo);
-							      button.on('click', function(event) {
-							          sub_comment(event, response.commentNo);
-							      });
-							    var delbutton = $('<button>').text("삭제하기");
-							    delbutton.addClass('reply_'+response.commentNo);
-							    delbutton.on('click',function(event){
-							    	del_comment(event, response.commentNo, data.b.bullNo);
-							    });
-							    $("#post_comment").append(delbutton);
-							    $("#post_comment").append(button);
+								$('#post_comment_reply').val('');
+						   		let $div = $('<div id="main_comment">');
+						   		let $img = $('<img>').attr("scr","<%=request.getContextPath()%>/upload/user/user.png").addClass('main_comment_img');
+						   		$.each(data.dog,function(i,value){
+									if(value.userId=="<%=loginUser.getUserId()%>"){
+								   		$img.attr("src","<%=request.getContextPath()%>/upload/user/"+value.dogImg);
+								   		return false;
+									}
+								});
+						   		$div.append($img);
+						   		$div.append($('<p>').addClass('main_comment_id').text('<%=loginUser.getUserId()%>'));
+						   		$div.append($('<p>').addClass('main_comment_content').text(replyContent));
+						   		$("#post_comment").append($div);
+						   		$("#post_comment").append($('<button>').text('댓글달기'));
 							}
 						});
 					});

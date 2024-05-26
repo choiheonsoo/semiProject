@@ -12,6 +12,8 @@ import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.BulletinComment;
 import com.web.board.model.dto.BulletinImg;
 import com.web.board.model.dto.BulletinLike;
+import com.web.board.model.dto.MateApply;
+import com.web.board.model.dto.WalkingMate;
 import com.web.dog.model.dto.Dog;
 public class BoardService {
 	private static BoardService service = new BoardService();
@@ -146,6 +148,13 @@ public class BoardService {
 		close(conn);
 		return bk;
 	}
+	//댓글 조회하기
+	public List<BulletinComment> selectBoardComment() {
+		Connection conn = getConnection();
+		List<BulletinComment> result = getDao().selectBoardComment(conn);
+		close(conn);
+		return result;
+	}
 	//댓글 등록하기
 	public int insertBoardComment(BulletinComment bc) {
 		Connection conn = getConnection();
@@ -161,6 +170,68 @@ public class BoardService {
 		Connection conn = getConnection();
 		int result = getDao().deleteBoardComment(conn,bcNo);
 		if(result>0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+	
+	//산책메이트 게시글 전체 조회
+	public List<WalkingMate> selectWalkingMateAll(int cPage, int numPerpage){
+		Connection conn = getConnection();
+		List<WalkingMate> boards = getDao().selectWalkingMateAll(conn, cPage, numPerpage);
+		close(conn);
+		return boards;
+	}
+
+	//산책메이트 게시글 전체 조회(pageX)
+	public List<WalkingMate> selectWalkingMateAllpageX(){
+		Connection conn = getConnection();
+		List<WalkingMate> boards = getDao().selectWalkingMateAllpageX(conn);
+		close(conn);
+		return boards;
+	}
+	
+	//산책메이트 게시글 수
+	public int selectWalkingMateCount() {
+		Connection conn = getConnection();
+		int result = getDao().selectWalkingMateCount(conn);
+		close(conn);
+		return result;
+	}
+	
+	//산책메이트 신청자 전체 조회
+	public List<MateApply> selectMateApplyAll(){
+		Connection conn = getConnection();
+		List<MateApply> apply = getDao().selectMateApplyAll(conn);
+		close(conn);
+		return apply;
+	}
+	
+	//산책메이트 게시글 등록
+	public int insertWalkingMate(WalkingMate wm) {
+		Connection conn = getConnection();
+		int result = getDao().insertWalkingMate(conn, wm);
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+	
+	//산책메이트 게시글 삭제
+	public int deleteWalkingMate(int no) {
+		Connection conn = getConnection();
+		int result = getDao().deleteWalkingMate(conn,no);
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+	
+	//산책메이트 신청
+	public int insertApply(int no, String id) {
+		Connection conn = getConnection();
+		int result = getDao().insertApply(conn,no,id);
+		if(result>0)commit(conn);
 		else rollback(conn);
 		close(conn);
 		return result;

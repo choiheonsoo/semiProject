@@ -75,11 +75,12 @@
 	width:10%;
 }
 .board-header-title{
-	width:60%;
+	width:70%;
 }
 .board-body-title{
-	width:60%;
+	width:70%;
 	text-align: left;
+	padding-left:3%;
 }
 .board-writer{
 	width:10%;

@@ -7,17 +7,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import static com.web.board.model.service.BoardService.getService;
+
 /**
- * Servlet implementation class FreeBoardDeleteServlet
+ * Servlet implementation class DeleteWalkingMateServlet
  */
-@WebServlet("/board/deletefreeboard.do")
-public class FreeBoardDeleteServlet extends HttpServlet {
+@WebServlet("/board/deletewalkingmate.do")
+public class DeleteWalkingMateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FreeBoardDeleteServlet() {
+    public DeleteWalkingMateServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -27,15 +28,9 @@ public class FreeBoardDeleteServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int no = Integer.parseInt(request.getParameter("no"));
-		String bull = request.getParameter("멍스타그램");
-		int result = getService().deleteFreeBoard(no);
-		String msg = result > 0 ? "삭제 성공하였습니다." : "삭제 실패하였습니다.";
-		String loc = "";
-		if(bull!= null) {
-			loc = "/board/dogstargram.do";
-		}else {
-			loc = result > 0 ? "/board/freeboard.do" : "/board/boardview.do?no="+no;
-		}
+		int result = getService().deleteWalkingMate(no);
+		String msg = result>0 ? "삭제 성공하였습니다." : "삭제 실패하였습니다.";
+		String loc = "/board/walkingmate.do";
 		request.setAttribute("msg", msg);
 		request.setAttribute("loc", loc);
 		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
