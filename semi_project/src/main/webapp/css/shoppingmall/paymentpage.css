@@ -257,3 +257,13 @@ h2{
 .productQuantity{
 	width: 10%;
 }
+
+
+/* 결제 정보 */
+.paymentContainer{
+	width:70%;
+	margin-top:20px;
+}
+.paymentdiv{
+	border-top:2px solid #cecece;
+}

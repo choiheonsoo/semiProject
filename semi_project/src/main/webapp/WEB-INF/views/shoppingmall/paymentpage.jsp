@@ -94,8 +94,27 @@
 		<div class="paymentContainer">
 			<div>
 				<h2>결제정보</h2>
-				<div>
-				
+				<div class="paymentdiv">
+					<div class="buyerNameContainer">
+						<div>총상품가격</div>
+						<div class="buyerName">20000원</div>
+					</div>
+					<div class="buyerEmailContainer">
+						<div>배송비</div>
+						<div class="buyerEmail">0원</div>
+					</div>
+					<div class="buyerPhoneContainer">
+						<div>포인트</div>
+						<div class="buyerPhone">0 POINT</div>
+					</div>
+					<div>
+						<div >총결제금액</div>
+						<div>10000원</div>
+					</div>
+					<div>
+						<div>결제방법</div>
+						<input type="radio" value="kakao">카카오페이
+					</div>
 				</div>
 			</div>
 		</div>
