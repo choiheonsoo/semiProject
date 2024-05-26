@@ -237,4 +237,23 @@ h2{
 /* 상품 정보 */
 .productsContainer{
 	margin-top:20px;
+	width:70%;
+}
+.products{
+	border-top:2px solid #cecece;
+}
+.products>div{
+	display: flex;
+    align-items: center;
+    font-size: 15px;
+    border-bottom: 1px solid #e4e4e4;
+}
+.productName{
+	width: 65%;
+}
+.productOption{
+	width: 25%;
+}
+.productQuantity{
+	width: 10%;
 }
