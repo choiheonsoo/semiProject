@@ -38,28 +38,34 @@ public class UserLoginCheckServlet extends HttpServlet {
 
 		User user = getUserService().loginUser(id,password);
 		String dogImg = getUserService().getDogImg(id);
-		if(user!=null) {
-			HttpSession session = request.getSession();
-			System.out.println(dogImg);
-			session.setAttribute("loginUser", user);
-			session.setAttribute("dogImg", dogImg);
-			session.setAttribute("isLogin", true);
-			request.setAttribute("msg", "어서오세요!");
-			request.setAttribute("loc", "/");
-			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+		if(id.equals("admin")) {
+			request.getRequestDispatcher("/WEB-INF/views/admin/adminpage.jsp").forward(request, response);	
 		} else {
-			request.setAttribute("msg", "아이디 혹은 비밀번호를 확인해주세요.");
-			request.setAttribute("loc", "/user/login.do");
-			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+			if(user!=null) {
+				HttpSession session = request.getSession();
+				System.out.println(dogImg);
+				session.setAttribute("loginUser", user);
+				session.setAttribute("dogImg", dogImg);
+				session.setAttribute("isLogin", true);
+				request.setAttribute("msg", "어서오세요!");
+				request.setAttribute("loc", "/");
+				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+			} else {
+				request.setAttribute("msg", "아이디 혹은 비밀번호를 확인해주세요.");
+				request.setAttribute("loc", "/user/login.do");
+				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+			}
 		}
 	}
+		
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
+/**
+ * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+ */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
-}
+	
+	}

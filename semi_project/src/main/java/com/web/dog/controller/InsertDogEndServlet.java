@@ -51,7 +51,7 @@ public class InsertDogEndServlet extends HttpServlet {
 								.dogWeight(dogWeight)
 								.dogImg(dogImg)
 								.build();
-		
+		System.out.println(dog);
 		int insertDogResult = DogService.getDogService().insertDog(dog);
 		String msg, loc;
 		File delFile = new File(path+"/"+dogImg);
