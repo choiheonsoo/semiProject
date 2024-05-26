@@ -353,6 +353,25 @@
 	font-size:14px;
 	color:lightgray;
 }
+/* 리뷰 수정,삭제 버튼 */
+.reviewdeletebtn{
+	color:#346aff;
+	cursor:pointer;
+	background:none;
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+.reviewdeletebtn:hover{
+	border-bottom:1px solid #346aff;
+}
+.reviewupdatebtn{
+	color:#346aff;
+	cursor:pointer;
+	background:none;
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+.reviewupdatebtn:hover{
+	border-bottom:1px solid #346aff;
+}
 /* 리뷰 사진들 */
 .reviewImgs{
 	display:flex;
@@ -496,6 +515,24 @@
 	width:20px;
 	height:20px;
 }
+.qnadeletebtn{
+	color:#346aff;
+	cursor:pointer;
+	background:none;
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+.qnadeletebtn:hover{
+	border-bottom:1px solid #346aff;
+}
+.qnaupdatebtn{
+	color:#346aff;
+	cursor:pointer;
+	background:none;
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+.qnaupdatebtn:hover{
+	border-bottom:1px solid #346aff;
+}
 /* qna 페이지바 */
 .qnapagebarContainer{
 	margin-top:10px;
@@ -635,6 +672,7 @@
 .selectedreviewimg{
 	border:3px solid #346aff;
 }
+
 /* qna 문의하기 등록 모달 */
 .qnamodalContainer{
 	width:100%;
@@ -653,27 +691,63 @@
 .qnamodalhidden{
 	display:none;
 }
-.qnacontentdiv{
-    width: 80%;
-    height: 80%;
+.qnaheaddiv{
+	background-color: white;
+    width: 40%;
+    height: 45%;
     display: flex;
     flex-direction: column;
+}
+.modalhead{
+	display: flex;
+    justify-content: space-between;
+    background-color:#eee;
+    align-items: center;
+    height: 20%;
+}
+.qtext{
+	font-size: 27px;
+    margin-left: 4%;
+    margin-top: 2%;
+    height: 35px;
+}
+.qnamodalclosebtn{
+	margin-right: 3%;
+    margin-top: 2%;
+    height: 34px;
+    width: 40px;
+    font-weight: 900;
+    cursor: pointer;
+    font-size: 27px;
+}
+.qnacontentdiv{
+	display: flex;
+    height: 60%;
+    margin-top: 20px;
+}
+.contenthead{
+	width: 25%;
+    font-size: 18px;
+    display: flex;
     justify-content: center;
+    align-items: center;
 }
 .qnatextdiv{
-    width: 100%;
-    height: 80%;
+    width: 75%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .qnatextarea{
-	width: 100%;
+	width: 95%;
     height: 95%;
 }
 textarea:focus {
   outline: none; /* 포커스 테두리 제거 */
-  border-color: #007bff; /* 포커스된 상태의 테두리 색상 설정 */
 }
 .qnabtndiv{
-	height: 10%;
+	height: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -681,11 +755,17 @@ textarea:focus {
 .qnabtn{
 	border: 1px solid #346aff;
     border-radius: 5px;
-    width: 15%;
+    width: 25%;
     height: 70%;
+    background-color:#346aff;
+	color:white;
 }
-.qnabtn:hover{
-	background-color:#346aff;
+.qnamodalupdatebtn{
+	border: 1px solid #346aff;
+    border-radius: 5px;
+    width: 25%;
+    height: 70%;
+    background-color:#346aff;
 	color:white;
 }
 /* top버튼 */
@@ -707,4 +787,93 @@ textarea:focus {
 .topbtn:hover{
 	background-color:rgb(0,0,0,0.8);
 	color:white;
+}
+
+/* 로그인 하라는 알림모달창 */
+.loginalertmodal{
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	display:flex;
+	flex-direction:row;
+	justify-content:center;
+	align-items:center;
+	z-index:1100;
+	text-align:center;
+	background-color:rgba(0,0,0,0.3);
+}
+.loginalertmodalhidden{
+	display:none;
+}
+.alertdiv{
+	box-shadow: 5px 6px 10px 1px grey;
+    background: white;
+    width: 300px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 5px;
+}
+.alerttextdiv{
+	height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.alertbtndiv{
+	display: flex;
+    justify-content: flex-end;
+    height: 25%;
+}
+.alertnobtn{
+	margin-right: 3%;
+    border: 1px solid #346aff;
+    background: none;
+    border-radius: 5px;
+    width: 70px;
+}
+.alertyesbtn{
+	margin-right: 3%;
+    border: 1px solid #346aff;
+    background: #346aff;
+    border-radius: 5px;
+    width: 70px;
+    color: white;
+}
+
+/* 삭제여부 묻는 모달창 */
+.deletemodal{
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	display:flex;
+	flex-direction:row;
+	justify-content:center;
+	align-items:center;
+	z-index:1100;
+	text-align:center;
+	background-color:rgba(0,0,0,0.3);
+}
+.deletemodalhidden{
+	display:none;
+}
+.deletenobtn{
+	margin-right: 3%;
+    border: 1px solid #346aff;
+    background: none;
+    border-radius: 5px;
+    width: 70px;
+}
+.deleteyesbtn{
+	margin-right: 3%;
+    border: 1px solid #346aff;
+    background: #346aff;
+    border-radius: 5px;
+    width: 70px;
+    color: white;
 }

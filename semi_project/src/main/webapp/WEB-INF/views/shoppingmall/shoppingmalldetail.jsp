@@ -7,6 +7,7 @@
 				 com.web.shoppingmall.model.dto.Qna, com.web.shoppingmall.model.dto.QnaAnswer" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
+	/* DecimalFormat df=new DecimalFormat("#,###"); */
 	Product p=(Product)request.getAttribute("product");
 	String r=(String)request.getAttribute("r");
 	String pageBar=(String)request.getAttribute("pageBar");
@@ -161,6 +162,14 @@
 							<div>
 								<span class="memberName"><%=u.getUserId() %></span>
 								<span class="reviewDate"><%=u.getReviews().get(0).getReviewDate() %></span>
+								<%if(loginUser!=null){%>
+									<%if(u.getUserId().equals(loginUser.getUserId())){ %>
+									<input type="hidden" value="<%=u.getReviews().get(0).getReviewKey() %>" id="rk">
+									<span class="reviewupdatebtn">수정</span>
+									|
+									<span class="reviewdeletebtn">삭제</span>
+									<%} %>
+								<%} %>
 								<div class="stars">
 									<%for(int i=0;i<5;i++){ %>
 										<%if(i<u.getReviews().get(0).getRating()){ %>
@@ -213,10 +222,20 @@
 							</div>
 						</div>
 						<div class="qnadate">
+						<%if(loginUser!=null){%>
+						<%if(q.getUserId().equals(loginUser.getUserId())){ %>
+							<div>
+								<input type="hidden" value="<%=q.getQnaKey()%>" class="qk">
+								<button class="qnaupdatebtn">수정</button>
+								|
+								<button class="qnadeletebtn">삭제</button>
+							</div>
+						<%} %>
+						<%} %>
 							<span><%=q.getQnaDate() %></span>
 						</div>
 					</div>
-					<%if(q.getAnswer()!=null){ %>
+					<%if(q.getAnswer().getQnaAnswerKey()!=0){ %>
 					<div class="qnaAnswerBox">
 						<div class="qnaTitle">
 							<div class="arrow">
@@ -246,6 +265,7 @@
 		top
 	</button>
 </section>
+	<!-- 리뷰 이미지 모달창 -->
 	<div class="modalContainer modalhidden">
 		<div class="modalContent">
 			<button class="modalclosebtn">x</button>
@@ -259,26 +279,241 @@
 			</div>
 		</div>
 	</div>
+	<!-- 문의 등록하기 모달창 -->
 	<div class="qnamodalContainer qnamodalhidden">
-		<div class="qnacontentdiv">
-			<div class="qnatextdiv">
-				<textarea class="qnatextarea"></textarea>
+		<div class="qnaheaddiv">
+			<div class="modalhead">
+				<h2 class="qtext">문의하기</h2>
+				<h2 class="qnamodalclosebtn">x</h2>
+			</div>
+			<div class="qnacontentdiv">
+				<div class="contenthead">
+					<span>문의내용</span>
+				</div>
+				<div class="qnatextdiv">
+					<textarea class="qnatextarea"></textarea>
+				</div>
 			</div>
 			<div class="qnabtndiv">
-				<button class="qnabtn">문의 등록하기</button>
+				<button class="qnabtn" id="qnabtn">문의 등록하기</button>
 			</div>	
 		</div>
 	</div>
+	<!-- 로그인 하라는 알림 모달창 -->
+	<div class="loginalertmodal loginalertmodalhidden">
+		<div class="alertdiv">
+			<div class="alerttextdiv">
+				<span>로그인이 필요한 서비스입니다.<br>
+				로그인 하시겠습니까?</span>
+			</div>
+			<div class="alertbtndiv">
+				<button class="alertnobtn">아니오</button>
+				<button class="alertyesbtn">예</button>
+			</div>
+		</div>
+	</div>
+	<!-- 삭제 여부 묻는 모달창 -->
+	<div class="deletemodal deletemodalhidden">
+		<div class="alertdiv">
+			<div class="alerttextdiv">
+				<span>정말 삭제하시겠습니까?</span>
+			</div>
+			<div class="alertbtndiv">
+				<button class="deletenobtn">아니오</button>
+				<button class="deleteyesbtn">예</button>
+			</div>
+		</div>
+	</div>
 <script>
+	//구매버튼 누르기
+	const movePaypage=()=>{
+		<%if(loginUser!=null){%>
+			//로그인 한 상태
+			const size=$("select[name=size]").val();
+			const color=$("select[name=color]").val();
+			const quantity=$("purchaseQuantity").text();
+			location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
+		<%}else{%>
+			//로그인 안 한 상태
+			$(".loginalertmodal").remove("loginalertmodalhidden");
+		<%}%>
+	}
+	
+	$(document).ready(()=>{
+		let btn=null;
+		
+		$(document).on("click", ".qnadeletebtn", (e)=>{
+			//qna삭제
+			//삭제여부를 묻는 모달창을 띄운다.
+			$(".deletemodal").removeClass("deletemodalhidden");
+			$("html, body").css("overflow", "hidden");
+			btn="qna";
+		});
+		
+		$(document).on("click", ".reviewdeletebtn", (e)=>{
+			//리뷰삭제
+			//삭제여부 모달창을 띄운다.
+			$(".deletemodal").removeClass("deletemodalhidden");
+			btn="review";
+		})
+		
+		//삭제 모달창에서 '예'를 눌렀을 때
+		$(".deleteyesbtn").click(e=>{
+			$(".deletemodal").addClass("deletemodalhidden");
+			deleteReviewOrQna(btn);
+			$("html, body").css("overflow","");
+		});
+		
+		//삭제 모달창에서 '아니오'를 눌렀을 때
+		$(".deletenobtn").click(e=>{
+			$("html, body").css("overflow", "");
+			$(".deletemodal").addClass("deletemodalhidden");
+		});
+			
+	});
+	const deleteReviewOrQna=(e)=>{
+		if(e=="qna"){
+			//qna 삭제일 때
+			const qnaKey=$(".qk").val();
+			$.ajax({
+				url:"<%=request.getContextPath()%>/shoppingmall/deleteqna.do",
+				type:"POST",
+				data:{"qnaKey":qnaKey},
+				success:(response)=>{
+					if(response.result!=0){
+						//삭제 성공
+						location.reload();
+						alert("문의글 삭제 성공!");
+					}else{
+						//삭제 실패
+						alert("문의글 삭제 실패!");
+					}
+				},
+				error:()=>{
+					alert("오류");
+				}
+			});
+		}else{
+			//리뷰 삭제일 때
+			const reviewKey=$("#rk").val();
+			$.ajax({
+				url:"<%=request.getContextPath()%>/shoppingmall/deletereview.do",
+				type:"POST",
+				data:{"reviewKey":reviewKey},
+				success:(response)=>{
+					if(response.result!=0){
+						//삭제 성공
+						location.reload();
+						alert("리뷰 삭제 성공!");
+					}else{
+						//삭제 실패
+						alert("리뷰 삭제 실패!");
+					}
+				},
+				error:()=>{
+					alert("오류");
+				}
+			});
+		}
+	};
+	//qna 수정하기
+	$(document).on("click", ".qnaupdatebtn", (e)=>{
+		$(".qnamodalContainer").removeClass("qnamodalhidden");
+		$("html").css("overflow","hidden");
+		$(".qnabtn").addClass("qnamodalupdatebtn").removeClass("qnabtn").text("문의 수정하기");
+		const oldQnaText=$(e.target).parent().parent().prev().children().last().text().trim();
+		$(".qnatextarea").val(oldQnaText);
+		$("#qnabtn").off();
+	});
+	$(document).on("click", ".qnamodalupdatebtn", (e)=>{
+		//문의글 수정하기 ajax
+		const qnaKey=$(".qk").val();
+		if($(".qnatextarea").val()==""){
+			//내용 입력 안했을 때
+			alert("내용을 입력해주세요!");
+		}else{
+			//내용 입력 했을 때
+			const content=$(".qnatextarea").val();
+			$.ajax({
+				url:"<%=request.getContextPath()%>/shoppingmall/updateqna.do",
+				type:"POST",
+				data:{"qnaKey":qnaKey, "content":content},
+				success:(response)=>{
+					if(response.result!="0"){
+						//문의글 수정 성공
+						location.reload();
+						alert("문의글 수정 성공!");
+					}else{
+						alert("문의글 수정 실패!");
+					}
+				},
+				error:()=>{
+					alert("에러");
+				}
+			})
+		}
+	});
+	
+	//문의하기 등록버튼 눌러서 등록하기
+	$(".qnabtn").click(e=>{
+		<%if(loginUser!=null){%>
+			//로그인 한 상태
+			if($(".qnatextarea").val()==""){
+				//내용 입력 안했을 때
+				alert("내용을 입력해주세요!");
+			}else{
+				//내용 입력 했을 때
+				const content=$(".qnatextarea").val();
+				$.ajax({
+					url:"<%=request.getContextPath()%>/shoppingmall/enrollqna.do",
+					type:"POST",
+					data:{"productKey":<%=p.getProductKey()%>, "userId":"<%=loginUser.getUserId()%>", "content":content},
+					success:(response)=>{
+						console.log(response.result);
+						if(response.result!="0"){
+							//문의글 등록 성공
+							location.reload();
+							alert("문의글 등록 성공!");
+						}else{
+							alert("문의글 등록 실패!");
+						}
+					},
+					error:()=>{
+						alert("에러");
+					}
+				})
+			}
+		<%}else{%>
+			// 로그인 안한 상태. 로그인 하라고 창 띄우기
+			$(".qnamodalContainer").addClass("qnamodalhidden");
+			$(".loginalertmodal").removeClass("loginalertmodalhidden");
+			$("html").css("overflow","hidden");
+		<%}%>
+	});
+	
 	//문의하기 버튼 누를시 문의글등록모달창 띄우기
 	$(".enrollQna").click(e=>{
 		$(".qnamodalContainer").removeClass("qnamodalhidden");
+		$("html").css("overflow","hidden");
 	})
-	//문의하기 등록모달창 x 버튼누르면 모달창 닫기
-	$(".closeqnamodal").click(e=>{
-		$(".qnamodalContainer").addClass("qnamidalhidden");
+	//문의하기 모달창 x 버튼누르면 모달창 닫기
+	$(".qnamodalclosebtn").click(e=>{
+		$(".qnamodalContainer").addClass("qnamodalhidden");
+		$("html").css("overflow","");
 	})
-
+	
+	//로그인 알림 모달창 '아니오' 버튼 눌렀을 때
+	$(".alertnobtn").click(e=>{
+		$(".loginalertmodal").addClass("loginalertmodalhidden");
+		$("html").css("overflow","");
+	})
+	//로그인 알림 모달창 '예' 버튼 눌렀을 때
+	$(".alertyesbtn").click(e=>{
+		$("html").css("overflow","");
+		$(".loginalertmodal").addClass("loginalertmodalhidden");
+		location.assign("<%=request.getContextPath()%>/user/login.do");
+	})
+	
 	//top 버튼 스크롤 이벤트
 	$(".topbtn").click(e=>{
 		$("html, body").scrollTop(0);
@@ -422,7 +657,7 @@
 		})
 		$("html").css("overflow","hidden");
 		$(".modalContainer").removeClass("modalhidden");		
-	})
+	});
 
 	//모달창 닫기
 	$(".modalclosebtn").click(e=>{
@@ -461,11 +696,6 @@
 			$(".modalmainimg").attr("src",$last.attr("src"));
 		}
 	});
-	
-	//구매페이지 이동 함수
-	const movePaypage=()=>{
-		location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
-	}
 	
 	//이미지 누르면 메인이미지 바뀌게하는 함수
 	$(".imgbordercontainer").mouseenter(e=>{
@@ -549,7 +779,7 @@
 	    <%if(!options.isEmpty()){%>
 	    	const $optionDiv=$("<div>").addClass("option").append($("<span>").text("옵션선택 *"));
 	    	<%if(!options.stream().anyMatch(e->e.containsKey("NULL"))){%>
-	    		const $sizeSelect=$("<select>").attr("name","size").append($("<option>").attr({disabled:true,selected:true}).text("사이즈를 선택해주세요"));
+	    		const $sizeSelect=$("<select>").attr("name","size");//.append($("<option>").attr({disabled:true,selected:true}).text("사이즈를 선택해주세요"));
     			<%List<String> key=new ArrayList<>();%>
 	    		<%for(Map<String,String> m:options){
 	    			for(String k:m.keySet()){
@@ -563,12 +793,19 @@
 		    		$optionDiv.append($sizeSelect);
 	    		<%};%>
 	    		<%if(!options.stream().anyMatch(e->e.containsValue("NULL"))){%>
-	    			const $colorSelect=$("<select>").attr("name","color").append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
-	    			$optionDiv.append($colorSelect);
+	    			const $colorSelect=$("<select>").attr("name","color");//.append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
+	    			<%for(Map<String,String> m:options){%>
+	    				<%for(Map.Entry<String,String> e:m.entrySet()){%>
+	    					<%if(e.getKey().equals(options.get(0).keySet().iterator().next())){%>
+	    						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>").text("<%=e.getValue()%>"));
+	    						$optionDiv.append($colorSelect);
+	    					<%}%>
+	    				<%}%>
+	    			<%}%>
 	    		<%}%>
 	    	<%}else{%>
 	    		<%if(!options.stream().anyMatch(e->e.containsValue("NULL"))){%>
-    				const $colorSelect=$("<select>").attr("name","color").append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
+    				const $colorSelect=$("<select>").attr("name","color");//.append($("<option>").attr({disabled:true,selected:true}).text("색상을 선택해주세요"));
     				<%for(Map<String,String> m:options){%>
     					<%for(Map.Entry<String, String> e:m.entrySet()){%>
     						$colorSelect.append($("<option>").attr("name","<%=e.getValue()%>").text("<%=e.getValue()%>"));

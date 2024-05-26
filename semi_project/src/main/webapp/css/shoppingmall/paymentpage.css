@@ -1,0 +1,240 @@
+@charset "UTF-8";
+
+
+.paymentpageContainer{
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+h2{
+	overflow:hidden
+}
+/* 타이틀 */
+.paymentpageTitle{
+	width: 70%;
+    margin-top: 20px;
+    height: auto;
+    border-bottom: 3px solid #777;
+}
+.title{
+	font-size: 35px;
+    overflow: hidden;
+    font-weight: 600;
+}
+.asterisk{
+	color:red;
+}
+/* 구매자 정보 */
+.buyerContainer{
+	width: 70%;
+    margin-top: 40px;
+}
+.buyerTitle{
+	font-size: 20px;
+    overflow: hidden;
+}
+.buyerContainer>div>div{
+	border-top: 2px solid #cecece;
+}
+.buyerNameContainer{
+	display: flex;
+    height: auto;
+    justify-content: flex-start;
+}
+.buyerNameContainer>div:first-child{
+	display: flex;
+    width: 15%;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+}
+.buyerName{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+.buyerEmailContainer{
+	display: flex;
+    height: auto;
+    justify-content: flex-start;
+}
+.buyerEmailContainer>div:first-child{
+	display: flex;
+    width: 15%;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+}
+.buyerEmail{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+.buyerPhoneContainer{
+	display: flex;
+    height: auto;
+    justify-content: flex-start;
+}
+.buyerPhoneContainer>div:first-child{
+	display: flex;
+    width: 15%;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+}
+.buyerPhone{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+
+/* 받는사람 정보 */
+.receiverContainer{
+	width: 70%;
+    margin-top: 20px;
+}
+
+.receiverTitle{
+	display: flex;
+    align-items: center;
+}
+.shippingAddressChangeBtn{
+	width: 65px;
+    height: 20px;
+    font-size: 11px;
+    border-radius: 2px;
+    border: 1px solid #999;
+    background: none;
+    color: #333;
+    margin-left: 15px;
+}
+
+.receiverContainer>div>div:last-child{
+	border-top: 2px solid #cecece;
+}
+.receiverNameContainer{
+	display: flex;
+}
+.receiverNameContainer>div:first-child{
+	display: flex;
+    width: 15%;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+}
+.receiverName{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+
+.receiverAddressContainer{
+	display: flex;
+}
+.receiverAddressContainer>div:first-child{
+	display: flex;
+    width: 15%;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+}
+.receiverAddress{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+
+.receiverPhoneContainer{
+	display: flex;
+}
+.receiverPhoneContainer>div:first-child{
+	display: flex;
+    width: 15%;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+}
+.receiverPhone{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+
+.requestContainer{
+	display: flex;
+}
+.requestContainer>div:first-child{
+	display: flex;
+    width: 15%;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+}
+.receiverRequest{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+
+
+/* 상품 정보 */
+.productsContainer{
+	margin-top:20px;
+}

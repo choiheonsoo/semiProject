@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.web.user.model.dto.User;
 
 /**
@@ -108,7 +109,9 @@ public class ReviewPagingAjaxServlet extends HttpServlet {
 		m.put("pagebar", pageBar);
 		m.put("user", u);
 		response.setContentType("application/json;charset=UTF-8");
-		Gson gson=new Gson();
+		Gson gson=new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd")
+                .create();
 		gson.toJson(m,response.getWriter());
 	}
 

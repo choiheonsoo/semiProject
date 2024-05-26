@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-
 public class BulletinImg {
 	private int bulletinImgKey;
 	private int bullNo;
