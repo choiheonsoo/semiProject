@@ -28,6 +28,7 @@ public class PurchaseServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 구매 페이지로 이동
 		
+		request.getRequestDispatcher("/WEB-INF/views/shoppingmall/paymentpage.jsp").forward(request, response);
 	}
 
 	/**

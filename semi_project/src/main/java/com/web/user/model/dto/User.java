@@ -31,4 +31,5 @@ public class User {
 	private String zipCode;
 	private List<Review> reviews;
 	private List<Dog> dog;
+	private List<ShippingAddress> shippingAddress;
 }

@@ -332,7 +332,7 @@
 			const size=$("select[name=size]").val();
 			const color=$("select[name=color]").val();
 			const quantity=$("purchaseQuantity").text();
-			location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>&size='+size+'&color='+color+'&quantity='+quantity);
+			location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do?productKey=<%=p.getProductKey()%>');
 		<%}else{%>
 			//로그인 안 한 상태
 			$(".loginalertmodal").remove("loginalertmodalhidden");
