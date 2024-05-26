@@ -104,6 +104,24 @@ public class DogDao {
 			close(pstmt);
 		} return dogs;
 	}
+	// 관리자 기능 : 전체 강아지 데려오기
+	public List<Dog> serachAllDog(Connection con){
+		List<Dog> dogs = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("serachAllDog"));
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				dogs.add(getDog(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		} return dogs;
+	}
 	
 	public static Dog getDog(ResultSet rs) throws SQLException{
 		return Dog.builder().userId(rs.getString("USER_ID"))

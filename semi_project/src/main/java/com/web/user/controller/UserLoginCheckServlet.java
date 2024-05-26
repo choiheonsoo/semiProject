@@ -38,7 +38,11 @@ public class UserLoginCheckServlet extends HttpServlet {
 
 		User user = getUserService().loginUser(id,password);
 		String dogImg = getUserService().getDogImg(id);
-		if(id.equals("admin")) {
+		if(user!=null && user.getUserId().equals("admin")) {
+			HttpSession session = request.getSession();
+			session.setAttribute("loginUser", user);
+			session.setAttribute("dogImg", dogImg);
+			session.setAttribute("isLogin", true);
 			request.getRequestDispatcher("/WEB-INF/views/admin/adminpage.jsp").forward(request, response);	
 		} else {
 			if(user!=null) {

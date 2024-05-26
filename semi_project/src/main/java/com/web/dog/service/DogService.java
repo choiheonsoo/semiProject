@@ -58,4 +58,12 @@ public class DogService {
 		else rollback(con);
 		return result;
 	}
+	
+	// 관리자 기능 : 전체 등록된 반려견 데려오기
+	public List<Dog> serachAllDog(){
+		Connection con = getConnection();
+		List<Dog> dogs = getDogDao().serachAllDog(con);
+		close(con);
+		return dogs;
+	}
 }
