@@ -657,12 +657,30 @@ public class BoardDao {
 			pstmt.setInt(3, boardNo);
 			pstmt.setString(4, id);
 			result = pstmt.executeUpdate();
+			if(result > 0) {
+				updateMemberMateCount(conn,id);
+			}
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
 			close(pstmt);
 		}
 		return result;
+	}
+	
+	//회원의 산책메이트 횟수 증가
+	public void updateMemberMateCount(Connection conn, String id) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("updateMemberMateCount"));
+			pstmt.setString(1, id);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
 	}
 	
 	//산책메이트 수락할 때 수락 된 총 인원 가져오기
@@ -702,14 +720,14 @@ public class BoardDao {
 	}
 	
 	//신고 기능
-	public int insertReport(Connection conn, String id, String reportedId, String content, int cataNum, int no) {
+	public int insertReport(Connection conn, String reporterId, String reportedId, String content, int cataNum, int no) {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		try {
 			pstmt = conn.prepareStatement(sql.getProperty("insertReport"));
 			pstmt.setInt(1, cataNum);
 			pstmt.setInt(2,no);
-			pstmt.setString(3, id);
+			pstmt.setString(3, reporterId);
 			pstmt.setString(4, content);
 			pstmt.setString(5, reportedId);
 			result = pstmt.executeUpdate();

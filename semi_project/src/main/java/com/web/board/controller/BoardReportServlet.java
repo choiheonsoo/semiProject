@@ -31,7 +31,7 @@ public class BoardReportServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
+		String reporterId = request.getParameter("id");
 		String content = request.getParameter("content");
 		String category = request.getParameter("category");
 		int no = Integer.parseInt(request.getParameter("no"));
@@ -42,7 +42,7 @@ public class BoardReportServlet extends HttpServlet {
 		case "음란물" :categoryNo = 2; break;
 		case "도배" :categoryNo = 3; break;
 		}
-		int result = getService().insertReport(id,reportedId,content,categoryNo,no);
+		int result = getService().insertReport(reporterId,reportedId,content,categoryNo,no);
 		
 		
 		 JSONObject jo = new JSONObject(); jo.put("result",result);
