@@ -3,9 +3,11 @@
 <%@page import="com.web.board.model.dto.WalkingMate"%>
 <%@page import="java.util.List"%>
 <%@page import="java.sql.Timestamp" %>
+<%@page import="com.web.dog.model.dto.Dog"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
+
 <%
 	List<WalkingMate> boards = (List<WalkingMate>)request.getAttribute("boards");
 	List<WalkingMate> boardAll = (List<WalkingMate>)request.getAttribute("boardAll");
@@ -15,7 +17,97 @@
 
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board/walkingMate.css">
-
+	<div id="apply-list-button" onclick='apply_list_button(event,"<%=loginUser.getUserId()%>")'>
+		<button>신청한 사람 목록</button>
+	</div>
+	<div class='apply-list'><!--  style="display:none" -->
+		<p onclick="apply_list_close();">x</p>
+		<ul>
+			<li>회원아이디</li>
+			<li>유저이름</li>
+			<li>회원주소</li>
+			<li>메이트횟수</li>
+			<li>수락여부</li>
+		</ul>
+	</div>
+	<script>
+		//리스트 출력 닫기
+		const apply_list_close=function(){
+			$('.apply-list').hide();
+		}
+		
+		//리스트 출력
+		const apply_list_button = function(e, userId){
+			$('.apply-list').show();
+			$.ajax({
+				url:"<%=request.getContextPath()%>/board/selectApply.do?userId="+userId,
+				success:function(data){
+					if(data.length==0){
+						alert("조회된 결과가 없습니다.");
+					}else{
+						$('.apply-list').children().not(":first-child").hide();
+						$.each(data,function(i,value){
+							console.log(value);
+							$ul = $("<ul>").addClass('apply_list_'+value.boardNo+value.userId);
+							$ul.append($("<li>").text(value.userId));
+							$ul.append($("<li>").text(value.userName));
+							$ul.append($("<li>").text(value.address));
+							$ul.append($("<li>").text(value.mateCount));
+							//수락하면 MATE-APPLY에서 ACCEPT를 'Y'로 변경
+							$ul.append($("<button>")
+											.text("수락하기")
+											.click(function(){
+												$.ajax({
+													url:'<%=request.getContextPath()%>/board/updateApply.do',
+													type:'post',
+													data:{
+														totalMembers : value.totalMembers,
+														boardNo : value.boardNo,
+														userId :value.userId
+													},
+													success:function(data){
+														console.log(data);
+														alert("수락 완료!");
+														$('.apply_list_'+value.boardNo+value.userId).hide();
+													},
+													error:function(){
+														alert("수락하는 중 오류 발생");
+													}
+												});	
+											})
+										);
+							//거절하면 MATE-APPLY에서 삭제
+							$ul.append($("<button>")
+											.text("거절하기")
+											.click(function(){
+												$.ajax({
+													url:'<%=request.getContextPath()%>/board/deleteApply.do',
+													type:'post',
+													data:{
+														boardNo : value.boardNo,
+														userId :value.userId
+													},
+													success:function(data){
+														console.log(data);
+														alert("거절 완료!");
+														$('.apply_list_'+value.boardNo+value.userId).hide();
+													},
+													error:function(){
+														alert("수락하는 중 오류 발생");
+													}	
+												});	
+											})
+										);
+							$('.apply-list').append($ul);
+						});
+					}
+				},
+				error:function(){
+					alert("목록 불러오는 중 오류 발생");
+				}	
+			});
+		}
+	</script>
 <section class="content">
 	<div class="mateHeader">
 		<h3>산책메이트</h3>
@@ -25,6 +117,7 @@
 	    </div>
 	<%for(WalkingMate b : boardAll){ %>
 	    <%if(b.getUserId().equals(loginUser.getUserId()) && b.getDelC()!='Y'){ %>
+		    <p class="placeTime" style="display:none"><%=b.getPlaceTime() %></p>
 		    <div class="my_mate">
 		        <p><%=b.getPlace().substring(0,2) %></p>
 		        <p><%=b.getTitle() %></p>
@@ -54,6 +147,7 @@
     
 		<div class="table">
 		<%for(WalkingMate b : boards){ %>
+			<p class="table-date" style="display:none"><%=b.getPlaceTime() %></p>
 	   		 <%if(!b.getUserId().equals(loginUser.getUserId())){ %>
 				<div class="theader">
 					<div>
@@ -77,15 +171,13 @@
 					<div>
 						<p>
 					<%
-			        		int total = 0;
 			        		int accept = 0;
 			        		for(MateApply a : apply){
 			        			if(b.getWalkingMateNo()==a.getBoardNo()){
-			        				++total;
 			        				if(a.getAccept()=='Y') ++accept;
 			        			}
 			        		}
-			        		out.print(accept+"/"+total);
+			        		out.print(accept+"/"+b.getRecruitmentNumber());
 			        %>
 						</p>
 					<%
@@ -104,7 +196,7 @@
 					<%
 					    } else {
 					%>
-					        <button onclick="popup_open('<%=b.getWalkingMateNo() %>')">참석하기</button>
+					        <button onclick="popup_open(<%=b.getWalkingMateNo() %>,<%=b.getLatitue()%>,<%=b.getLogitude()%>);">참석하기</button>
 					<%
 					    }
 					%>
@@ -148,7 +240,7 @@
 							<p><%=b.getContent() %></p>
 						</div>
 						<div class="modal_5" id="modal_5_id">
-							<button onclick="apply(event,<%=b.getWalkingMateNo()%>,'<%=loginUser.getUserId()%>')">참석하기</button>
+							<button onclick="apply(event,<%=b.getWalkingMateNo()%>,'<%=loginUser!=null?loginUser.getUserId():""%>')">참석하기</button>
 							<button onclick="close_popup(event,<%=b.getWalkingMateNo()%>)">취소</button>
 						</div>
 					</div>
@@ -167,11 +259,11 @@
 	    </div>
     	<%=request.getAttribute("pageBar") %>
     	<% for(WalkingMate post : boardAll){ %>
-    <div class="post" data-latitude="<%= post.getLatitue() %>" data-longitude="<%= post.getLogitude() %>" data-no="<%=post.getWalkingMateNo()%>">
-    </div>
+	    <div class="post" data-latitude="<%= post.getLatitue() %>" data-longitude="<%= post.getLogitude() %>" data-no="<%=post.getWalkingMateNo()%>">
+	    </div>
 <% } %>
 </section>
-
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a5195f24115fc28a6fae3a6191e0f7b0"></script>
 <script>
 	// 사용자의 위치 좌표
 	let userLat = 0;
@@ -235,31 +327,40 @@
 	
 	
 	// 모달창 열기
-	const popup_open = function(no) {
+	const popup_open = function(no,lat,lon) {
 	   $(".popup_"+no).show();
 	   setTimeout(function() {
-	       map_open(no);
+	       map_open(no,lat,lon);
+	       //map.relayout();
 	   }, 1000); // 1000 밀리초(1초) 후에 맵을 생성
 	}
-
+	var map;
 	// 맵 띄우기
-	const map_open = function(no){
+	const map_open = function(no,lat,lon){
 		kakao.maps.load(function() {
 		    var mapContainer = document.getElementById("map_"+no);
-		    console.log(mapContainer);
 		    var options = {
-		        center: new kakao.maps.LatLng(33.450701, 126.570667),
+		        center: new kakao.maps.LatLng(lat, lon),
 			level: 3
 		    };
 					
-		   	var map = new kakao.maps.Map(mapContainer, options);
+		   	map = new kakao.maps.Map(mapContainer, options);
 		    function resizeMap() {
 		        var mapContainer = document.getElementById('map_'+no);
 		        mapContainer.style.width = '100%';
 		        mapContainer.style.height = '100%'; 
 		    }
+		    var markerPosition  = new kakao.maps.LatLng(lat, lon); 
+
+			 // 마커를 생성합니다
+			 var marker = new kakao.maps.Marker({
+			     position: markerPosition
+			 });
 	
-		    function relayout() {    
+			 // 마커가 지도 위에 표시되도록 설정합니다
+			 marker.setMap(map);
+			//map.relayout();
+		     function relayout() {    
 		        
 		        // 지도를 표시하는 div 크기를 변경한 이후 지도가 정상적으로 표출되지 않을 수도 있습니다
 		        // 크기를 변경한 이후에는 반드시  map.relayout 함수를 호출해야 합니다 
@@ -288,7 +389,80 @@
 	const delete_board=function(no){
 		location.assign('<%=request.getContextPath()%>/board/deletewalkingmate.do?no='+no);
 	}
+	
+	//내 산책메이트에서 기간 지난 게시글들 안보이게 설정
+	$('.placeTime').each((i,element)=>{
+		var dbDateString = $(element).text();
+
+		// DB에서 가져온 날짜와 시간을 공백을 기준으로 나누어 배열로 만듭니다.
+		var dbDateTimeParts = dbDateString.split(" ");
+
+		// 날짜 부분과 시간 부분을 나누어 가져옵니다.
+		var dbDate = dbDateTimeParts[0]; // "2024-05-27"
+		var dbTime = dbDateTimeParts[1]; // "15:30"
+
+		// 날짜를 년, 월, 일로 나누어 배열로 만듭니다.
+		var dbDateParts = dbDate.split("-");
+		var year = parseInt(dbDateParts[0], 10);
+		var month = parseInt(dbDateParts[1], 10) - 1; // 자바스크립트에서 월은 0부터 시작하므로 1을 빼줍니다.
+		var day = parseInt(dbDateParts[2], 10);
+
+		// 시간을 시간과 분으로 나누어 배열로 만듭니다.
+		var dbTimeParts = dbTime.split(":");
+		var hour = parseInt(dbTimeParts[0], 10);
+		var minute = parseInt(dbTimeParts[1], 10);
+
+		// DB에서 가져온 날짜와 시간으로 Date 객체 생성
+		var dbDateTime = new Date(year, month, day, hour, minute);
+
+		// 현재 날짜와 시간 객체 생성
+		var now = new Date();
+
+		// DB에서 가져온 날짜와 시간이 현재 날짜와 시간을 넘는지 확인
+		if (dbDateTime > now) {
+		} else {
+		    $(element).next().css('display','none');
+		}
+		
+	});
+	
+	//다른 사람의 메이트에서 기간이 지난 게시글은 가림
+	$('.table-date').each((i,element)=>{
+		var dbDateString = $(element).text();
+		// DB에서 가져온 날짜와 시간을 공백을 기준으로 나누어 배열로 만듭니다.
+		var dbDateTimeParts = dbDateString.split(" ");
+
+		// 날짜 부분과 시간 부분을 나누어 가져옵니다.
+		var dbDate = dbDateTimeParts[0]; // "2024-05-27"
+		var dbTime = dbDateTimeParts[1]; // "15:30"
+
+		// 날짜를 년, 월, 일로 나누어 배열로 만듭니다.
+		var dbDateParts = dbDate.split("-");
+		var year = parseInt(dbDateParts[0], 10);
+		var month = parseInt(dbDateParts[1], 10) - 1; // 자바스크립트에서 월은 0부터 시작하므로 1을 빼줍니다.
+		var day = parseInt(dbDateParts[2], 10);
+
+		// 시간을 시간과 분으로 나누어 배열로 만듭니다.
+		var dbTimeParts = dbTime.split(":");
+		var hour = parseInt(dbTimeParts[0], 10);
+		var minute = parseInt(dbTimeParts[1], 10);
+
+		// DB에서 가져온 날짜와 시간으로 Date 객체 생성
+		var dbDateTime = new Date(year, month, day, hour, minute);
+
+		// 현재 날짜와 시간 객체 생성
+		var now = new Date();
+
+		// DB에서 가져온 날짜와 시간이 현재 날짜와 시간을 넘는지 확인
+		if (dbDateTime > now) {
+		} else {
+		    $(element).next().css('display','none');
+		}
+		
+	});
+	
+	
 </script>
-<script charset="UTF-8" class="daum_roughmap_loader_script" src="//ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a5195f24115fc28a6fae3a6191e0f7b0"></script>
+<!-- <script charset="UTF-8" class="daum_roughmap_loader_script" src="//ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script> -->
+
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

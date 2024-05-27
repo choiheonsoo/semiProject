@@ -16,10 +16,12 @@ import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.BulletinComment;
 import com.web.board.model.dto.BulletinImg;
 import com.web.board.model.dto.BulletinLike;
+import com.web.board.model.dto.CusttomApply;
 import com.web.board.model.dto.MateApply;
 import com.web.board.model.dto.WalkingMate;
 import com.web.dog.model.dao.DogDao;
 import com.web.dog.model.dto.Dog;
+import com.web.user.model.dto.User;
 
 public class BoardDao {
 	//싱글톤 적용
@@ -566,6 +568,27 @@ public class BoardDao {
 		return apply;
 	}
 	
+	//산책메이트 한 회원의 모든 게시글 신청자 조회
+	public List<CusttomApply> selectApply(Connection conn, String id){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<CusttomApply> users = new ArrayList<>();
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("selectApply"));
+			pstmt.setString(1,id);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				users.add(getCusttomApply(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+			close(rs);
+		}
+		return users;
+	}
+	
 	//산책메이트 게시글 등록
 	public int insertWalkingMate(Connection conn, WalkingMate wm) {
 		PreparedStatement pstmt = null;
@@ -620,6 +643,95 @@ public class BoardDao {
 			close(pstmt);
 		}
 		return result;
+	}
+	
+	//산책메이트 수락
+	public int updateApply(Connection conn,int totalMembers, int boardNo, String id) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		int count = selectMateApplyCount(conn, boardNo);
+		try {
+			pstmt =conn.prepareStatement(sql.getProperty("updateApply"));
+			pstmt.setInt(1,count);
+			pstmt.setInt(2, totalMembers);
+			pstmt.setInt(3, boardNo);
+			pstmt.setString(4, id);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	//산책메이트 수락할 때 수락 된 총 인원 가져오기
+	public int selectMateApplyCount(Connection conn, int boardNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		try {
+			pstmt =conn.prepareStatement(sql.getProperty("selectMateApplyCount"));
+			pstmt.setInt(1, boardNo);
+			rs = pstmt.executeQuery();
+			if(rs.next()) result = rs.getInt(1);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+			close(rs);
+		}
+		return result;
+	}
+	
+	//산책메이트 거절
+	public int deleteApply(Connection conn, int boardNo, String id) {
+		PreparedStatement pstmt =null;
+		int result = 0;
+		try {
+			pstmt =conn.prepareStatement(sql.getProperty("deleteApply"));
+			pstmt.setInt(1, boardNo);
+			pstmt.setString(2, id);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally{
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	//신고 기능
+	public int insertReport(Connection conn, String id, String reportedId, String content, int cataNum, int no) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("insertReport"));
+			pstmt.setInt(1, cataNum);
+			pstmt.setInt(2,no);
+			pstmt.setString(3, id);
+			pstmt.setString(4, content);
+			pstmt.setString(5, reportedId);
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	
+	//유저 생성
+	private static CusttomApply getCusttomApply (ResultSet rs) throws SQLException{
+		return CusttomApply.builder()
+				.userId(rs.getString("user_id"))
+				.userName(rs.getString("user_name"))
+				.address(rs.getString("address"))
+				.mateCount(rs.getInt("mate_count"))
+				.totalMembers(rs.getInt("RECRUITMENT_NUMBER"))
+				.boardNo(rs.getInt("walking_mate_no"))
+				.build();
 	}
 	
 	//게시글 좋아요 생성

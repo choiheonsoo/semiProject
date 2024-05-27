@@ -15,6 +15,21 @@
 	List<BulletinLike> bk = (List<BulletinLike>)request.getAttribute("bk");
 %>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board/dogstargram.css">
+
+<!-- 신고창 -->
+<div id="report-container">
+    <span class="close-modal">&times;</span>
+    <div class="category">신고 카테고리</div>
+    <button class="report-button">욕설</button>
+    <button class="report-button">음란물</button>
+    <button class="report-button">도배</button>
+    <textarea id="report-textarea" placeholder="신고 내용을 입력해주세요"></textarea>
+    <button class="submit-button">신고하기</button>
+    <p id='report-id' style="display:none"></p>
+    <p id='report-no' style="display:none"></p>
+    <p id="reported-id" style="display:none"></p>
+</div>
+
 <section class="content">
 	<div id="boardHeader">
       <h2>커뮤니티</h2>
@@ -81,7 +96,8 @@
 	   				</div>	
 	   			</div>
 	   		</div>
-	   		 <div class="popup" id="popup">
+	   <%} %>
+	  <div class="popup" id="popup">
       <img id="close_popup" src="<%=request.getContextPath()%>/images/x.png">
       <div id="post_view_info">
                <div id="post_view_left" class="carousel slide">
@@ -118,6 +134,8 @@
 				   				<div class="post_footer_menu">
 				   					<button id="post_update">수정하기</button>
 				   					<button id="post_delete">삭제하기</button>
+				   					<button id="post_info">정보보기</button>
+				   					<button id="post_report">신고하기</button>
 				   				</div>
 				   			</div>
 				   			<div id="post_footer_insert_comment">
@@ -130,7 +148,7 @@
 					</div>
 				</div>
 			</div>
-   		<%} %>
+   		
 	</div>
 	<div id="freeboardFooter1">
 		<button class="insert_board" onclick="location.assign('<%=request.getContextPath()%>/board/mungstargraminsert.do');">글 작성</button>
@@ -138,6 +156,77 @@
 	<%=request.getAttribute("pageBar") %>
 </section>
 <script>
+	//신고버튼 누를 때 신고 폼 나오게하기
+	const report_container_show= function(reportedId,no,id){
+		$('#report-container').css('display','block');
+		$('#report-id').text(id);
+		$('#report-no').text(no);
+		$('#reported-id').text(reportedId);
+		$('.report-button').css('backgroundColor','red');
+		$('#report-textarea').val('');
+	}
+	
+	//신고버튼 모달창 닫기
+	$('.close-modal').click(e=>{
+		$('#report-container').css('display','none');
+		$('#report-id').text('');
+		$('#report-no').text('');
+		$('#reported-id').text('');
+	});
+	
+	//신고 카타고리를 누르면 색상 변경
+	var reportButtons = document.querySelectorAll(".report-button");
+	   reportButtons.forEach(function(button) {
+	       button.addEventListener("click", function() {
+	       // 모든 버튼의 배경색을 초기화
+	       reportButtons.forEach(function(btn) {
+	           btn.style.backgroundColor = "";
+	       });
+	        // 클릭한 버튼의 배경색 변경
+	        button.style.backgroundColor = "lightgray";
+	        var selectedCategory = button.textContent;
+	        console.log("사용자가 선택한 신고 카테고리:", selectedCategory);
+	    });
+	});
+	
+	// AJAX로 신고 정보 전송
+    $('.submit-button').click(function() {
+        var selectedCategory = $('.report-button[style="background-color: lightgray;"]').text();
+        var reportContent = $('#report-textarea').val();
+        
+        if( $('#reported-id').text()!='admin'){
+        	if(selectedCategory!=''){
+	        	// 선택된 카테고리와 신고 내용을 서버로 전송
+		        $.ajax({
+		            url: '<%=request.getContextPath()%>/board/boardreport.do',
+		            type: 'POST',
+		            data: {
+		                category: selectedCategory,
+		                content: reportContent,
+		                id: $('#report-id').text(),
+		                reportedId:$('#reported-id').text(),
+		                no: $('#report-no').text()
+		            },
+		            success: function(response) {
+		                // 성공 시 처리
+		                alert('신고가 성공적으로 전송되었습니다.');
+				        $('#report-container').css('display','none');
+		                // 추가로 원하는 처리 가능
+		            },
+		            error: function(xhr, status, error) {
+		                // 실패 시 처리
+		                alert('신고 전송 중 오류 발생:');
+		                // 추가로 원하는 처리 가능
+		            }
+		        });
+	        }else{
+	        	alert('신고 종류를 선택해주세요');
+	        }
+        }else{
+        	alert("관리자를 신고하면 안돼요~");
+        }
+    });
+
 	//모달 창 닫기
 	$('#close_popup').click(e=>{
 	   location.reload();
@@ -248,6 +337,21 @@
 							$('#post_footer_icon>img').eq(0).attr("src","<%=request.getContextPath()%>/images/board/redheart.png");
 						}
 					});
+					if(data.b.userId=='<%=loginUser.getUserId()%>'){
+						$('#post_report').hide();
+						$('#post_info').hide();
+					}else{
+						$('#post_update').hide();
+						$('#post_delete').hide();
+						let userId = data.b.userId;
+						let bullNo = data.b.bullNo;
+						let loginUser = '<%=loginUser.getUserId()%>';loginUser
+						$('#post_report').on('click',function(){
+							report_container_show(userId,bullNo,loginUser);
+						});
+					}
+					
+					
 					//<!--ajax로 댓글 조회 하는 ...-->
 					$.each(data.b.comments,function(i,value){
 						if(value.commentLevel==1){
@@ -264,7 +368,7 @@
 								}
 							});
 					   		$div.append($img);
-					   		$div.append($('<p>').addClass('main_comment_id').text('<%=loginUser.getUserId()%>'));
+					   		$div.append($('<p>').addClass('main_comment_id').text(value.userId));
 					   		$div.append($('<p>').addClass('main_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
 						   	var button = $('<button>').text('댓글달기');
@@ -272,13 +376,34 @@
 						      button.on('click', function(event) {
 						          sub_comment(event, mainComment);
 						      });
-						    var delbutton = $('<button>').text("삭제하기");
-						    delbutton.addClass('reply_'+value.mainComment);
-						    delbutton.on('click',function(event){
-						    	del_comment(event, mainComment, data.b.bullNo);
-						    });
-						    $("#post_comment").append(delbutton);
-						    $("#post_comment").append(button);
+						    //로그인 한 유저와 댓글 쓴 유저가 같다면 삭제하기 넣기
+						    if(value.userId=='<%=loginUser.getUserId()%>'){
+							    var delbutton = $('<button>').text("삭제하기");
+							    delbutton.addClass('reply_'+value.mainComment);
+							    delbutton.on('click',function(event){
+							    	del_comment(event, mainComment, data.b.bullNo);
+							    });
+							    $("#post_comment").append(delbutton);
+								 $("#post_comment").append(button);
+						    }else{
+						    	//다른 유저라면 정보보기와 신고하기 넣기
+						    	var button = $('<button>').text('댓글달기');
+						    button.addClass('reply_'+value.mainComment);
+						      button.on('click', function(event) {
+						          sub_comment(event, mainComment);
+						      });
+							    $("#post_comment").append(button);
+								 $("#post_comment").append(infobutton);
+								 var reportbutton = $('<button>').text("신고하기");
+								 reportbutton.addClass('reply_'+value.mainComment);
+								 let userId = data.b.userId;
+								 let bullNo = data.b.bullNo;
+								 let loginUser = '<%=loginUser.getUserId()%>';loginUser
+								 reportbutton.on('click',function(){
+								 	report_container_show(userId,bullNo,loginUser);
+								 });
+								 $("#post_comment").append(reportbutton);
+						    }
 					   		
 						}else if(value.commentLevel==2){
 							let $div = $('<div id="sub_comment">');
@@ -298,15 +423,38 @@
 								}
 							});
 					   		$div.append($img);
-					   		$div.append($('<p>').addClass('sub_comment_id').text('<%=loginUser.getUserId()%>'));
+					   		$div.append($('<p>').addClass('sub_comment_id').text(value.userId));
 					   		$div.append($('<p>').addClass('sub_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
-					   		var delbutton = $('<button>').text('삭제하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
-					   		delbutton.addClass('reply_'+value.mainComment);
-					   		delbutton.on('click',function(event){
-					   			del_comment(event,value.mainComment,data.b.bullNo);
-					   		});
-					  	    $('#post_comment').append(delbutton);
+					   		
+					   		//로그인한 유저와 댓글 유저가 같다면 삭제하기
+					   		if(value.userId=='<%=loginUser.getUserId()%>'){
+						   		var delbutton = $('<button>').text('삭제하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
+						   		delbutton.addClass('reply_'+value.mainComment);
+						   		delbutton.on('click',function(event){
+						   			del_comment(event,value.mainComment,data.b.bullNo);
+						   		});
+						  	    $('#post_comment').append(delbutton);
+					   		}else{
+					  	    	//아니라면 유저 정보보기 신고하기
+					   			var infobutton = $('<button>').text('정보보기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
+					   			infobutton.addClass('reply_'+value.mainComment);
+					   			infobutton.on('click',function(event){
+						   			alert('개발중');
+						   		});
+						  	    $('#post_comment').append(infobutton);
+						  	    
+						  	 	var reportbutton= $('<button>').text('신고하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
+							  	reportbutton.addClass('reply_'+value.mainComment);
+							  	let userId = data.b.userId;
+								let bullNo = data.b.bullNo;
+								let loginUser = '<%=loginUser.getUserId()%>';loginUser
+								reportbutton.on('click',function(){
+									report_container_show(userId,bullNo,loginUser);
+								});
+								$("#post_comment").append(reportbutton);
+					   		}
+					  	    
 						}
 						
 					});
@@ -421,10 +569,13 @@
 							      });
 							    var delbutton = $('<button>').text("삭제하기");
 							    delbutton.addClass('reply_'+response.commentNo);
-							    delbutton.on('click',function(event){
-							    	del_comment(event, response.commentNo, data.b.bullNo);
-							    });
-							    $("#post_comment").append(delbutton);
+							    let userId = data.b.userId;
+								let bullNo = data.b.bullNo;
+								let loginUser = '<%=loginUser.getUserId()%>';loginUser
+								reportbutton.on('click',function(){
+									report_container_show(userId,bullNo,loginUser);
+								});
+								$("#post_comment").append(reportbutton);
 							    $("#post_comment").append(button);
 							}
 						});
