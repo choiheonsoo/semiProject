@@ -167,7 +167,7 @@ h2{
 .receiverAddressContainer>div:first-child{
 	display: flex;
     width: 15%;
-    height: 40px;
+    height: 100px;
     background-color: #f4f4f4;
     border-right: 1px solid #e4e4e4;
     border-bottom: 1px solid #e4e4e4;
@@ -176,13 +176,17 @@ h2{
     padding: 0px 10px 0px 0px;
 }
 .receiverAddress{
-	height: 40px;
+	height: 100px;
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     border-bottom: 1px solid #e4e4e4;
     width: 85%;
     padding-left: 10px;
+}
+.receiverAddress>input{
+	width:400px;
+	margin-top:2px;
 }
 
 .receiverPhoneContainer{
@@ -237,4 +241,116 @@ h2{
 /* 상품 정보 */
 .productsContainer{
 	margin-top:20px;
+	width:70%;
+}
+.products{
+	border-top:2px solid #cecece;
+}
+.products>div{
+	display: flex;
+    align-items: center;
+    font-size: 15px;
+    border-bottom: 1px solid #e4e4e4;
+}
+.productName{
+	width: 65%;
+}
+.productOption{
+	width: 25%;
+}
+.productQuantity{
+	width: 10%;
+}
+
+
+/* 결제 정보 */
+.paymentContainer{
+	width:70%;
+	margin-top:20px;
+}
+.paymentdiv{
+	border-top:2px solid #cecece;
+}
+.paymentInfoContainer{
+	display: flex;
+}
+.paymentInfoContainer>div:first-child{
+	display: flex;
+    width: 15%;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+}
+.totalPrice{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+.shippingPrice{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+.point{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+.point>div{
+	margin-left:5px;
+}
+.totalpay{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+.payment{
+	height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+    width: 85%;
+    padding-left: 10px;
+}
+.btnContainer{
+	margin-top: 20px;
+    margin-bottom: 20px;
+    height: 100px;
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.paymentBtn{
+	border: 1px solid #346aff;
+    border-radius: 2px;
+    background-color: #346aff;
+    color: white;
+    width: 250px;
+    height: 60px;
+    font-size: 30px;
+}
+.payment>label:last-child{
+	margin-left:10px;
 }

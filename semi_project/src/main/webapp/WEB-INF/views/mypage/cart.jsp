@@ -213,7 +213,7 @@ h1 {
         <div class="shipping">배송비: ₩ 0</div>
         <div class="total">총 결제 금액: ₩ <%=request.getAttribute("total") %></div>
         <div class="order-summary-btn">
-            <button class="checkout">결제하기</button>
+            <button class="checkout" onclick="movePurchasePage();">결제하기</button>
             <button class="continue-shopping" onclick="location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do?category=1')">쇼핑 계속하기</button>
         </div>
     </div>
@@ -263,6 +263,61 @@ h1 {
 			}
 			$total.innerText = "총 결제 금액: ₩ "+sum.toLocaleString();
 		})
-	}
+	}  
+	
+	const movePurchasePage=()=>{
+		//상품 키, 이름, 옵션, 구매수량, 할인율, 가격을 form태그로 넘기기
+		let color;
+		let size;
+		<%if(list!=null && list.size()>0) {%>
+			const form = $("<form>").attr("method","POST").attr("action","<%=request.getContextPath()%>/shoppingmall/shoppingmallpay.do");
+        	<%for(int i=0;i<list.size();i++) {%>
+					$("<input>")
+			        .attr("type", "hidden")
+			        .attr("name", "products["+<%=i%>+"].productKey")
+			        .val("<%=list.get(i).getProductKey()%>")
+			        .appendTo(form);
+		
+				    $("<input>")
+				        .attr("type", "hidden")
+				        .attr("name", "products["+<%=i%>+"].productName")
+				        .val("<%=list.get(i).getProductName()%>")
+				        .appendTo(form);
+				    
+				    color = "<%=list.get(i).getProductColor()!=null && !list.get(i).getProductColor().equals("null")?list.get(i).getProductColor():"" %>";
+				    $("<input>")
+				        .attr("type", "hidden")
+				        .attr("name", "products["+<%=i%>+"].color")
+				        .val(color)
+				        .appendTo(form);
+				    
+				    size = "<%=list.get(i).getProductSize()!=null && !list.get(i).getProductSize().equals("null")?list.get(i).getProductSize():"" %>";
+				    $("<input>")
+				        .attr("type", "hidden")
+				        .attr("name", "products["+<%=i%>+"].size")
+				        .val(size)
+				        .appendTo(form);
+		
+				    $("<input>")
+				        .attr("type", "hidden")
+				        .attr("name", "products["+<%=i%>+"].quantity")
+				        .val($(".quantity").eq(<%=i%>).text())
+				        .appendTo(form);
+				    
+				    $("<input>")
+				        .attr("type", "hidden")
+				        .attr("name", "products["+<%=i%>+"].discount")
+				        .val("<%=(int)list.get(i).getRateDiscount()%>")
+				        .appendTo(form);
+				    
+				    $("<input>")
+				        .attr("type", "hidden")
+				        .attr("name", "products["+<%=i%>+"].price")
+				        .val("<%=list.get(i).getPrice()%>")
+				        .appendTo(form);
+			<%}%>
+			form.appendTo("body").submit();
+		<%}%>
+	};
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
