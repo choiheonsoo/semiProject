@@ -188,57 +188,7 @@
 		$(".totalpay").text(endPrice+"원");
 	});
 	
-
-
-
-
-
-
-
-//결제테스트 코드
-function kakaopay(){
-	const endPrice=parsrInt($(".totalpay").text());
-	
-	IMP.init("imp74680205");
-	IMP.request_pay({ //카카오 결제 보내기
-	    pg : 'kakaopay.TC0ONETIME',
-	    pay_method : 'card',
-	    merchant_uid: 'merchant_' + new Date().getTime(), // 상점에서 관리하는 주문 번호 랜덤값 줘야함
-	    name : <%=products.get(0).getProductName()%>, //첫번째 상품이름으로
-	    amount : endPrice,
-	    buyer_email : '<%=loginUser.getEmail()%>',
-	    buyer_name : '<%=loginUser.getUserName()%>',
-	    buyer_tel : '<%=loginUser.getPhone()%>',
-	    buyer_addr : '서울특별시 강남구 삼성동',
-	    buyer_postcode : '123-456'
-	},async (response) => {
-	    if (response.error_code != null) {
-	        return alert('결제에 실패하였습니다. 에러 내용: '+response.error_msg);
-	    }
-
-	    const notified = await fetch('<%=request.getContextPath()%>/shoppingmall/payment.do', {
-	        method: "POST",
-	        headers: { "Content-Type": "application/json;charset=utf8" },
-	        // imp_uid와 merchant_uid, 주문 정보를 서버에 전달합니다
-	        body: JSON.stringify({
-	          imp_uid: response.imp_uid,
-	          merchant_uid: response.merchant_uid,
-	          pg_provider:response.pg_provider,
-	          buyer_addr:response.buyer_addr
-	        })
-	    });
-	    
-	    const result = await notified.json();
-        if (result.success) {
-            alert('결제가 성공적으로 완료되었습니다.');
-            location.href='<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do';
-        } else {
-            alert('결제 검증에 실패했습니다.');
-        }
-	});
-};
-
-//카카오가 제공하는 API
+	//카카오가 제공하는 API
     function sample6_execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function(data) {
@@ -284,5 +234,55 @@ function kakaopay(){
             }
         }).open();
     }
+
+
+
+
+
+
+//결제테스트 코드
+function kakaopay(){
+	const endPrice=parseInt($(".totalpay").text());
+	
+	IMP.init("imp74680205");
+	IMP.request_pay({ //카카오 결제 보내기
+	    pg : 'kakaopay.TC0ONETIME',
+	    pay_method : 'card',
+	    merchant_uid: 'merchant_' + new Date().getTime(), // 상점에서 관리하는 주문 번호 랜덤값 줘야함
+	    name : '<%=products.get(0).getProductName()%>', //첫번째 상품이름으로
+	    amount : endPrice,
+	    buyer_email : '<%=loginUser.getEmail()%>',
+	    buyer_name : '<%=loginUser.getUserName()%>',
+	    buyer_tel : '<%=loginUser.getPhone()%>',
+	    buyer_addr : '서울특별시 강남구 삼성동',
+	    buyer_postcode : '123-456'
+	},async (response) => {
+	    if (response.error_code != null) {
+	        return alert('결제에 실패하였습니다. 에러 내용: '+response.error_msg);
+	    }
+
+	    const notified = await fetch('<%=request.getContextPath()%>/shoppingmall/payment.do', {
+	        method: "POST",
+	        headers: { "Content-Type": "application/json;charset=utf8" },
+	        // imp_uid와 merchant_uid, 주문 정보를 서버에 전달합니다
+	        body: JSON.stringify({
+	          imp_uid: response.imp_uid,
+	          merchant_uid: response.merchant_uid,
+	          pg_provider:response.pg_provider,
+	          buyer_addr:response.buyer_addr
+	        })
+	    });
+	    
+	    const result = await notified.json();
+        if (result.success) {
+            alert('결제가 성공적으로 완료되었습니다.');
+            location.href='<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do';
+        } else {
+            alert('결제 검증에 실패했습니다.');
+        }
+	});
+};
+
+
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>
