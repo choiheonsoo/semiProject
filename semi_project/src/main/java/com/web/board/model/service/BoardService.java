@@ -12,6 +12,7 @@ import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.BulletinComment;
 import com.web.board.model.dto.BulletinImg;
 import com.web.board.model.dto.BulletinLike;
+import com.web.board.model.dto.CusttomApply;
 import com.web.board.model.dto.MateApply;
 import com.web.board.model.dto.WalkingMate;
 import com.web.dog.model.dto.Dog;
@@ -234,6 +235,42 @@ public class BoardService {
 		if(result>0)commit(conn);
 		else rollback(conn);
 		close(conn);
+		return result;
+	}
+	
+	//신고기능
+	public int insertReport(String id, String reportedId, String content, int categoryNo, int no) {
+		Connection conn = getConnection();
+		int result = getDao().insertReport(conn, id, reportedId, content, categoryNo, no);
+		if(result>0) commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+	
+	//산책메이트 조회
+	public List<CusttomApply> selectApply(String id){
+		Connection conn = getConnection();
+		List<CusttomApply> users = getDao().selectApply(conn,id);
+		close(conn);
+		return users;
+	}
+	
+	//산책메이트 수락기능
+	public int updateApply(int totalMembers, int boardNo, String id) {
+		Connection conn = getConnection();
+		int result = getDao().updateApply(conn, totalMembers, boardNo, id);
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		return result;
+	}
+	
+	//산책메이트 거절기능
+	public int deleteApply(int boardNo, String id) {
+		Connection conn =getConnection();
+		int result = getDao().deleteApply(conn, boardNo, id);
+		if(result > 0) commit(conn);
+		else rollback(conn);
 		return result;
 	}
 }

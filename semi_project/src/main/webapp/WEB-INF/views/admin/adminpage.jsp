@@ -112,13 +112,13 @@ body {
 </style>
 <body>
     <div class="sidebar">
-        <h2 onclick="location.assign('#')">산책하개 <br> Admin Page</h2>
+        <h2 onclick="adminMain();">산책하개 <br> Admin Page</h2>
         <ul class="nav">
             <li>
                 <p>회원관리</p>
                 <ul class="sub-nav">
                     <li><p id="searchMember">회원 조회</p></li>
-                    <li><p>회원 퇴출</p></li>
+                    <li><p id="reportDetails">신고 내역 조회</p></li>
                 </ul>
             </li>
             <li>
@@ -151,16 +151,40 @@ body {
         <button>로그아웃</button>
     </div>
     <div class="content">
-        <img src="<%=request.getContextPath() %>/images/admin/adminpage.jpg" style="width:100%; height:93vh; opacity:0.3;">
+        <img id="adminMainPage" src="<%=request.getContextPath() %>/images/admin/adminpage.jpg" style="width:100%; height:93vh; opacity:0.2;">
     </div>
 </body>
 <script>
+	// 산책하개 클릭 시 메인 페이지로 이동
+	const adminMain = () =>{
+		$("div.content").html("");
+		const $adminMainPage = $("<img src='<%=request.getContextPath() %>/images/admin/adminpage.jpg' style='width:100%; height:93vh; opacity:0.2;'>");
+		$("div.content").append($adminMainPage);
+	}
+	
 	// 회원 조회
 	$("#searchMember").click(e=>{
 		$.get("<%=request.getContextPath()%>/admin/searchmember.do")
 		.done(data=>{
 			$("div.content").html(data);
-		})
+		});
+      	printLoading('div.content');
 	})
+	// 신고내역 조회
+	$("reportDetails").click(e=>{
+		$.get("<%=request.getContextPath()%>/admin/searchreport.do")
+		.done(data=>{
+			$("div.content").html(data);
+		});
+		printLoading('div.content');
+	})
+	
+	
+	// 로딩 표현 by BootStrap
+	function printLoading(target){
+		  const $container=$("<div>").attr({"class":"spinner-border text-primary","role":"status"});
+	        $(target).html("");
+	        $(target).append($container);
+	}
 </script>
 </html>

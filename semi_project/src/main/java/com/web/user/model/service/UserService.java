@@ -1,8 +1,6 @@
 package com.web.user.model.service;
 
-import static com.web.common.JDBCTemplate.close;
-import static com.web.common.JDBCTemplate.getConnection;
-import static com.web.common.JDBCTemplate.rollback;
+import static com.web.common.JDBCTemplate.*;
 import static com.web.dog.model.dao.DogDao.getDogDao;
 import static com.web.user.model.dao.UserDao.getUserDao;
 
@@ -39,21 +37,24 @@ public class UserService {
 		Connection con = getConnection();
 		int result = getUserDao().enrollUser(con, user);
 		if(result>0) {
-			System.out.println(result);
-			close(con);
+			commit(con);
 		} else {
 			rollback(con);
-		} return result;
+		} 
+		close(con);
+		return result;
 	}
 	
 	public int updateUser(User user) {
 		Connection con = getConnection();
 		int result = getUserDao().updateUser(con, user);
 		if(result>0) {
-			close(con);
+			commit(con);
 		} else {
 			rollback(con);
-		} return result;
+		} 
+		close(con);
+		return result;
 	}
 	
 	public String searchUserId(String email, String name) {
@@ -69,6 +70,12 @@ public class UserService {
 		close(con);
 		return result;
 	}
+	public User adminSearchUserById(String id) {
+		Connection con = getConnection();
+		User user = getUserDao().adminSearchUserById(con, id);
+		close(con);
+		return user;
+	}
 	
 	public User selectUser(String id, String email) {
 		Connection con = getConnection();
@@ -81,10 +88,11 @@ public class UserService {
 		Connection con = getConnection();
 		int result = getUserDao().changeUserPw(con, id, pw);
 		if(result>0) {
-			close(con);
+			commit(con);
 		} else {
 			rollback(con);
 		}
+		close(con);
 		return result;
 	}
 	
@@ -102,5 +110,15 @@ public class UserService {
 		List<User> users = getUserDao().searchAllUser(con, cPage, numPerpage);
 		close(con);
 		return users;
+	}
+	
+	// 회원 삭제 기능
+	public int deleteUserById(String userId) {
+		Connection con = getConnection();
+		int result = getUserDao().deleteUserById(con, userId);
+		if(result>0) commit(con);
+		else rollback(con);
+		close(con);
+		return result;
 	}
 }

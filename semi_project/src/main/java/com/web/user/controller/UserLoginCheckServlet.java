@@ -47,7 +47,6 @@ public class UserLoginCheckServlet extends HttpServlet {
 		} else {
 			if(user!=null) {
 				HttpSession session = request.getSession();
-				System.out.println(dogImg);
 				session.setAttribute("loginUser", user);
 				session.setAttribute("dogImg", dogImg);
 				session.setAttribute("isLogin", true);

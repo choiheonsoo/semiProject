@@ -27,14 +27,17 @@
                     for(BulletinImg img : imgs){ 
                     	if(img.getBullNo()==b.getBullNo()){
                     %>
-                    		<input type="hidden" name="preFile<%=i++ %>" value="<%=img.getBullImg()%>">
+                    		<input type="hidden" name="oriName<%=i++ %>" value="<%=img.getBullImg()%>">
                     <%	
+	                    	if(i>=1){%>
+							<input type="hidden" name="oriName<%=i++ %>" value="<%=img.getBullImg()%>">	                    		
+	                    	<%}		
                     	}
                     }
                     %>
                     <input type="hidden" name="no" value="<%=b.getBullNo()%>">
                     <input type="submit" value="등록">
-                    <input type="button" value="취소" onclick="location.href='<%=request.getContextPath()%>/board/freeboard.do';">
+                    <input type="button" value="취소" onclick="location.href('<%=request.getContextPath()%>/board/mungstargram.do');">
                     <input type="file" name="upfile1" class="img-input" accept="image/*">
                     <input type="file" name="upfile2" class="img-input" accept="image/*">
                 </div>
@@ -51,10 +54,6 @@
             if($("input[name=title]").val()==""){
             	alert('제목을 입력하세요.');
             	return false;
-            }
-            if (!imageSelected) {
-                alert('한 개 이상의 이미지를 선택해주세요.');
-                event.preventDefault();
             }
         });
     });

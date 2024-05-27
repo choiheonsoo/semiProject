@@ -217,6 +217,38 @@ public class UserDao {
 			close(pstmt);
 		} return users;
 	}
+	// 특정 ID의 회원 조회
+	public User adminSearchUserById(Connection con, String id) {
+		PreparedStatement pstmt= null;
+		ResultSet rs = null;
+		User user = new User();
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("adminSearchUserById"));
+			pstmt.setString(1, id);
+			rs=pstmt.executeQuery();
+			if(rs.next()) user = getUser(rs);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(pstmt);
+		} return user;
+	}
+	
+	// 회원 삭제 기능
+	public int deleteUserById(Connection con, String userId) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("adminDeleteUserById"));
+			pstmt.setString(1, userId);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		} return result;
+	}
 	
 	private static User getUser(ResultSet rs) throws SQLException{
 		return User.builder()
@@ -228,7 +260,7 @@ public class UserDao {
 				.password(rs.getString("password"))
 				.mateCount(rs.getInt("mate_count"))
 				.point(rs.getInt("point"))
-				.status(rs.getBoolean("status"))
+				.status(rs.getString("status"))
 				.birthDay(rs.getDate("birth_day"))
 				.zipCode(rs.getString("zipcode"))
 				.build();
@@ -245,7 +277,7 @@ public class UserDao {
 				.password(rs.getString("password"))
 				.mateCount(rs.getInt("mate_count"))
 				.point(rs.getInt("point"))
-				.status(rs.getBoolean("status"))
+				.status(rs.getString("status"))
 				.birthDay(rs.getDate("birth_day"))
 				.zipCode(rs.getString("zipcode"))
 				.build();

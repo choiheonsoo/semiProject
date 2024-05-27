@@ -36,13 +36,6 @@ public class UpdateMungStargramEndServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-    //파일 삭제하는 메소드
-    private void deleteFile(String filePath) {
-        File file = new File(filePath);
-        if (file.exists()) { // 파일이 존재하는지 확인
-            file.delete(); // 파일 삭제
-        }
-    }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String path = getServletContext().getRealPath("/upload/board");
@@ -59,8 +52,8 @@ public class UpdateMungStargramEndServlet extends HttpServlet {
         String title = mr.getParameter("title");
         String content = mr.getParameter("content");
         String id = mr.getParameter("id");
-        String prefile1 = mr.getParameter("preFile1");
-        String prefile2 = mr.getParameter("preFile2");
+        String prefile1 = mr.getParameter("oriName1");
+        String prefile2 = mr.getParameter("oriName2");
         String rename1 = mr.getFilesystemName("upFile1");
         String rename2 = mr.getFilesystemName("upFile2");
         List<String> oriname = new ArrayList<>();
@@ -90,7 +83,8 @@ public class UpdateMungStargramEndServlet extends HttpServlet {
         }
 
         Bulletin b = Bulletin.builder()
-            .categoryNo(4) // 카테고리 번호 설정 (원하는 값으로 수정)
+            .categoryNo(4)
+            .bullNo(no)
             .userId(id)
             .title(title)
             .content(content)

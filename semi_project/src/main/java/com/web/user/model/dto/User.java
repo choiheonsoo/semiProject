@@ -26,7 +26,7 @@ public class User {
 	private String password;
 	private int mateCount;
 	private int point;
-	private boolean status;
+	private String status;
 	private Date birthDay;
 	private String zipCode;
 	private List<Review> reviews;

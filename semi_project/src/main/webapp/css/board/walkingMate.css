@@ -1,4 +1,83 @@
 @charset "UTF-8";
+
+		#apply-list-button{
+			position: absolute;
+			top:15.8%;
+			right:10%;
+			box-sizing: border-box;
+		}
+		#apply-list-button>button{
+			border-style: none;
+		    background-color: white;
+		    border-left: 1px solid;
+		    border-right: 1px solid;
+		    font-size:12px;
+		    font-weight:bold;
+		    padding-left:10px;
+		    padding-right:10px;
+		}
+		
+		.apply-list{
+			width:45%;
+			background-color:darkgray;
+			height:50vh;
+			position: absolute;
+			left:30%;
+			top:20%;
+			display:flex;
+			flex-direction:column;
+			margin:0;
+			padding: 20px 20px 20px 20px;
+			box-sizing: border-box;
+			overflow: auto;
+			display:none;
+		}
+		.apply-list>p{
+			font-size:40px;
+			font-weight:bold;
+			position: absolute;
+			top:-23px;
+			right:5px;
+		}
+		.apply-list>p:hover{
+			cursor:pointer;
+		}
+		.apply-list>ul{
+			width:100%;
+			height:10%;
+			display:flex;
+			list-style-type: none;
+			margin:0;
+			padding:0;
+			box-sizing: border-box;
+			min-height:41.5px;
+		}
+		.apply-list>ul:first-child{
+			font-size:16px;
+			font-weight:bold;
+			border-bottom:1px solid black;
+		}
+		.apply-list>ul>li{
+			width:20%;
+			display:flex;
+			justify-content: space-around;
+			box-sizing: border-box;
+			margin-top:5px;
+			font-size:13px;
+			font-weight:600;
+		}
+		.apply-list>ul button{
+			width: 10%;
+		    font-size: 12px;
+		    height: 60%;
+		    margin-top:5px;
+		    background-color: transparent; /* 배경색 투명 */
+		    background-color: lightgray; /* 버튼 배경색 */
+		    color: black; /* 텍스트 색상 */
+		    border: 2px solid darkgray; /* 테두리 설정 */
+		    border-radius: 5px; /* 둥근 모서리 설정 */
+		    cursor: pointer;
+		}
 		.fixed{
 			width:60px;
 			height:60px;
