@@ -74,7 +74,7 @@ public class EnrollUserEndServlet extends HttpServlet {
 								  .address(mr.getParameterValues("address")[1]==null?address[0]:address[0]+","+address[1])
 								  .mateCount(0)	// default값 설정
 								  .point(0) // default값 설정
-								  .status(false) // default값 설정
+								  .status("N") // default값 설정
 								  .birthDay(sqlDate)
 								  .zipCode(mr.getParameter("zipCode"))
 								  .build();
