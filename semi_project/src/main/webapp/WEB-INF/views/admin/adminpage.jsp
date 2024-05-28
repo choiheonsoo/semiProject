@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="com.web.user.model.dto.User"%>
+
 <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/logo.png">
 <!DOCTYPE html>
 <script src="<%=request.getContextPath()%>/js/jquery-3.7.1.min.js"></script>
@@ -133,11 +134,11 @@ body {
             <li>
                 <p>게시판 관리</p>
                 <ul class="sub-nav">
-                    <li><p>자유게시판</p></li>
-                    <li><p>공지사항게시판</p></li>
-                    <li><p>멍스타그램 게시판</p></li>
-                    <li><p>산책메이트 게시판</p></li>
-                    <li><p>핫플레이스 게시판</p></li>
+                    <li><p id="freeBoard">자유게시판</p></li>
+                    <li><p id="noticeBoard">공지사항게시판</p></li>
+                    <li><p id="dogStargram">멍스타그램 게시판</p></li>
+                    <li><p id="walkingMateBoard">산책메이트 게시판</p></li>
+                    <li><p id="hotPlaceBoard">핫플레이스 게시판</p></li>
                 </ul>
             </li>
             <li>
@@ -162,6 +163,7 @@ body {
 		$("div.content").append($adminMainPage);
 	}
 	
+	// 회원 관리 기능
 	// 회원 조회
 	$("#searchMember").click(e=>{
 		$.get("<%=request.getContextPath()%>/admin/searchmember.do")
@@ -170,7 +172,7 @@ body {
 		});
       	printLoading('div.content');
 	})
-	// 신고내역 조회
+	// 신고내역 조회 → 헌수 Dto 수정 끝나면 다시 시작
 	$("reportDetails").click(e=>{
 		$.get("<%=request.getContextPath()%>/admin/searchreport.do")
 		.done(data=>{
@@ -179,6 +181,65 @@ body {
 		printLoading('div.content');
 	})
 	
+	// 게시판 기능
+	// 자유 게시판 관리 기능 : 게시글 전체 조회 후 삭제 기능
+	$("#freeBoard").click(e=>{
+		$.get("<%=request.getContextPath()%>/admin/managefreeboard.do")
+		.done(data=>{
+			// data ? ManageFreeBoardServlet.java에서 innerClass로 선언한 ResponseData 클래스의 객체로 StringBuffer pageBar와 List<Bulletin>을 담고있음
+			let $div = $("div.content");
+			$div.html("");
+			let $table = $("<table>").append($("<tbody>"));
+			let $th = $("<tr>").append($("<th>").text("게시글번호")).append($("<th>").text("작성자")).append($("<th>").text("제목")).append($("<th>").text("내용")).append($("<th>").text("등록일"))
+								.append($("<th>").text("조회수")).append($("<th>").text("좋아요수")).append($("<th>").text("게시글 삭제"))				
+			if(data.bulletins.length>0){
+				$div.append($table).append($th);
+				for(b of data.bulletins){
+					let $tr = $("<tr>")
+					$tr.append($("<td>").text(b.bullNo)).append($("<td>").text(b.userId)).append($("<td>").text(b.title)).append($("<td>").text(b.content)).append($("<td>").text(b.rDate))
+					.append($("<td>").text(b.hits)).append($("<td>").text(b.likeC)).append($("<td>").append($("<button>").text("삭제")))
+					$div.append($tr);
+				}
+			} else {
+				let $h1 = $("<h1>").text("작성된 자유 게시판 게시글이 없습니다.");
+				$div.append($h1);
+			}
+			$div.append(data.pageBar);
+			
+		});
+		printLoading('div.content');
+	})
+	// 비동기적 절차에 따른 자유게시판 페이징 처리
+	$(document).on("click",".page-link", function(e) {
+		
+    	let pageValue = $(e.target).data("page");
+    	let url=$(e.target).data("url");
+    	
+    	if(typeof url != 'undefined'){
+	        $.get(url+"?cPage="+pageValue)
+	        .done(data => {
+	        	let $div = $("div.content");
+				$div.html("");
+				let $table = $("<table>").append($("<tbody>"));
+				let $th = $("<tr>").append($("<th>").text("게시글번호")).append($("<th>").text("작성자")).append($("<th>").text("제목")).append($("<th>").text("내용")).append($("<th>").text("등록일"))
+									.append($("<th>").text("조회수")).append($("<th>").text("좋아요수")).append($("<th>").text("게시글 삭제"))				
+				if(data.bulletins.length>0){
+					$div.append($table).append($th);
+					for(b of data.bulletins){
+						let $tr = $("<tr>")
+						$tr.append($("<td>").text(b.bullNo)).append($("<td>").text(b.userId)).append($("<td>").text(b.title)).append($("<td>").text(b.content)).append($("<td>").text(b.rDate))
+						.append($("<td>").text(b.hits)).append($("<td>").text(b.likeC)).append($("<td>").append($("<button>").text("삭제")))
+						$div.append($tr);
+					}
+				} else {
+					let $h1 = $("<h1>").text("작성된 자유 게시판 게시글이 없습니다.");
+					$div.append($h1);
+				}
+				$div.append(data.pageBar);
+	        });
+	        printLoading('div.content');
+	    }
+    })
 	
 	// 로딩 표현 by BootStrap
 	function printLoading(target){

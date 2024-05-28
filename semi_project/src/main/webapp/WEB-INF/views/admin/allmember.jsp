@@ -134,7 +134,8 @@
     // 비동기적 절차에 따른 페이징 처리
     $(document).on("click",".page-link", function(p) {
     	let pageValue = $(p.target).data("page");
-        $.get("<%=request.getContextPath()%>/admin/searchmember.do?cPage=" + pageValue)
+    	let url=$(p.target).data("url");
+        $.get(url+"?cPage=" + pageValue)
         .done(data => {
             $("div.content").html(data);
         });
