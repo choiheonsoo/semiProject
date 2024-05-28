@@ -31,8 +31,7 @@ public class MoveToCartServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		int wishlistKey = Integer.parseInt(request.getParameter("wishlistkey"));
-		// 장바구니 옮기면서 삭제할꺼면 필요해서 가져온 데이터
+		
 		int productKey = Integer.parseInt(request.getParameter("productkey"));
 		String productColor = request.getParameter("productcolor");
 		String productSize = request.getParameter("productsize");

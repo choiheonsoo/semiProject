@@ -76,7 +76,7 @@ public class EnrollUserEndServlet extends HttpServlet {
 								  .point(0) // default값 설정
 								  .status("N") // default값 설정
 								  .birthDay(sqlDate)
-								  .zipCode(mr.getParameter("zipCode"))
+								  .zipCode(mr.getParameter("zipcode"))
 								  .build();
 		
 		int result = UserService.getUserService().enrollUser(user);

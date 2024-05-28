@@ -28,12 +28,13 @@ public class AdminDao {
 		return dao;
 	}	
 	
-	public List<Bulletin> searchFreeBulletins(Connection con){
+	public List<Bulletin> searchFreeBulletins(Connection con, int type){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<Bulletin> bulletins = new ArrayList<>();
 		try {
-			pstmt = con.prepareStatement(sql.getProperty("searchFreeBulletins"));
+			pstmt = con.prepareStatement(sql.getProperty("searchBulletins"));
+			pstmt.setInt(1, type);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				bulletins.add(getBulletin(rs));
@@ -46,14 +47,15 @@ public class AdminDao {
 		} return bulletins;
 	}
 	
-	public List<Bulletin> searchFreeBulletins(Connection con, int cPage, int numPerpage){
+	public List<Bulletin> searchFreeBulletins(Connection con, int type, int cPage, int numPerpage){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<Bulletin> bulletins = new ArrayList<>();
 		try {
-			pstmt = con.prepareStatement(sql.getProperty("searchFreeBulletinsPaging"));
-			pstmt.setInt(1, (cPage-1)*numPerpage+1);
-			pstmt.setInt(2, cPage*numPerpage);
+			pstmt = con.prepareStatement(sql.getProperty("searchBulletinsPaging"));
+			pstmt.setInt(1, type);
+			pstmt.setInt(2, (cPage-1)*numPerpage+1);
+			pstmt.setInt(3, cPage*numPerpage);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				bulletins.add(getBulletin(rs));

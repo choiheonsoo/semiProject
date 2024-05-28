@@ -7,6 +7,9 @@
 	List<CartList> list = (List<CartList>)request.getAttribute("cartlist");
 %>
 <style>
+.content{
+	padding-top: 1%;
+}
 .cart-page {
     max-width: 800px;
     margin: 2% auto;

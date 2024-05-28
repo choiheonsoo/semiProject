@@ -61,7 +61,7 @@
                 	</a>
                 <%} else { %>
                		<a href="<%=request.getContextPath()%>/user/myPage.do">
-               			<%if(dogImg.contains(".")){ %>
+               			<%if(dogImg!=null && dogImg.contains(".")){ %>
                				<img style="border-radius: 100px" src="<%=request.getContextPath() %>/upload/user/<%=dogImg %>" alt="유저" width="30" height="30">
                			<%} else { %>
                				<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30">

@@ -24,15 +24,15 @@ public class AdminService {
 		return reports;
 	}
 	
-	public List<Bulletin> searchFreeBulletins(){
+	public List<Bulletin> searchFreeBulletins(int type){
 		Connection con = getConnection();
-		List<Bulletin> bulletins = getAdminDao().searchFreeBulletins(con);
+		List<Bulletin> bulletins = getAdminDao().searchFreeBulletins(con, type);
 		close(con);
 		return bulletins;
 	}
-	public List<Bulletin> searchFreeBulletins(int cPage, int numPerpage){
+	public List<Bulletin> searchBulletins(int type, int cPage, int numPerpage){
 		Connection con = getConnection();
-		List<Bulletin> bulletins = getAdminDao().searchFreeBulletins(con, cPage, numPerpage);
+		List<Bulletin> bulletins = getAdminDao().searchFreeBulletins(con, type, cPage, numPerpage);
 		close(con);
 		return bulletins;
 	}

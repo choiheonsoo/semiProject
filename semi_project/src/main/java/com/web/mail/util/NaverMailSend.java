@@ -55,7 +55,7 @@ public class NaverMailSend {
 	// 인증코드 생성 메서드
 	private String makeAuthenticationCode() throws Exception {
 		// 인증코드 길이 설정
-		int pwdLength = 8;
+		int pwdLength = 6;
 		// 인증코드를 만들기 위한 배열 설정
 		final char[] pwdTable = { 	
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 

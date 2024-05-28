@@ -30,7 +30,8 @@ public class AdminDeleteUserByIdServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String userId = request.getParameter("userId");
-		int result = UserService.getUserService().deleteUserById(userId);
+		String status = request.getParameter("status");
+		int result = UserService.getUserService().deleteUserById(userId, status);
 		request.setAttribute("result", result);
 		request.getRequestDispatcher("/WEB-INF/views/admin/adminpage.jsp").forward(request, response);
 	}

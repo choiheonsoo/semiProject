@@ -36,20 +36,18 @@ public class SendEmailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json;charset=utf-8");
 		String email = request.getParameter("email");
-		NaverMailSend mailSend = new NaverMailSend();
 		HttpSession session = request.getSession();
 		String authenCode = "";
 		User user = UserService.getUserService().searchUserByEmail(email);
-		System.out.println(user);
+		System.out.println(email);
+		System.out.println("현재 입력한 이메일을 사용중인 유저 : "+user);
 		if(user==null) {
 			try {
+				NaverMailSend mailSend = new NaverMailSend();
 				authenCode = mailSend.sendEmail(email);
 				session.setAttribute("authenCode",authenCode);
-			} catch (Exception e) {
-				e.printStackTrace();
-				// 유효한 이메일이 아니라면 알림 보내주기 로직구현 필요
-			}
-		} 
+			} catch (Exception e) {	}
+		}
 		System.out.println("session에 저장된 코드 : "+authenCode);
 		Gson gson = new Gson();
 		gson.toJson(user, response.getWriter());

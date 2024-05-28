@@ -34,7 +34,8 @@ public class AdminSearchMemberByIdServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json;charset=utf-8");
 		String id = request.getParameter("userId");
-		User user = UserService.getUserService().adminSearchUserById(id);
+		String status = request.getParameter("status");
+		User user = UserService.getUserService().adminSearchUserById(id, status);
 		Gson gson=new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		gson.toJson(user, response.getWriter());
 				

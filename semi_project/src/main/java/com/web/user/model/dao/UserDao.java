@@ -60,7 +60,7 @@ public class UserDao {
 			pstmt = con.prepareStatement(sql.getProperty("searchUserByEmail"));
 			pstmt.setString(1, email);
 			rs = pstmt.executeQuery();
-			if(rs.next()) user=getUser(rs, user);
+			if(rs.next()) user=getUser(rs);
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -180,12 +180,13 @@ public class UserDao {
 		} return user;
 	}
 	// 관리자 기능 : 전체 회원 조회
-	public List<User> searchAllUser(Connection con){
+	public List<User> searchAllUser(Connection con, String status){
 		List<User> users = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = con.prepareStatement(sql.getProperty("searchAllUser"));
+			pstmt.setString(1, status);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				users.add(getUser(rs));
@@ -198,14 +199,15 @@ public class UserDao {
 		} return users;
 	}
 	// 페이징 처리를 위한 가져오는 메소드
-	public List<User> searchAllUser(Connection con, int cPage, int numPerpage){
+	public List<User> searchAllUser(Connection con, int cPage, int numPerpage, String status){
 		List<User> users = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = con.prepareStatement(sql.getProperty("searchUser"));
-			pstmt.setInt(1, (cPage-1)*numPerpage+1);
-			pstmt.setInt(2, cPage*numPerpage);
+			pstmt.setString(1, status);
+			pstmt.setInt(2, (cPage-1)*numPerpage+1);
+			pstmt.setInt(3, cPage*numPerpage);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				users.add(getUser(rs));
@@ -218,13 +220,14 @@ public class UserDao {
 		} return users;
 	}
 	// 특정 ID의 회원 조회
-	public User adminSearchUserById(Connection con, String id) {
+	public User adminSearchUserById(Connection con, String id, String status) {
 		PreparedStatement pstmt= null;
 		ResultSet rs = null;
 		User user = new User();
 		try {
 			pstmt = con.prepareStatement(sql.getProperty("adminSearchUserById"));
 			pstmt.setString(1, id);
+			pstmt.setString(2, status);
 			rs=pstmt.executeQuery();
 			if(rs.next()) user = getUser(rs);
 		} catch(SQLException e) {
@@ -235,12 +238,16 @@ public class UserDao {
 		} return user;
 	}
 	
-	// 회원 삭제 기능
-	public int deleteUserById(Connection con, String userId) {
+	// 회원 상태 변경 기능
+	public int deleteUserById(Connection con, String userId, String status) {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		try {
-			pstmt = con.prepareStatement(sql.getProperty("adminDeleteUserById"));
+			if(status.equals("N")) {	// 실사용 유저는 탈퇴처리
+				pstmt = con.prepareStatement(sql.getProperty("adminDeleteUserById"));
+			} else {					// 탈퇴했던 유저의 재가입 처리
+				pstmt = con.prepareStatement(sql.getProperty("adminRollBackUserById"));
+			}
 			pstmt.setString(1, userId);
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {

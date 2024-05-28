@@ -70,9 +70,9 @@ public class UserService {
 		close(con);
 		return result;
 	}
-	public User adminSearchUserById(String id) {
+	public User adminSearchUserById(String id, String status) {
 		Connection con = getConnection();
-		User user = getUserDao().adminSearchUserById(con, id);
+		User user = getUserDao().adminSearchUserById(con, id, status);
 		close(con);
 		return user;
 	}
@@ -98,24 +98,24 @@ public class UserService {
 	
 	// 관리자 페이지 기능
 	// 회원 전체 조회
-	public List<User> searchAllUser(){
+	public List<User> searchAllUser(String status){
 		Connection con = getConnection();
-		List<User> users = getUserDao().searchAllUser(con);
+		List<User> users = getUserDao().searchAllUser(con, status);
 		close(con);
 		return users;
 	}
 	
-	public List<User> searchAllUser(int cPage, int numPerpage){
+	public List<User> searchAllUser(int cPage, int numPerpage, String status){
 		Connection con = getConnection();
-		List<User> users = getUserDao().searchAllUser(con, cPage, numPerpage);
+		List<User> users = getUserDao().searchAllUser(con, cPage, numPerpage, status);
 		close(con);
 		return users;
 	}
 	
 	// 회원 삭제 기능
-	public int deleteUserById(String userId) {
+	public int deleteUserById(String userId, String status) {
 		Connection con = getConnection();
-		int result = getUserDao().deleteUserById(con, userId);
+		int result = getUserDao().deleteUserById(con, userId, status);
 		if(result>0) commit(con);
 		else rollback(con);
 		close(con);

@@ -95,6 +95,7 @@
 		</tr>
 		<%if(!users.isEmpty()){ 
 			for(User user:users) {%>
+			<input type='hidden' id="search-user-status" value="<%=user.getStatus() %>">
 			<tr class="user-info">
 				<td><%=user.getUserId() %></td>
 				<td><%=user.getUserName() %></td>

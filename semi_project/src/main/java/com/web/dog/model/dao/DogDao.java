@@ -105,12 +105,13 @@ public class DogDao {
 		} return dogs;
 	}
 	// 관리자 기능 : 전체 강아지 데려오기
-	public List<Dog> serachAllDog(Connection con){
+	public List<Dog> serachAllDog(Connection con, String status){
 		List<Dog> dogs = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = con.prepareStatement(sql.getProperty("serachAllDog"));
+			pstmt.setString(1, status);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				dogs.add(getDog(rs));

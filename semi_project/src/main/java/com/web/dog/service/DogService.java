@@ -60,9 +60,9 @@ public class DogService {
 	}
 	
 	// 관리자 기능 : 전체 등록된 반려견 데려오기
-	public List<Dog> serachAllDog(){
+	public List<Dog> serachAllDog(String status){
 		Connection con = getConnection();
-		List<Dog> dogs = getDogDao().serachAllDog(con);
+		List<Dog> dogs = getDogDao().serachAllDog(con, status);
 		close(con);
 		return dogs;
 	}

@@ -175,13 +175,14 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 			    <input type="tel" id="phone" name="phone" placeholder="' - '을 제외하고 입력해주세요." minlength="8" required>
 			
 			    <label for="address">주소</label>
-			    <div>
-			    	<span>
-					    <input name="zipcode" type="text" id="sample6_postcode" placeholder="우편번호" readOnly>
-					    <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+				<div>
+				    <span>
+				        <input name="zipcode" type="text" id="sample6_postcode" placeholder="우편번호" readOnly>
+				        <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
 				    </span>
 				    <input type="text" name="address" id="sample6_address" placeholder="주소" readOnly>
-				    <input type="text" name="address" id="sample6_detailAddress" placeholder="상세주소">
+				    <input type="text" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소">
+				    <input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목" readOnly>
 				</div>
 			
 			    <label for="birthday">생일</label>
@@ -249,8 +250,10 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 					            }
 					         });
 					    });
-					} else {
+					} else if(user.status=='N'){
 						alert("이미 사용 중인 이메일입니다.");
+					} else {
+						alert("탈퇴하신 계정의 이메일이거나 차단 당한 계정의 이메일입니다. 다른 이메일을 사용해주세요.");
 					}
 				});
 			}
@@ -400,14 +403,15 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 	
 	            // 우편번호와 주소 정보를 해당 필드에 넣는다.
 	            document.getElementById('sample6_postcode').value = data.zonecode;
+	            // 우편번호 넣기
 	            document.getElementById('sample6_address').value = addr;
-	            // 커서를 상세주소 필드로 이동한다.
+	            // 주소 넣기
 	            document.getElementById("sample6_detailAddress").focus();
+	         	// 커서를 상세주소 필드로 이동한다.
 	        	}
 	    	}).open();
 		}
 	}
-	
 </script>
 
 

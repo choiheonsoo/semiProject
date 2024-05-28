@@ -15,14 +15,14 @@ import com.web.board.model.dto.Bulletin;
 /**
  * Servlet implementation class ManageFreeBoardServlet
  */
-@WebServlet("/admin/managefreeboard.do")
-public class ManageFreeBoardServlet extends HttpServlet {
+@WebServlet("/admin/manageboard.do")
+public class ManageBoardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ManageFreeBoardServlet() {
+    public ManageBoardServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,7 +31,9 @@ public class ManageFreeBoardServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Bulletin> allBulletins = AdminService.getAdminService().searchFreeBulletins();
+		
+		int type = Integer.parseInt(request.getParameter("type"));
+		List<Bulletin> allBulletins = AdminService.getAdminService().searchFreeBulletins(type);
 		
 		int cPage = 1;
 		try {
@@ -55,10 +57,10 @@ public class ManageFreeBoardServlet extends HttpServlet {
 			pageBar.append("</li>");
 		} else {
 			pageBar.append("<li class='page-item'>");
-			pageBar.append("<p class='page-link' data-page="+1+" data-url="+request.getRequestURI()+"><<</p>");	
+			pageBar.append("<p class='page-link' data-page="+1+"data-type="+type+" data-url="+request.getRequestURI()+"><<</p>");	
 			pageBar.append("</li>");
 			pageBar.append("<li class='page-item'>");
-			pageBar.append("<p class='page-link' data-page="+(pageNo-1)+" data-url="+request.getRequestURI()+"><</p>");	
+			pageBar.append("<p class='page-link' data-page="+(pageNo-1)+" data-type="+type+" data-url="+request.getRequestURI()+"><</p>");	
 			pageBar.append("</li>");
 		}
 		
@@ -69,7 +71,7 @@ public class ManageFreeBoardServlet extends HttpServlet {
 				pageBar.append("</li>");
 			} else {
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+pageNo+" data-url="+request.getRequestURI()+">"+pageNo+"</p>");
+				pageBar.append("<p class='page-link' data-page="+pageNo+" data-type="+type+" data-url="+request.getRequestURI()+">"+pageNo+"</p>");
 				pageBar.append("</li>");
 			}
 			pageNo++;
@@ -84,18 +86,19 @@ public class ManageFreeBoardServlet extends HttpServlet {
 			pageBar.append("</li>");
 		} else {
 			pageBar.append("<li class='page-item'>");
-			pageBar.append("<p class='page-link' data-page="+pageNo+" data-url="+request.getRequestURI()+">></p>");
+			pageBar.append("<p class='page-link' data-page="+pageNo+" data-type="+type+" data-url="+request.getRequestURI()+">></p>");
 			pageBar.append("</li>");
 			pageBar.append("<li class='page-item'>");
-			pageBar.append("<p class='page-link' data-page="+totalPage+" data-url="+request.getRequestURI()+">>></p>");
+			pageBar.append("<p class='page-link' data-page="+totalPage+" data-type="+type+ "data-url="+request.getRequestURI()+">>></p>");
 			pageBar.append("</li>");
 		} 
 		pageBar.append("</ul>");
-		List<Bulletin> bulletins = AdminService.getAdminService().searchFreeBulletins(cPage, numPerpage);
 		
+		List<Bulletin> bulletins = AdminService.getAdminService().searchBulletins(type, cPage, numPerpage); 
+		System.out.println(bulletins);
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("bulletins", bulletins);
-		request.getRequestDispatcher("/WEB-INF/views/admin/managefreeboard.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/admin/manageboard.jsp").forward(request, response);
 	}
 
 	/**

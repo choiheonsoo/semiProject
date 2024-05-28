@@ -37,13 +37,14 @@ public class SearchMemberServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User admin = (User)session.getAttribute("loginUser");
+		String status = request.getParameter("status");
 		if(admin==null || !admin.getUserId().equals("admin")) {
 			String msg = "잘못된 접근입니다.";
 			String loc = "/";
 			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 		} else {
-			List<User> totalMember = UserService.getUserService().searchAllUser();
-			List<Dog> searchDogs = DogService.getDogService().serachAllDog();
+			List<User> totalMember = UserService.getUserService().searchAllUser(status);
+			List<Dog> searchDogs = DogService.getDogService().serachAllDog(status);
 			int cPage = 1;
 			try {
 				cPage = Integer.parseInt(request.getParameter("cPage"));
@@ -66,10 +67,10 @@ public class SearchMemberServlet extends HttpServlet {
 				pageBar.append("</li>");
 			} else {
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+1+" data-url="+request.getRequestURI()+"><<</p>");	
+				pageBar.append("<p class='page-link' data-page="+1+" data-url="+request.getRequestURI()+" data-status="+status+"><<</p>");	
 				pageBar.append("</li>");
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+(pageNo-1)+" data-url="+request.getRequestURI()+"><</p>");	
+				pageBar.append("<p class='page-link' data-page="+(pageNo-1)+" data-url="+request.getRequestURI()+" data-status="+status+"><</p>");	
 				pageBar.append("</li>");
 			}
 			
@@ -80,7 +81,7 @@ public class SearchMemberServlet extends HttpServlet {
 					pageBar.append("</li>");
 				} else {
 					pageBar.append("<li class='page-item'>");
-					pageBar.append("<p class='page-link' data-page="+pageNo+" data-url="+request.getRequestURI()+">"+pageNo+"</p>");
+					pageBar.append("<p class='page-link' data-page="+pageNo+" data-url="+request.getRequestURI()+" data-status="+status+">"+pageNo+"</p>");
 					pageBar.append("</li>");
 				}
 				pageNo++;
@@ -95,14 +96,15 @@ public class SearchMemberServlet extends HttpServlet {
 				pageBar.append("</li>");
 			} else {
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+pageNo+" data-url="+request.getRequestURI()+">></p>");
+				pageBar.append("<p class='page-link' data-page="+pageNo+" data-url="+request.getRequestURI()+" data-status="+status+">></p>");
 				pageBar.append("</li>");
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+totalPage+" data-url="+request.getRequestURI()+">>></p>");
+				pageBar.append("<p class='page-link' data-page="+totalPage+" data-url="+request.getRequestURI()+" data-status="+status+">>></p>");
 				pageBar.append("</li>");
 			} 
 			pageBar.append("</ul>");
-			List<User> searchmember = UserService.getUserService().searchAllUser(cPage, numPerpage);
+			List<User> searchmember = UserService.getUserService().searchAllUser(cPage, numPerpage, status);
+			System.out.println(request.getRequestURI());
 			request.setAttribute("pageBar", pageBar);
 			request.setAttribute("users", searchmember);
 			request.setAttribute("dogs", searchDogs);

@@ -70,7 +70,7 @@
             cursor: pointer;
             font-size: 14px;
         }
-        .btn-cart {
+        .btn-cart, .btn-gotoshopping {
             background-color: #28a745;
             color: #fff;
         }
@@ -124,7 +124,7 @@
 	    	<%}%>
 		<% }else { %>
 	    	<h1 style="overflow: hidden; margin-bottom:4%;">찜 하신 상품이 없습니다.</h1>
-	    	<button class="btn btn-cart" onclick="location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do?category=1')">상품 페이지로 이동하기</button>
+	    	<button class="btn btn-gotoshopping" onclick="location.assign('<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do?category=1')">상품 페이지로 이동하기</button>
 	    <%} %>
     </div>
     <%if(list!=null && list.size()>0){ %>

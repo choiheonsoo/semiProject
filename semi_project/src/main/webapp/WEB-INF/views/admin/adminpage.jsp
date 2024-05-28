@@ -191,7 +191,7 @@ li {
 	display: none;
 }
 
-.resign-btn {
+.resign-btn, .delete-board-btn{
 	padding: 5px 10px;
 	font-size: 12px;
 	color: #fff;
@@ -212,16 +212,17 @@ li {
                 <p>회원관리</p>
                 <ul class="sub-nav">
                     <li><p id="searchMember">회원 조회</p></li>
+                    <li><p id="searchResignMember">탈퇴 및 차단한 회원 조회</p></li>
                     <li><p id="reportDetails">신고 내역 조회</p></li>
                 </ul>
             </li>
             <li>
                 <p>상품관리</p>
                 <ul class="sub-nav">
-                    <li><p>상품 등록</p></li>
-                    <li><p>상품 수정</p></li>
-                    <li><p>상품 삭제</p></li>
-                    <li><p>QnA 관리</p></li>
+                    <li><p id="insertProduct">상품 등록</p></li>
+                    <li><p id="updateProduct">상품 수정</p></li>
+                    <li><p id="deleteProduct">상품 삭제</p></li>
+                    <li><p id="manageQnA">QnA 관리</p></li>
                 </ul>
             </li>
             <li>
@@ -229,6 +230,7 @@ li {
                 <ul class="sub-nav">
                     <li><p id="freeBoard">자유게시판</p></li>
                     <li><p id="noticeBoard">공지사항게시판</p></li>
+                    <li><p id="eventBoard">이벤트게시판</p></li>
                     <li><p id="dogStargram">멍스타그램 게시판</p></li>
                     <li><p id="walkingMateBoard">산책메이트 게시판</p></li>
                     <li><p id="hotPlaceBoard">핫플레이스 게시판</p></li>
@@ -257,14 +259,25 @@ li {
 	}
 	
 	// 회원 관리 기능
-	// 회원 조회
+	// 실제 이용중인 회원 조회
 	$("#searchMember").click(e=>{
-		$.get("<%=request.getContextPath()%>/admin/searchmember.do")
+		$.get("<%=request.getContextPath()%>/admin/searchmember.do?status=N")
 		.done(data=>{
 			$("div.content").html(data);
 		});
       	printLoading('div.content');
 	})
+	
+	// 탈퇴 및 차단당한 회원 조회
+	$("#searchResignMember").click(e=>{
+		$.get("<%=request.getContextPath()%>/admin/searchmember.do?status=Y")
+		.done(data=>{
+			$("div.content").html(data);
+		});
+      	printLoading('div.content');
+	})
+	
+	
 	// 신고내역 조회 → 헌수 Dto 수정 끝나면 다시 시작
 	$("reportDetails").click(e=>{
 		$.get("<%=request.getContextPath()%>/admin/searchreport.do")
@@ -274,34 +287,87 @@ li {
 		printLoading('div.content');
 	})
 	
-	// 게시판 기능
-	// 자유 게시판 관리 기능 : 게시글 전체 조회 후 삭제 기능
-	$("#freeBoard").click(e=>{
-		$.get("<%=request.getContextPath()%>/admin/managefreeboard.do")
-		.done(data=>{
-			$("div.content").html(data);
+	// 게시판 기능	
+	// 자유 게시판 관리 기능 - 게시글 전체 조회 및 페이징 처리
+	$(document).on("click", "#freeBoard", function(e){
+		$.get("<%=request.getContextPath()%>/admin/manageboard.do?type="+3)
+		.done(data => {
+			$('div.content').html(data);
 		});
 		printLoading('div.content');
 	})
 	
+	// 이벤트 게시판 관리 기능 - 이벤트 게시글 등록, 수정, 삭제
+	$(document).on("click", "#eventBoard", function(e){
+		$.get("<%=request.getContextPath()%>/admin/manageboard.do?type="+2)
+		.done(data => {
+			$('div.content').html(data);
+		});
+		printLoading('div.content');
+	})
+	
+	// 공지 게시판 관리 기능 - 공지 게시글 등록, 수정, 삭제
+	$(document).on("click", "#noticeBoard", function(e){
+		$.get("<%=request.getContextPath()%>/admin/manageboard.do?type="+1)
+		.done(data => {
+			$('div.content').html(data);
+		});
+		printLoading('div.content');
+	})
+	
+	// 멍스타그램 게시판 관리 기능 - 게시글 전체 조회 및 페이징 처리
+	$(document).on("click", "#dogStargram", function(e){
+		$.get("<%=request.getContextPath()%>/admin/manageboard.do?type="+4)
+		.done(data => {
+			$('div.content').html(data);
+		});
+		printLoading('div.content');
+	})
+	
+	// 산책메이트 게시판 관리 기능 → 산책메이트에서 신고기능 추가 후 작성자, 신청자, 모집장소, 확정받은 인원, 날짜 출력해줄 예정
+	$(document).on("click", "#walkingMateBoard", function(e){
+		alert("산책메이트 신고기능 추가 후 조회 기능 업데이트 예정");
+	})
+	
+	// 핫플레이스 게시판 관리 기능 → 핫플레이스 기능 미구현 상태
+	$(document).on("click", "#hotPlaceBoard", function(e){
+		alert("추후 업데이트 예정");
+	})
+	
 	// 비동기적 절차에 따른 페이징 처리
     $(document).on("click",".page-link", function(p) {
+    	let type = $(p.target).data("type"); // 게시글 관리에 관한 타입 설정
+    	let status = $(p.target).data("status"); // 회원 상태(탈퇴 or 실사용 중)
     	let pageValue = $(p.target).data("page");
     	let url=$(p.target).data("url");
-        $.get(url+"?cPage=" + pageValue)
-        .done(data => {
-            $("div.content").html(data);
-        });
+    	console.log(status);
+    	
+    	if(typeof status!='undefined' && typeof type == 'undefined'){
+	        $.get(url+"?cPage="+pageValue+"&status="+status)
+	        .done(data => {
+	            $("div.content").html(data);
+	        })
+    	} else if(typeof status =='undefined' && typeof type != 'undefined'){
+    		$.get(url+"?cPage="+pageValue+"&type="+type)
+    		.done(data=>{
+    			$("div.content").html(data);
+    		})
+    	}
     });
 
     let currentButton = null;
     // 회원 정보 <tr> 클릭 시 회원 강퇴 버튼 등장
     $(document).on("click", ".user-info", function(e) {
+    	const status = $("#search-user-status").val();
         if (currentButton) {
             currentButton.remove();
         }
         const $button = document.createElement("button");
-        $button.innerText = "삭제";
+        if(status=='N'){
+        	$button.innerText = "삭제";
+        } else {
+        	$button.innerText = "복구";
+        }
         $button.setAttribute("class", "resign-btn");
 
         const lastTd = $(this).find("td:last")[0];
@@ -312,7 +378,8 @@ li {
     // 회원 아이디 검색 기능
     $(document).on("click", ".search-user-btn", function(e){
     	 const userid = $("#search-user-id").val();
-         $.get("<%=request.getContextPath()%>/admin/searchuserbyid.do?userId="+userid)
+    	 const status = $("#search-user-status").val();
+         $.get("<%=request.getContextPath()%>/admin/searchuserbyid.do?userId="+userid+"&status="+status)
          .done(data => {
              $("tr.user-info").remove();
              const $targetTbody = $(".user-container>table>tbody");
@@ -328,16 +395,36 @@ li {
     	printLoading('.user-container>table>tbody');        
     });
 	
-    // 특정 row 클릭하여 해당 유저 탈퇴 처리
+    // 특정 row 클릭하여 해당 유저 가입상태 변경 처리
     $(document).on("click", ".resign-btn", function(e){    	
     	const deleteTargetUserId = $(this).parent().siblings()[0].innerText;
-    	$.get("<%=request.getContextPath()%>/admin/deleteuserbyid.do?userId="+deleteTargetUserId)
+    	const status = $("#search-user-status").val();
+    	$.get("<%=request.getContextPath()%>/admin/deleteuserbyid.do?userId="+deleteTargetUserId+"&status="+status)
     	.done(data=>{
-    		alert('회원 삭제에 성공했습니다.');
+    		alert('회원 상태 변경에 성공했습니다.');
     		adminMain();
     	})
     	.fail(error=>{
-    		alert('회원 삭제에 실패했습니다.');
+    		alert('회원 상태 변경에 실패했습니다.');
+    	})
+    })
+    
+    // 게시판 관리페이지에서 해당 게시글로 옮겨가기
+    $(document).on("click", ".board-info", function(e){
+    	const bullNo = $(this).siblings()[0].innerText;
+    	window.open("<%=request.getContextPath()%>/board/boardview.do?no="+bullNo);
+    })
+    
+    // 게시판 관리 기능 중 삭제 기능(게시글 고유 번호(PK)로 삭제하는  기능)
+    $(document).on("click", ".delete-board-btn", function(e){
+    	const bullNo = $(this).parent().siblings()[0].innerText
+    	$.get("<%=request.getContextPath()%>/board/deletefreeboard.do?no="+bullNo)
+    	.done(data=>{
+    		alert('게시글 삭제에 성공했습니다.');
+    		adminMain();
+    	})
+    	.fail(error=>{
+    		alert('게시글 삭제에 실패했습니다.')
     	})
     })
     
