@@ -485,6 +485,8 @@
 			border-radius:5px;
 			width:60px;
 			height:20px;
+			position: absolute;
+    		right: 10%;
 		}
 		.insert_button>button:hover{
 			background-color:gray;
