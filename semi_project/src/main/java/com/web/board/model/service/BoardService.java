@@ -239,9 +239,9 @@ public class BoardService {
 	}
 	
 	//신고기능
-	public int insertReport(String id, String reportedId, String content, int categoryNo, int no) {
+	public int insertReport(String reporterId, String reportedId, String content, int categoryNo, int no) {
 		Connection conn = getConnection();
-		int result = getDao().insertReport(conn, id, reportedId, content, categoryNo, no);
+		int result = getDao().insertReport(conn, reporterId, reportedId, content, categoryNo, no);
 		if(result>0) commit(conn);
 		else rollback(conn);
 		close(conn);

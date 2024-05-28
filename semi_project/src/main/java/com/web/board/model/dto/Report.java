@@ -13,6 +13,7 @@ public class Report {
 	private int reportKey;
 	private int reportTypeKey;
 	private int bullNo;
-	private String userId;
+	private String reportedId;
+	private String reporterId;
 	private String reportContent;
 }

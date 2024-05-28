@@ -64,20 +64,20 @@ public class ShoppingmallPaymentServlet extends HttpServlet {
         System.out.println(impUid+"  /  "+merchantUid+"   /   "+pg_provider+"  /  "+buyer_addr);
         // 추출한 값들을 사용하여 필요한 작업을 수행합니다.
         // 포트원 토큰 발급
-//        String token = getPortOneToken();
-//        if (token == null) {
-//            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//            response.getWriter().write("{\"success\": false, \"message\": \"토큰 발급 실패\"}");
-//            return;
-//        }
-//        boolean isValid = validatePayment(impUid, token);
-//        JSONObject result = new JSONObject();
-//        result.put("success", isValid);
+        String token = getPortOneToken();
+        if (token == null) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"success\": false, \"message\": \"토큰 발급 실패\"}");
+            return;
+        }
+        boolean isValid = validatePayment(impUid, token);
+        JSONObject result = new JSONObject();
+        result.put("success", isValid);
 
         // 클라이언트에게 응답을 보냅니다.
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("success");
+        response.getWriter().write("{\"success\": true}");
 	}
 
 	/**
@@ -87,62 +87,72 @@ public class ShoppingmallPaymentServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-//	private String getPortOneToken() throws IOException {
-//	    // IMP_KEY와 IMP_SECRET은 포트원에서 발급받은 API 키로 채워넣어야 합니다.
-//
-//	    URL url = new URL("https://api.iamport.kr/users/getToken");
-//	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//	    conn.setRequestMethod("POST");
-//	    conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
-//	    conn.setDoOutput(true);
-//
-//	    JSONObject json = new JSONObject();
-//	    json.put("imp_key", IMP_KEY);
-//	    json.put("imp_secret", IMP_SECRET);
-//
-//	    try (OutputStream os = conn.getOutputStream()) {
-//	        byte[] input = json.toString().getBytes("utf-8");
-//	        os.write(input, 0, input.length);
-//	    }
-//
-//	    try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-//	        StringBuilder response = new StringBuilder();
-//	        String responseLine;
-//	        while ((responseLine = br.readLine()) != null) {
-//	            response.append(responseLine.trim());
-//	        }
-//
-//	        JSONObject responseJson = new JSONObject(response.toString());
-//	        long code = (long) responseJson.get("code");
-//	        if (code == 0) {
-//	            JSONObject responseObject = (JSONObject) responseJson.get("response");
-//	            return (String) responseObject.get("access_token");
-//	        } else {
-//	            return null;
-//	        }
-//	    }
-//	}
-//
-//	private boolean validatePayment(String impUid, String token) throws IOException {
-//	    URL url = new URL("https://api.iamport.kr/payments/" + impUid);
-//	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//	    conn.setRequestMethod("GET");
-//	    conn.setRequestProperty("Authorization", token);
-//
-//	    try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-//	        StringBuilder response = new StringBuilder();
-//	        String responseLine;
-//	        while ((responseLine = br.readLine()) != null) {
-//	            response.append(responseLine.trim());
-//	        }
-//
-//	        JSONObject responseJson = new JSONObject(response.toString());
-//	        long code = (long) responseJson.get("code");
-//	        if (code == 0) {
-//	            return true;
-//	        } else {
-//	            return false;
-//	        }
-//	    }
-//	}
+	private String getPortOneToken() throws IOException {
+        URL url = new URL("https://api.iamport.kr/users/getToken");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+        conn.setDoOutput(true);
+
+        JSONObject json = new JSONObject();
+        json.put("imp_key", IMP_KEY);
+        json.put("imp_secret", IMP_SECRET);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = json.toString().getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+
+            JSONParser parser = new JSONParser();
+            try {
+                Object obj = parser.parse(response.toString());
+                JSONObject responseJson = (JSONObject) obj;
+                Long code = (Long) responseJson.get("code");
+                if (code != null && code == 0) {
+                    JSONObject responseObject = (JSONObject) responseJson.get("response");
+                    return (String) responseObject.get("access_token");
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+	private boolean validatePayment(String impUid, String token) throws IOException {
+	    URL url = new URL("https://api.iamport.kr/payments/" + impUid);
+	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	    conn.setRequestMethod("GET");
+	    conn.setRequestProperty("Authorization", token);
+
+	    try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"))) {
+	        StringBuilder response = new StringBuilder();
+	        String responseLine;
+	        while ((responseLine = br.readLine()) != null) {
+	            response.append(responseLine.trim());
+	        }
+
+	        JSONParser parser = new JSONParser();
+	        try {
+	            Object obj = parser.parse(response.toString());
+	            JSONObject responseJson = (JSONObject) obj;
+	            Long code = (Long) responseJson.get("code");
+	            if (code != null && code == 0) {
+	                JSONObject responseObject = (JSONObject) responseJson.get("response");
+	                String accessToken = (String) responseObject.get("access_token");
+	                return accessToken != null; // accessToken이 null이 아닐 때 유효하다고 간주
+	            }
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return false; // 유효하지 않은 경우 false 반환
+	}
 }
