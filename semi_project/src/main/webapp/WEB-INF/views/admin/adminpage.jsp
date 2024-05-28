@@ -15,100 +15,193 @@
 </head>
 <style>
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	display: flex;
 }
+
 .sidebar {
-    width: 250px;
-    background-color: #333;
-    color: #fff;
-    height: 100vh;
-    position: fixed;
-    overflow-y: auto;
+	width: 250px;
+	background-color: #333;
+	color: #fff;
+	height: 100vh;
+	position: fixed;
+	overflow-y: auto;
 }
 
 .sidebar h2 {
-    text-align: center;
-    padding: 0.3em;
-    margin: 0;
-    background-color: #444;
-    cursor: pointer;
+	text-align: center;
+	padding: 0.3em;
+	margin: 0;
+	background-color: #444;
+	cursor: pointer;
 }
-.sidebar button{
+
+.sidebar button {
 	background-color: #444;
 	font-size: 15px;
-    color: #fff;
-    border: none;
-    padding: 1em;
-    cursor: pointer;
-    width: 100%;
-    text-align: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    transition: background-color 0.3s ease;
+	color: #fff;
+	border: none;
+	padding: 1em;
+	cursor: pointer;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	transition: background-color 0.3s ease;
 }
-.sidebar button:hover{
+
+.sidebar button:hover {
 	background-color: #b5258b;
 }
+
 .nav {
 	display: flex;
 	flex-direction: column;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
 }
 
 .nav li {
-    border-bottom: 1px solid #444;
-    position: relative;
+	border-bottom: 1px solid #444;
+	position: relative;
 }
 
 .nav p {
-    color: #fff;
-    text-decoration: none;
-    display: block;
-    padding: 0.75em 1em;
-    margin-bottom: 5px; 
-    cursor: pointer;
+	color: #fff;
+	text-decoration: none;
+	display: block;
+	padding: 0.75em 1em;
+	margin-bottom: 5px;
+	cursor: pointer;
 }
+
 .nav p:hover {
-    background-color: #575757;
+	background-color: #575757;
 }
+
 .sub-nav {
-    max-height: 0;
-    overflow: hidden;
-    list-style-type: none;
-    padding-left: 20px;
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+	max-height: 0;
+	overflow: hidden;
+	list-style-type: none;
+	padding-left: 20px;
+	transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
+
 .nav li:hover .sub-nav {
-    max-height: 500px;
-    padding: 10px 0;
-    transition: max-height 0.5s ease-in, padding 0.5s ease-in;
+	max-height: 500px;
+	padding: 10px 0;
+	transition: max-height 0.5s ease-in, padding 0.5s ease-in;
 }
+
 .sub-nav li {
-    border: none;
+	border: none;
 }
+
 .sub-nav p {
-    padding: 0.5em 1em;
-    background-color: #444;
-    margin: 0;
-    cursor: pointer;
+	padding: 0.5em 1em;
+	background-color: #444;
+	margin: 0;
+	cursor: pointer;
 }
+
 .sub-nav p:hover {
-    background-color: #575757;
+	background-color: #575757;
 }
+
 .content {
-    margin-left: 250px;
-    padding: 2em;
-    background-color: #bcbcbc;
-    flex-grow: 1;
+	margin-left: 250px;
+	padding: 2em;
+	background-color: #bcbcbc;
+	flex-grow: 1;
 }
+
 .content h1 {
-    margin-top: 0;
+	margin-top: 0;
+}
+
+.adminpage-container {
+	margin-top: 20px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 10px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:hover {
+	cursor: pointer;
+	background-color: #f5f5f5;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+li {
+	margin-bottom: 5px;
+}
+
+.justify-content-center {
+	margin-top: 3%;
+}
+
+.search-container {
+	margin: 20px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.search-container input[type="text"] {
+	padding: 10px;
+	font-size: 14px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	margin-right: 10px;
+	width: 200px;
+}
+
+.search-container button {
+	padding: 10px 20px;
+	font-size: 14px;
+	color: #fff;
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.resign-td {
+	display: none;
+}
+
+.resign-btn {
+	padding: 5px 10px;
+	font-size: 12px;
+	color: #fff;
+	background-color: #c40000;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.page-link{
+	cursor: pointer;
 }
 </style>
 <body>
@@ -186,62 +279,69 @@ body {
 	$("#freeBoard").click(e=>{
 		$.get("<%=request.getContextPath()%>/admin/managefreeboard.do")
 		.done(data=>{
-			// data ? ManageFreeBoardServlet.java에서 innerClass로 선언한 ResponseData 클래스의 객체로 StringBuffer pageBar와 List<Bulletin>을 담고있음
-			let $div = $("div.content");
-			$div.html("");
-			let $table = $("<table>").append($("<tbody>"));
-			let $th = $("<tr>").append($("<th>").text("게시글번호")).append($("<th>").text("작성자")).append($("<th>").text("제목")).append($("<th>").text("내용")).append($("<th>").text("등록일"))
-								.append($("<th>").text("조회수")).append($("<th>").text("좋아요수")).append($("<th>").text("게시글 삭제"))				
-			if(data.bulletins.length>0){
-				$div.append($table).append($th);
-				for(b of data.bulletins){
-					let $tr = $("<tr>")
-					$tr.append($("<td>").text(b.bullNo)).append($("<td>").text(b.userId)).append($("<td>").text(b.title)).append($("<td>").text(b.content)).append($("<td>").text(b.rDate))
-					.append($("<td>").text(b.hits)).append($("<td>").text(b.likeC)).append($("<td>").append($("<button>").text("삭제")))
-					$div.append($tr);
-				}
-			} else {
-				let $h1 = $("<h1>").text("작성된 자유 게시판 게시글이 없습니다.");
-				$div.append($h1);
-			}
-			$div.append(data.pageBar);
-			
+			$("div.content").html(data);
 		});
 		printLoading('div.content');
 	})
-	// 비동기적 절차에 따른 자유게시판 페이징 처리
-	$(document).on("click",".page-link", function(e) {
-		
-    	let pageValue = $(e.target).data("page");
-    	let url=$(e.target).data("url");
-    	
-    	if(typeof url != 'undefined'){
-	        $.get(url+"?cPage="+pageValue)
-	        .done(data => {
-	        	let $div = $("div.content");
-				$div.html("");
-				let $table = $("<table>").append($("<tbody>"));
-				let $th = $("<tr>").append($("<th>").text("게시글번호")).append($("<th>").text("작성자")).append($("<th>").text("제목")).append($("<th>").text("내용")).append($("<th>").text("등록일"))
-									.append($("<th>").text("조회수")).append($("<th>").text("좋아요수")).append($("<th>").text("게시글 삭제"))				
-				if(data.bulletins.length>0){
-					$div.append($table).append($th);
-					for(b of data.bulletins){
-						let $tr = $("<tr>")
-						$tr.append($("<td>").text(b.bullNo)).append($("<td>").text(b.userId)).append($("<td>").text(b.title)).append($("<td>").text(b.content)).append($("<td>").text(b.rDate))
-						.append($("<td>").text(b.hits)).append($("<td>").text(b.likeC)).append($("<td>").append($("<button>").text("삭제")))
-						$div.append($tr);
-					}
-				} else {
-					let $h1 = $("<h1>").text("작성된 자유 게시판 게시글이 없습니다.");
-					$div.append($h1);
-				}
-				$div.append(data.pageBar);
-	        });
-	        printLoading('div.content');
-	    }
-    })
 	
-	// 로딩 표현 by BootStrap
+	// 비동기적 절차에 따른 페이징 처리
+    $(document).on("click",".page-link", function(p) {
+    	let pageValue = $(p.target).data("page");
+    	let url=$(p.target).data("url");
+        $.get(url+"?cPage=" + pageValue)
+        .done(data => {
+            $("div.content").html(data);
+        });
+    });
+
+    let currentButton = null;
+    // 회원 정보 <tr> 클릭 시 회원 강퇴 버튼 등장
+    $(document).on("click", ".user-info", function(e) {
+        if (currentButton) {
+            currentButton.remove();
+        }
+        const $button = document.createElement("button");
+        $button.innerText = "삭제";
+        $button.setAttribute("class", "resign-btn");
+
+        const lastTd = $(this).find("td:last")[0];
+        lastTd.appendChild($button);
+        currentButton = $button;
+    });
+
+    // 회원 아이디 검색 기능
+    $(document).on("click", ".search-user-btn", function(e){
+    	 const userid = $("#search-user-id").val();
+         $.get("<%=request.getContextPath()%>/admin/searchuserbyid.do?userId="+userid)
+         .done(data => {
+             $("tr.user-info").remove();
+             const $targetTbody = $(".user-container>table>tbody");
+             const $searchUserTh = $targetTbody.append($("<tr>").append($("<th>").text("아이디")).append($("<th>").text("성함")).append($("<th>").text("전화번호"))
+             .append($("<th>").text("이메일")).append($("<th>").text("생일")).append($("<th>").text("우편번호")).append($("<th>").text("주소"))
+             .append($("<th>").text("산책 참여횟수")).append($("<th>").text("적립금")))
+             const $searchUserTr = $targetTbody.append($("<tr class='user-info'>").append($("<td>").text(data.userId)).append($("<td>").text(data.userName)).append($("<td>").text(data.phone)).append($("<td>").text(data.email))
+             .append($("<td>").text(data.birthDay)).append($("<td>").text(data.zipCode)).append($("<td>").text(data.address)).append($("<td>").text(data.mateCount))
+             .append($("<td>").text(data.point)));
+             
+             $("div.spinner-border").remove();
+    	})
+    	printLoading('.user-container>table>tbody');        
+    });
+	
+    // 특정 row 클릭하여 해당 유저 탈퇴 처리
+    $(document).on("click", ".resign-btn", function(e){    	
+    	const deleteTargetUserId = $(this).parent().siblings()[0].innerText;
+    	$.get("<%=request.getContextPath()%>/admin/deleteuserbyid.do?userId="+deleteTargetUserId)
+    	.done(data=>{
+    		alert('회원 삭제에 성공했습니다.');
+    		adminMain();
+    	})
+    	.fail(error=>{
+    		alert('회원 삭제에 실패했습니다.');
+    	})
+    })
+    
+    	// 로딩 표현 by BootStrap
 	function printLoading(target){
 		  const $container=$("<div>").attr({"class":"spinner-border text-primary","role":"status"});
 	        $(target).html("");

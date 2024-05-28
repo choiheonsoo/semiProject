@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.web.admin.service.AdminService;
 import com.web.board.model.dto.Bulletin;
 
@@ -21,31 +19,6 @@ import com.web.board.model.dto.Bulletin;
 public class ManageFreeBoardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
-	// gson.toJson으로 2가지 정보를 보내기 위하여 innerClass 선언
-	class ResponseData{
-		private List<Bulletin> bulletins;
-		private StringBuffer pageBar;
-		
-		public ResponseData(List<Bulletin>bulletins, StringBuffer pageBar) {
-			 this.bulletins = bulletins;
-	         this.pageBar = pageBar;
-		}
-		public List<Bulletin> getBulletins() {
-            return bulletins;
-        }
-
-        public void setBulletins(List<Bulletin> bulletins) {
-            this.bulletins = bulletins;
-        }
-
-        public StringBuffer getPageBar() {
-            return pageBar;
-        }
-
-        public void setPageBar(StringBuffer pageBar) {
-            this.pageBar = pageBar;
-        }
-	}
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -58,7 +31,6 @@ public class ManageFreeBoardServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json;charset=utf-8");
 		List<Bulletin> allBulletins = AdminService.getAdminService().searchFreeBulletins();
 		
 		int cPage = 1;
@@ -121,10 +93,9 @@ public class ManageFreeBoardServlet extends HttpServlet {
 		pageBar.append("</ul>");
 		List<Bulletin> bulletins = AdminService.getAdminService().searchFreeBulletins(cPage, numPerpage);
 		
-		ResponseData data = new ResponseData(bulletins, pageBar);
-		
-		Gson gson=new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-		gson.toJson(data, response.getWriter());
+		request.setAttribute("pageBar", pageBar);
+		request.setAttribute("bulletins", bulletins);
+		request.getRequestDispatcher("/WEB-INF/views/admin/managefreeboard.jsp").forward(request, response);
 	}
 
 	/**

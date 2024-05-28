@@ -6,7 +6,7 @@
 	List<User> users = (List<User>)request.getAttribute("users");
 %>
 <style>
-    .user-container {
+    .adminpage-container {
         margin-top: 20px;
     }
 
@@ -79,7 +79,7 @@
     }
 </style>
 <h2>산책하개 회원관리</h2>
-<div class="user-container">
+<div class="adminpage-container">
 	<table>
 		<tr>
 			<th>아이디</th>
@@ -129,63 +129,4 @@
 		<%=request.getAttribute("pageBar") %>
 	</div>
 </div>
-
-<script>
-    // 비동기적 절차에 따른 페이징 처리
-    $(document).on("click",".page-link", function(p) {
-    	let pageValue = $(p.target).data("page");
-    	let url=$(p.target).data("url");
-        $.get(url+"?cPage=" + pageValue)
-        .done(data => {
-            $("div.content").html(data);
-        });
-    })
-
-    let currentButton = null;
-    // 회원 정보 <tr> 클릭 시 회원 강퇴 버튼 등장
-    $(document).on("click", ".user-info", function(e) {
-        if (currentButton) {
-            currentButton.remove();
-        }
-        const $button = document.createElement("button");
-        $button.innerText = "삭제";
-        $button.setAttribute("class", "resign-btn");
-
-        const lastTd = $(this).find("td:last")[0];
-        lastTd.appendChild($button);
-        currentButton = $button;
-    });
-
-    // 회원 아이디 검색 기능
-    $(document).on("click", ".search-user-btn", function(e){
-    	 const userid = $("#search-user-id").val();
-         $.get("<%=request.getContextPath()%>/admin/searchuserbyid.do?userId="+userid)
-         .done(data => {
-             $("tr.user-info").remove();
-             const $targetTbody = $(".user-container>table>tbody");
-             const $searchUserTh = $targetTbody.append($("<tr>").append($("<th>").text("아이디")).append($("<th>").text("성함")).append($("<th>").text("전화번호"))
-             .append($("<th>").text("이메일")).append($("<th>").text("생일")).append($("<th>").text("우편번호")).append($("<th>").text("주소"))
-             .append($("<th>").text("산책 참여횟수")).append($("<th>").text("적립금")))
-             const $searchUserTr = $targetTbody.append($("<tr class='user-info'>").append($("<td>").text(data.userId)).append($("<td>").text(data.userName)).append($("<td>").text(data.phone)).append($("<td>").text(data.email))
-             .append($("<td>").text(data.birthDay)).append($("<td>").text(data.zipCode)).append($("<td>").text(data.address)).append($("<td>").text(data.mateCount))
-             .append($("<td>").text(data.point)));
-             
-             $("div.spinner-border").remove();
-    	})
-    	printLoading('.user-container>table>tbody');        
-    });
-	
-    // 특정 row 클릭하여 해당 유저 탈퇴 처리
-    $(document).on("click", ".resign-btn", function(e){    	
-    	const deleteTargetUserId = $(this).parent().siblings()[0].innerText;
-    	$.get("<%=request.getContextPath()%>/admin/deleteuserbyid.do?userId="+deleteTargetUserId)
-    	.done(data=>{
-    		alert('회원 삭제에 성공했습니다.');
-    		adminMain();
-    	})
-    	.fail(error=>{
-    		alert('회원 삭제에 실패했습니다.');
-    	})
-    })
-</script>
 
