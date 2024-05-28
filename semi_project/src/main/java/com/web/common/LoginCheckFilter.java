@@ -45,7 +45,6 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 		HttpServletRequest req=(HttpServletRequest)request;
 		HttpSession session=req.getSession();
 		User loginUser=(User)session.getAttribute("loginUser");
-		System.out.println(loginUser);
 		if(loginUser==null) {
 			request.setAttribute("msg","로그인 후 이용할 수 있습니다");
 			request.setAttribute("loc","/");

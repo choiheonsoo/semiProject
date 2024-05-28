@@ -371,14 +371,14 @@
 					   		$div.append($('<p>').addClass('main_comment_id').text(value.userId));
 					   		$div.append($('<p>').addClass('main_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
-						   	var button = $('<button>').text('댓글달기');
+						   	let button = $('<button>').text('댓글달기');
 						    button.addClass('reply_'+value.mainComment);
 						      button.on('click', function(event) {
 						          sub_comment(event, mainComment);
 						      });
 						    //로그인 한 유저와 댓글 쓴 유저가 같다면 삭제하기 넣기
 						    if(value.userId=='<%=loginUser.getUserId()%>'){
-							    var delbutton = $('<button>').text("삭제하기");
+							    let delbutton = $('<button>').text("삭제하기");
 							    delbutton.addClass('reply_'+value.mainComment);
 							    delbutton.on('click',function(event){
 							    	del_comment(event, mainComment, data.b.bullNo);
@@ -387,14 +387,13 @@
 								 $("#post_comment").append(button);
 						    }else{
 						    	//다른 유저라면 정보보기와 신고하기 넣기
-						    	var button = $('<button>').text('댓글달기');
+						    	let button = $('<button>').text('댓글달기');
 						    button.addClass('reply_'+value.mainComment);
 						      button.on('click', function(event) {
 						          sub_comment(event, mainComment);
 						      });
 							    $("#post_comment").append(button);
-								 $("#post_comment").append(infobutton);
-								 var reportbutton = $('<button>').text("신고하기");
+								 let reportbutton = $('<button>').text("신고하기");
 								 reportbutton.addClass('reply_'+value.mainComment);
 								 let userId = data.b.userId;
 								 let bullNo = data.b.bullNo;
@@ -429,7 +428,7 @@
 					   		
 					   		//로그인한 유저와 댓글 유저가 같다면 삭제하기
 					   		if(value.userId=='<%=loginUser.getUserId()%>'){
-						   		var delbutton = $('<button>').text('삭제하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
+					   			let delbutton = $('<button>').text('삭제하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
 						   		delbutton.addClass('reply_'+value.mainComment);
 						   		delbutton.on('click',function(event){
 						   			del_comment(event,value.mainComment,data.b.bullNo);
@@ -437,14 +436,14 @@
 						  	    $('#post_comment').append(delbutton);
 					   		}else{
 					  	    	//아니라면 유저 정보보기 신고하기
-					   			var infobutton = $('<button>').text('정보보기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
+					   			let infobutton = $('<button>').text('정보보기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
 					   			infobutton.addClass('reply_'+value.mainComment);
 					   			infobutton.on('click',function(event){
 						   			alert('개발중');
 						   		});
 						  	    $('#post_comment').append(infobutton);
 						  	    
-						  	 	var reportbutton= $('<button>').text('신고하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
+						  	  let reportbutton= $('<button>').text('신고하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
 							  	reportbutton.addClass('reply_'+value.mainComment);
 							  	let userId = data.b.userId;
 								let bullNo = data.b.bullNo;
@@ -506,7 +505,7 @@
 				                    $div.append($img);
 				                    $div.append($('<p>').addClass('sub_comment_id').text('<%=loginUser.getUserId()%>'));
 				                    $div.append($('<p>').addClass('sub_comment_content').text(replyContent));
-				                    var delbutton = $('<button>').text("삭제하기");
+				                    let delbutton = $('<button>').text("삭제하기");
 				                    delbutton.addClass('reply_'+response.commentNo);
 				                    delbutton.css('margin-left','35px');
 								    delbutton.on('click',function(event){
@@ -562,20 +561,17 @@
 		                        $div.append($('<p>').addClass('main_comment_content').text(replyContent));
 		                        $("#post_comment").append($div);
 
-						   		var button = $('<button>').text('댓글달기');
+		                        let button = $('<button>').text('댓글달기');
 						   		button.addClass('reply_'+response.commentNo);
 							      button.on('click', function(event) {
 							          sub_comment(event, response.commentNo);
 							      });
-							    var delbutton = $('<button>').text("삭제하기");
+							    let delbutton = $('<button>').text("삭제하기");
 							    delbutton.addClass('reply_'+response.commentNo);
 							    let userId = data.b.userId;
 								let bullNo = data.b.bullNo;
 								let loginUser = '<%=loginUser.getUserId()%>';loginUser
-								reportbutton.on('click',function(){
-									report_container_show(userId,bullNo,loginUser);
-								});
-								$("#post_comment").append(reportbutton);
+								$("#post_comment").append(delbutton);
 							    $("#post_comment").append(button);
 							}
 						});

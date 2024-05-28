@@ -11,7 +11,7 @@
 	<h6>산책메이트</h6>
 	<div class="br"></div>
 	<div class="insertBoard1">
-		<form action="<%=request.getContextPath()%>/board/insertwalkingmateend.do">
+		<form action="<%=request.getContextPath()%>/board/insertwalkingmateend.do" onsubmit="return checkForm()">
 			<div class="menu1">
 				<input type="text" name="title" placeholder="제목을 입력하세요.">
 			</div>
@@ -28,12 +28,23 @@
 					<input type="hidden" name="longitude" value="">
 					<p></p>
 				</div>
-			<textarea name="content" rows="" cols="" placeholder="내용을 입력하세요."></textarea>
+				<textarea id='content' name="content" rows="" cols="" placeholder="내용을 입력하세요."></textarea>
 			</div>
 		</form>
 	</div>
 </section>
 <script>
+
+const checkForm=function(){
+	let title = $('.menu1>input[name=title]').val();
+	let content = $('#content').val();
+	let place = $("input[type=hidden]").eq(1).val();
+	let date = $('input[type=datetime-local]').val();
+	if(title.trim()=='' ||content.trim()==''||place.trim()=='' || date.trim()==''){
+		alert("제목 - 내용 - 장소를 한 번 더 확인해주세요.");
+		return false;
+	}
+}
   const daumPostcode = () => {
     new daum.Postcode({
       oncomplete: data => {

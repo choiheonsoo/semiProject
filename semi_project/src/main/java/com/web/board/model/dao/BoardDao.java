@@ -66,6 +66,42 @@ public class BoardDao {
 		return result;
 	}
 	
+	//로그인한 회원이 작성한 게시글 가져오기
+	public List<Bulletin> selectUserBoardAll(Connection conn, String id, int cPage, int numPerpage){
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Bulletin> bulletins = new ArrayList<>();
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("selectUserBoardAll"));
+			pstmt.setString(1, id);
+			pstmt.setInt(2, (cPage-1)*numPerpage+1);
+			pstmt.setInt(3, numPerpage*cPage);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return bulletins;
+	}
+	
+	//로그인한 회원의 게시글 갯수 가져오기
+	public int selectUserBoardCount(Connection conn, String id) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(sql.getProperty("selectUserBoardCount"));
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	
 	//게시글 전체 조회
 	public List<Bulletin> selectBoardAll(Connection conn, int cPage, int numPerpage, String type, String keyword,int cateNum){
 		PreparedStatement pstmt = null;

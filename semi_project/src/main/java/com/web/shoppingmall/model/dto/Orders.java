@@ -1,6 +1,7 @@
 package com.web.shoppingmall.model.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,11 @@ public class Orders {
 	private String req;
 	private String purchaseStatus;
 	private Date shippingDate;
+	private String impUid;
+	private String receiverName;
+	private String receiverPhone;
+	private String zipcode;
+	private int usedPoint;
+	
+	private List<OrderDetail> orderDetails;
 }

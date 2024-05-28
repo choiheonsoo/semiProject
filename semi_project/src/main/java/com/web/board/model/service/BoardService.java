@@ -30,6 +30,22 @@ public class BoardService {
 		return result;
 	}
 	
+	//로그인한 회원의 게시글 불러오기
+	public List<Bulletin> selectUserBoardAll(String id, int cPage, int numPerpage){
+		Connection conn = getConnection();
+		List<Bulletin> bulletins = getDao().selectUserBoardAll(conn, id, cPage, numPerpage);
+		close(conn);
+		return bulletins;
+	}
+	
+	//로그인한 회원의 게시글 갯수 가져오기
+	public int selectUserBoardCount(String id) {
+		Connection conn = getConnection();
+		int result = getDao().selectUserBoardCount(conn, id);
+		close(conn);
+		return result;
+	}
+	
 	//게시글 전체 조회
 	public List<Bulletin> selectBoardAll(int cPage, int numPerpage,String type, String keyword, int cateNum){
 		Connection conn = getConnection();
@@ -262,6 +278,7 @@ public class BoardService {
 		int result = getDao().updateApply(conn, totalMembers, boardNo, id);
 		if(result > 0) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 	
@@ -271,6 +288,7 @@ public class BoardService {
 		int result = getDao().deleteApply(conn, boardNo, id);
 		if(result > 0) commit(conn);
 		else rollback(conn);
+		close(conn);
 		return result;
 	}
 }

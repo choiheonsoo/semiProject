@@ -47,14 +47,14 @@
 											<img src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName()%>/<%=p.getProductImgs().get("thumbnail").getProductImg() %>" alt="productImg">
 										</a>
 									</div>
-									<div class="iconarea">
+									<%-- <div class="iconarea">
 										<div class="heartIcon">
 											<img src="<%=request.getContextPath()%>/images/shoppingmall/normalheart.png" alt="찜하기">
 										</div>
 										<div class="cartIcon">
 											<img src="<%=request.getContextPath()%>/images/shoppingmall/cart.png" alt="장바구니">
 										</div>
-									</div>
+									</div> --%>
 								</div>
 								<div class="itemDescription">
 									<div class="name">

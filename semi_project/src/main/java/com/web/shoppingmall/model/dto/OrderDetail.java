@@ -19,4 +19,6 @@ public class OrderDetail {
 	private int productKey;
 	private int quantity;
 	private int price;
+	private String orderColor;
+	private String orderSize;
 }

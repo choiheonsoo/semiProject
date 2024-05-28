@@ -114,7 +114,7 @@
 					</div>
 					<div class="paymentInfoContainer">
 						<div>포인트사용</div>
-						<div class="point"><input type="text" id="usePoint" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+						<div class="point"><input type="text" id="usePoint" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="0">
 							POINT
 							<div>/ 잔여 포인트 : <%=loginUser.getPoint()%></div>
 						</div>
@@ -139,6 +139,7 @@
 		</div>
 		<div class="btnContainer">
 			<button class="paymentBtn" onclick="pay()">결제하기</button>
+			<button onclick="insertOrder('kakao','imp_123124')">확인^^</button>
 		</div>
 	</div>
 </section>
@@ -243,7 +244,7 @@
 //결제테스트 코드
 function kakaopay(){
 	const endPrice=parseInt($(".totalpay").text());
-	
+	const payment="kakao";
 	IMP.init("imp74680205");
 	IMP.request_pay({ //카카오 결제 보내기
 	    pg : 'kakaopay.TC0ONETIME',
@@ -269,20 +270,62 @@ function kakaopay(){
 	          imp_uid: response.imp_uid,
 	          merchant_uid: response.merchant_uid,
 	          pg_provider:response.pg_provider,
-	          buyer_addr:response.buyer_addr
+	          buyer_addr:response.buyer_addr,
+	          amount:response.paid_amount
 	        })
 	    });
 	    
 	    const result = await notified.json();
         if (result.success) {
+            insertOrder(result.pg,result.impUid);
             alert('결제가 성공적으로 완료되었습니다.');
             location.href='<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do';
         } else {
-            alert('결제 검증에 실패했습니다.');
+            alert(result.message);
         }
 	});
 };
 
+function insertOrder(p,i){
+	const orderDetails = [];
+	<% for(int i=0; i<products.size(); i++) { %>
+	orderDetails.push({
+	    "productKey": <%= products.get(i).getProductKey() %>,
+	    "quantity": <%= quantitys.get(i) %>,
+	    "price": <%= products.get(i).getPrice() %>,
+	    "orderColor": "<%= products.get(i).getProductOption().get(0).getColor().getColor() %>",
+	    "orderSize": "<%= products.get(i).getProductOption().get(0).getProductSize().getPSize() %>"
+	});
+	<% } %>
+	
+	const orders={
+		"userId":"<%=loginUser.getUserId()%>",
+		"shippingAddress":$("#sample6_address").val()+$("#sample6_detailAddress").val(),
+		"shippingPrice":parseInt($(".totalpay").text()),
+		"payment":p,
+		"req":$("input[name=receiverRequest]").val(),
+		"impUid":i,
+		"receiverName":$("input[name=receiverName]").val(),
+		"receiverPhone":$("input[name=receiverPhone]").val(),
+		"zipcode":$("#sample6_postcode").val(),
+		"orderDetails":orderDetails,
+		"usedPoint":parseInt($("#usePoint").val())
+	}
+	console.log(orders);
+	$.ajax({
+		url:"<%=request.getContextPath()%>/shoppingmall/insertorder.do",
+		type:"POST",
+		contentType:"application/json;charset=utf-8",
+		data:JSON.stringify(orders),
+		success:(response)=>{
+			console.log("insert됨");
+		},
+		error:(xhr, status, error)=>{
+	        // 요청이 실패한 경우의 동작
+	        console.error("Error: ", error);
+		}
+	});
+}
 
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

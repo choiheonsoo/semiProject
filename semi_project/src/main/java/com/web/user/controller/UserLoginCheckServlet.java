@@ -45,7 +45,11 @@ public class UserLoginCheckServlet extends HttpServlet {
 			session.setAttribute("isLogin", true);
 			request.getRequestDispatcher("/WEB-INF/views/admin/adminpage.jsp").forward(request, response);	
 		} else {
-			if(user!=null) {
+			if(user!=null&& user.getStatus().equals("Y")) {
+				request.setAttribute("msg", "탈퇴한 회원입니다.");
+				request.setAttribute("loc", "/");
+				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+			}else if(user!=null){
 				HttpSession session = request.getSession();
 				session.setAttribute("loginUser", user);
 				session.setAttribute("dogImg", dogImg);
@@ -53,7 +57,7 @@ public class UserLoginCheckServlet extends HttpServlet {
 				request.setAttribute("msg", "어서오세요!");
 				request.setAttribute("loc", "/");
 				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
-			} else {
+			}else {
 				request.setAttribute("msg", "아이디 혹은 비밀번호를 확인해주세요.");
 				request.setAttribute("loc", "/user/login.do");
 				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);

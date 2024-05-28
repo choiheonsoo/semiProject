@@ -1,12 +1,16 @@
 package com.web.shoppingmall.model.service;
 
 import static com.web.common.JDBCTemplate.close;
+import static com.web.common.JDBCTemplate.commit;
+import static com.web.common.JDBCTemplate.rollback;
+
 import static com.web.common.JDBCTemplate.getConnection;
 import static com.web.shoppingmall.model.dao.ShoppingmallDao.getDao;
 
 import java.sql.Connection;
 import java.util.List;
 
+import com.web.shoppingmall.model.dto.Orders;
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.Qna;
@@ -140,6 +144,8 @@ public class ShoppingmallService {
 	public int insertQna(Qna q) {
 		Connection conn=getConnection();
 		int result=getDao().insertQna(conn, q);
+		if(result>0)commit(conn);
+		else rollback(conn);
 		close(conn);
 		return result;
 	}
@@ -152,6 +158,8 @@ public class ShoppingmallService {
 	public int deleteQna(int qnaKey) {
 		Connection conn=getConnection();
 		int result=getDao().deleteQna(conn, qnaKey);
+		if(result>0)commit(conn);
+		else rollback(conn);
 		close(conn);
 		return result;
 	}
@@ -164,6 +172,8 @@ public class ShoppingmallService {
 	public int updateQna(int qnaKey, String content) {
 		Connection conn=getConnection();
 		int result=getDao().updateQna(conn, qnaKey, content);
+		if(result>0)commit(conn);
+		else rollback(conn);
 		close(conn);
 		return result;
 	}
@@ -176,9 +186,39 @@ public class ShoppingmallService {
 	public int deleteReview(int reviewKey) {
 		Connection conn=getConnection();
 		int result=getDao().deleteReview(conn, reviewKey);
+		if(result>0)commit(conn);
+		else rollback(conn);
 		close(conn);
 		return result;
 	}
 	
-	
+	/*
+	 * 	주문테이블, 주문상세테이블 isnert
+	 * 	매개변수 : 주문 객체
+	 * 	반환 : 결과 result
+	 */
+	public int insertOrders(Orders orders) {
+		Connection conn=getConnection();
+		int result=0;
+		int ordersResult=getDao().insertOrders(conn, orders);
+		result+=ordersResult;
+		if(ordersResult>0) {
+			int[] orderDetailResult=getDao().insertOrderDetail(conn, orders.getOrderDetails());
+			for(int i:orderDetailResult) {
+				if(!(i>0)) {
+					rollback(conn);
+					close(conn);
+					return 0;
+				}else {
+					result+=i;
+				}
+			}
+		}else {
+			rollback(conn);
+			close(conn);
+			return 0;
+		}
+		close(conn);
+		return result;
+	}
 }
