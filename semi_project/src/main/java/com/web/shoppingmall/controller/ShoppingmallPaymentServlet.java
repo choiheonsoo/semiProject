@@ -91,6 +91,7 @@ public class ShoppingmallPaymentServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	
 	private String getPortOneToken() throws IOException {
         URL url = new URL("https://api.iamport.kr/users/getToken");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

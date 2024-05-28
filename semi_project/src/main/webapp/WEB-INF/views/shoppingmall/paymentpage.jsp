@@ -277,8 +277,8 @@ function kakaopay(){
 	    
 	    const result = await notified.json();
         if (result.success) {
+            insertOrder(result.pg,result.impUid);
             alert('결제가 성공적으로 완료되었습니다.');
-            insertOrder(result.pg,result.imp_uid);
             location.href='<%=request.getContextPath()%>/shoppingmall/shoppingmalllist.do';
         } else {
             alert(result.message);

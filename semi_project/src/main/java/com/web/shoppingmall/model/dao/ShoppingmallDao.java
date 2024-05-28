@@ -384,14 +384,19 @@ public class ShoppingmallDao {
 			pstmt=conn.prepareStatement(sql.getProperty("insertOrderDetail"));
 			for(OrderDetail od:orderDetail) {
 				pstmt.setInt(1, od.getProductKey());
-				pstmt.setInt(2, od.getPrice());
-				pstmt.setString(3, od.getOrderColor());
-				pstmt.setString(4, od.getOrderSize());
+				pstmt.setInt(2, od.getQuantity());
+				pstmt.setInt(3, od.getPrice());
+				pstmt.setString(4, od.getOrderColor());
+				pstmt.setString(5, od.getOrderSize());
 				pstmt.addBatch();
 			}
 			result=pstmt.executeBatch();
 		}catch(SQLException e) {
 			e.printStackTrace();
+			System.err.println("Batch update failed: " + e.getMessage());
+	        for (Throwable t : e) {
+	            System.err.println("Cause: " + t);
+	        }
 		}finally {
 			close(pstmt);
 		}return result;
