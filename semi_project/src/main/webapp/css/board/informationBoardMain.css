@@ -2,7 +2,7 @@
 
 
 #boardHeader{
-   width:100vw;
+   width:100%;
    margin-top:2%;
    display:flex;
    justify-content: center;
@@ -95,7 +95,7 @@
 #freeboardFooter1{
    margin-top:1%;
    display:flex;
-   width:100vw;
+   width:100%;
    justify-content: center;
 }
 #freeboardSearch{

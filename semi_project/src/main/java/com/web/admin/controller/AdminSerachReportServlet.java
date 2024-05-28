@@ -1,25 +1,28 @@
-package com.web.admin;
+package com.web.admin.controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.web.user.model.service.UserService;
+import static com.web.admin.service.AdminService.getAdminService;
+import com.web.board.model.dto.Report;
 
 /**
- * Servlet implementation class AdminDeleteUserByIdServlet
+ * Servlet implementation class AdminSerachReportServlet
  */
-@WebServlet("/admin/deleteuserbyid.do")
-public class AdminDeleteUserByIdServlet extends HttpServlet {
+@WebServlet("/admin/searchreport.do")
+public class AdminSerachReportServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AdminDeleteUserByIdServlet() {
+    public AdminSerachReportServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,11 +31,7 @@ public class AdminDeleteUserByIdServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		String userId = request.getParameter("userId");
-		int result = UserService.getUserService().deleteUserById(userId);
-		request.setAttribute("result", result);
-		request.getRequestDispatcher("/WEB-INF/views/admin/adminpage.jsp").forward(request, response);
+		List<Report> reports = getAdminService().serachReport();
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package com.web.admin;
+package com.web.admin.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -66,10 +66,10 @@ public class SearchMemberServlet extends HttpServlet {
 				pageBar.append("</li>");
 			} else {
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+1+"><<</p>");	
+				pageBar.append("<p class='page-link' data-page="+1+" data-url="+request.getRequestURI()+"><<</p>");	
 				pageBar.append("</li>");
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+(pageNo-1)+"><</p>");	
+				pageBar.append("<p class='page-link' data-page="+(pageNo-1)+" data-url="+request.getRequestURI()+"><</p>");	
 				pageBar.append("</li>");
 			}
 			
@@ -80,7 +80,7 @@ public class SearchMemberServlet extends HttpServlet {
 					pageBar.append("</li>");
 				} else {
 					pageBar.append("<li class='page-item'>");
-					pageBar.append("<p class='page-link' data-page="+pageNo+">"+pageNo+"</p>");
+					pageBar.append("<p class='page-link' data-page="+pageNo+" data-url="+request.getRequestURI()+">"+pageNo+"</p>");
 					pageBar.append("</li>");
 				}
 				pageNo++;
@@ -95,10 +95,10 @@ public class SearchMemberServlet extends HttpServlet {
 				pageBar.append("</li>");
 			} else {
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+pageNo+">></p>");
+				pageBar.append("<p class='page-link' data-page="+pageNo+" data-url="+request.getRequestURI()+">></p>");
 				pageBar.append("</li>");
 				pageBar.append("<li class='page-item'>");
-				pageBar.append("<p class='page-link' data-page="+totalPage+">>></p>");
+				pageBar.append("<p class='page-link' data-page="+totalPage+" data-url="+request.getRequestURI()+">>></p>");
 				pageBar.append("</li>");
 			} 
 			pageBar.append("</ul>");
