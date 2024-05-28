@@ -16,6 +16,8 @@ import java.util.Properties;
 
 import com.web.dog.model.dto.Dog;
 import com.web.shoppingmall.model.dto.Color;
+import com.web.shoppingmall.model.dto.OrderDetail;
+import com.web.shoppingmall.model.dto.Orders;
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductCategory;
 import com.web.shoppingmall.model.dto.ProductImg;
@@ -350,6 +352,51 @@ public class ShoppingmallDao {
 			close(pstmt);
 		}return result;
 	}
+	
+	public int insertOrders(Connection conn, Orders orders) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		String newSql=sql.getProperty("insertOrders").replace(":STATUS", "배송준비중");
+		try {
+			pstmt=conn.prepareStatement(newSql);
+			pstmt.setString(1,orders.getUserId());
+			pstmt.setString(2, orders.getShippingAddress());
+			pstmt.setInt(3, orders.getShippingPrice());
+			pstmt.setString(4, orders.getPayment());
+			pstmt.setString(5, orders.getReq());
+			pstmt.setString(6, orders.getImpUid());
+			pstmt.setString(7, orders.getReceiverName());
+			pstmt.setString(8, orders.getReceiverPhone());
+			pstmt.setString(9, orders.getZipcode());
+			pstmt.setInt(10, orders.getUsedPoint());
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	public int[] insertOrderDetail(Connection conn, List<OrderDetail> orderDetail) {
+		PreparedStatement pstmt=null;
+		int[] result=new int[orderDetail.size()];
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("insertOrderDetail"));
+			for(OrderDetail od:orderDetail) {
+				pstmt.setInt(1, od.getProductKey());
+				pstmt.setInt(2, od.getPrice());
+				pstmt.setString(3, od.getOrderColor());
+				pstmt.setString(4, od.getOrderSize());
+				pstmt.addBatch();
+			}
+			result=pstmt.executeBatch();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
 	
 	
 	

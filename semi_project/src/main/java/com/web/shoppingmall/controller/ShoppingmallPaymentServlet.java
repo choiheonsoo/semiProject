@@ -61,6 +61,8 @@ public class ShoppingmallPaymentServlet extends HttpServlet {
         String merchantUid = (String)jsonObject.get("merchant_uid");
         String pg_provider = (String)jsonObject.get("pg_provider");
         String buyer_addr = (String)jsonObject.get("buyer_addr");
+        int amount = Integer.parseInt(jsonObject.get("amount").toString());
+        
         System.out.println(impUid+"  /  "+merchantUid+"   /   "+pg_provider+"  /  "+buyer_addr);
         // 추출한 값들을 사용하여 필요한 작업을 수행합니다.
         // 포트원 토큰 발급
@@ -70,14 +72,16 @@ public class ShoppingmallPaymentServlet extends HttpServlet {
             response.getWriter().write("{\"success\": false, \"message\": \"토큰 발급 실패\"}");
             return;
         }
-        boolean isValid = validatePayment(impUid, token);
+        boolean isValid = validatePayment(impUid, token, amount);
         JSONObject result = new JSONObject();
         result.put("success", isValid);
-
+        result.put("impUid", impUid);
+        result.put("pg", pg_provider);
+        
         // 클라이언트에게 응답을 보냅니다.
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"success\": true}");
+        response.getWriter().write(result.toJSONString());
 	}
 
 	/**
@@ -122,11 +126,13 @@ public class ShoppingmallPaymentServlet extends HttpServlet {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
+        }finally {
+	    	conn.disconnect();
+	    }
         return null;
     }
 
-	private boolean validatePayment(String impUid, String token) throws IOException {
+	private boolean validatePayment(String impUid, String token, int expectedAmount) throws IOException {
 	    URL url = new URL("https://api.iamport.kr/payments/" + impUid);
 	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	    conn.setRequestMethod("GET");
@@ -146,12 +152,17 @@ public class ShoppingmallPaymentServlet extends HttpServlet {
 	            Long code = (Long) responseJson.get("code");
 	            if (code != null && code == 0) {
 	                JSONObject responseObject = (JSONObject) responseJson.get("response");
-	                String accessToken = (String) responseObject.get("access_token");
-	                return accessToken != null; // accessToken이 null이 아닐 때 유효하다고 간주
+	                String status = (String) responseObject.get("status");
+	                Long amount = (Long) responseObject.get("amount");
+	                if ("paid".equals(status) && amount != null && amount == expectedAmount) {
+	                    return true;
+	                }
 	            }
 	        } catch (ParseException e) {
 	            e.printStackTrace();
 	        }
+	    }finally {
+	    	conn.disconnect();
 	    }
 	    return false; // 유효하지 않은 경우 false 반환
 	}
