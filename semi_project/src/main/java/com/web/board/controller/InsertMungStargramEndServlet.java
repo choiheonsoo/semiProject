@@ -50,7 +50,6 @@ public class InsertMungStargramEndServlet extends HttpServlet {
 		String id = mr.getParameter("id");
 		List<String> oriname = new ArrayList<>();
 		List<String> rename = new ArrayList<>();
-
 		List<BulletinImg> bi = new ArrayList<>();
 		// 파일 1에 대한 처리
 		String fileSystemName1 = mr.getFilesystemName("upfile1");

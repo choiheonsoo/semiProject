@@ -93,7 +93,7 @@
 				<img src="<%=request.getContextPath() %>/images/member/cart.png" alt="장바구니" width="40" height="40">
 				<p>장바구니</p>
 			</div>
-			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/user/writen.do')">
+			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/mypage/writen.do?id=<%=loginUser.getUserId()%>')">
 				<img src="<%=request.getContextPath() %>/images/member/board.png" alt="내가 쓴 글" width="40" height="40">
 				<p>내가 쓴 글</p>
 			</div>

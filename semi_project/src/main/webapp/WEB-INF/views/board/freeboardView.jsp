@@ -19,7 +19,7 @@
 	%>
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/board/freeboardView.css">
-<h3>자유게시판</h3>
+<h3>게시판 상세보기</h3>
 <div class="freeboard-br"></div>
 <div id="editForm_button_container">
 	<button id="saveButton">저장</button>

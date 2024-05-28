@@ -178,15 +178,21 @@
 			        			}
 			        		}
 			        		out.print(accept+"/"+b.getRecruitmentNumber());
+			        		boolean check = accept>=b.getRecruitmentNumber();
 			        %>
 						</p>
 					<%
 					    boolean isAccepted = apply.stream()
-					                             .anyMatch(e -> e.getBoardNo() == b.getWalkingMateNo() && e.getAccept() == 'Y');
+					                             .anyMatch(e -> e.getBoardNo() == b.getWalkingMateNo() && e.getUserId().equals(loginUser.getUserId()) && e.getAccept() == 'Y');
 					    boolean isPending = apply.stream()
 					                            .anyMatch(e -> e.getBoardNo() == b.getWalkingMateNo() && e.getAccept() != 'Y');
 					
-					    if (isAccepted) {
+					  	if(check){
+					 %>
+					 		<p>마감</p> 		
+					 <%		
+					  	}
+					    else if (isAccepted) {
 					%>
 					        <p>확정</p>
 					<%
