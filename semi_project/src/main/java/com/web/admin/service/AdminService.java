@@ -18,8 +18,21 @@ public class AdminService {
 	
 	public List<Report> serachReport(){
 		Connection con = getConnection();
-		List<Report> reports = null;
-				//getAdminDao().serachReport();
+		List<Report> reports = getAdminDao().serachReport(con);
+		close(con);
+		return reports;
+	}
+	// 나쁜사람 검색기능
+	public List<Report> serachReport(String id){
+		Connection con = getConnection();
+		List<Report> reports = getAdminDao().serachReport(con, id);
+		close(con);
+		return reports;
+	}
+	
+	public List<Report> serachReport(int cPage, int numPerpage){
+		Connection con = getConnection();
+		List<Report> reports = getAdminDao().serachReport(con, cPage, numPerpage);
 		close(con);
 		return reports;
 	}
@@ -35,5 +48,17 @@ public class AdminService {
 		List<Bulletin> bulletins = getAdminDao().searchFreeBulletins(con, type, cPage, numPerpage);
 		close(con);
 		return bulletins;
+	}
+	// 공지 및 이벤트 게시글 등록 메소드
+	public int writeBoard(int type, String title, String description) {
+		Connection con = getConnection();
+		int result = getAdminDao().writeBoard(con, type, title, description);
+		if(result>0) {
+			commit(con);
+		} else {
+			rollback(con);
+		}
+		close(con);
+		return result;
 	}
 }

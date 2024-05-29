@@ -104,7 +104,7 @@ public class SearchMemberServlet extends HttpServlet {
 			} 
 			pageBar.append("</ul>");
 			List<User> searchmember = UserService.getUserService().searchAllUser(cPage, numPerpage, status);
-			System.out.println(request.getRequestURI());
+			
 			request.setAttribute("pageBar", pageBar);
 			request.setAttribute("users", searchmember);
 			request.setAttribute("dogs", searchDogs);

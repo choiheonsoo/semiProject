@@ -13,6 +13,11 @@
 	}
 %>
 <h2>산책하개 <%=category %> 게시판 관리<small style="font-size: 14px; font-style:italic;"><%=category.equals("공지") || category.equals("이벤트")?"게시글 수정 및 삭제는 클릭하여 이동하신 후 프로필을 선택하세요.":"" %></small></h2>
+<%if(category.equals("공지")) {%>
+<button class="insert-board-btn" value="1">공지글 등록</button>
+<%} else if(category.equals("이벤트")){ %>
+<button class="insert-board-btn" value="2">이벤트글 등록</button>
+<%} %>
 <div class="adminpage-container">
 	<table>
 			<tr>
