@@ -35,25 +35,38 @@ public class BoardViewServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int no = Integer.parseInt(request.getParameter("no"));
 		
-		Cookie[] cookies = request.getCookies();
 		
+		//request에 담긴 쿠키를 모두 가져옴
+		Cookie[] cookies = request.getCookies();
+		//readBoard와 readResult를 초기화
 		String readBoard= "";
 		boolean readResult=false;
+		//만약 쿠키가 존재한다면
 		if(cookies!=null) {
+			//쿠키는 여러 값이 있을 수 있기 때문에 반복문
 			for(Cookie c : cookies) {
+				//만약 쿠키의 키에 readBoard가 있는 경우 <-- 이미 조회한 게시글이 있는거임
 				if(c.getName().equals("readBoard")) {
+					//키값인 readBoard의 value를 가져옴 / 만약 여러 게시글을 읽었다면 |게시글번호1||게시글번호2| 이렇게 저장되어있음.
 					readBoard=c.getValue();
+					//만약 || 을 기준으로 |안에있는 게시글 번호가 jsp에서 받아온 게시글 번호를 포함하는지 확인
 					if(readBoard.contains("|"+no+"|")) {
+						//포함한다면 readResult를 true로 변경
 						readResult=true;
 					}
 				}
 			}
 		}
+		//만약 포함을 안한다면
 		if(!readResult) {
+			//쿠키를 readBoard의 키 값으로 readBoard에 ||로 묶은 게시글 번호를 담아줌.
 			Cookie c=new Cookie("readBoard",readBoard+"|"+no+"|");
+			//쿠키 저장 기간은 1일
 			c.setMaxAge(60*60*24);
+			//응답 객체에 저장
 			response.addCookie(c);
 		}
+		//join문을 쓰지않고 게시글과 유저의 강아지를 모두 가져옴
 		Bulletin bulletin = getService().selectBoardNo(no,readResult);
 		List<Dog> dogs = getService().getDog();
 		request.setAttribute("dogs", dogs);

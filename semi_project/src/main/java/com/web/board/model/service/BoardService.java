@@ -59,6 +59,7 @@ public class BoardService {
 	public Bulletin selectBoardNo(int no, boolean readResult) {
 		Connection conn = getConnection();
 		Bulletin bulletin = getDao().selectBoardNo(conn, no);
+		//만약 읽지 않은 게시글이라면 조회수를 증가
 		if(bulletin!=null&&!readResult) {
 			int result=getDao().updateFreeBoardReadCount(conn, no);
 			if(result>0) {

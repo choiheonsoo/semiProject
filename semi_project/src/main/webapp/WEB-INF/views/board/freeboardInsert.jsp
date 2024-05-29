@@ -16,6 +16,7 @@
 				<div class="btn-container">
 					<input type="hidden" name="id" value="<%=loginUser.getUserId()%>">
 					<input type="submit" value="등록">
+					<!-- 버튼으로 준 이유는 취소 눌렀을 때 자유게시판 list 출력창으로 이동하기 위함 -->
 					<input type="button" value="취소">
 				</div>
 			<textarea name="content" rows="" cols="" placeholder="내용을 입력하세요."></textarea>
