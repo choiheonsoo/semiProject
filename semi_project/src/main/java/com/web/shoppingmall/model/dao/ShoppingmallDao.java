@@ -384,7 +384,6 @@ public class ShoppingmallDao {
 		try {
 			pstmt=conn.prepareStatement(sql.getProperty("insertOrderDetail"));
 			for(OrderDetail od:orderDetail) {
-//				pstmt.setInt(1, ordersKey);
 				pstmt.setInt(1, od.getProductKey());
 				pstmt.setInt(2, od.getQuantity());
 				pstmt.setInt(3, od.getPrice());

@@ -293,7 +293,7 @@ public class ShoppingmallService {
 	 */
 	public List<Orders> selectOrdersById(String userId){
 		Connection conn=getConnection();
-		List<Orders> result=getDao().selectOrdersById(userId);
+		List<Orders> result=getDao().selectOrdersById(conn, userId);
 		close(conn);
 		return result;
 	}

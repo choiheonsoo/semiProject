@@ -7,7 +7,8 @@
 				 com.web.shoppingmall.model.dto.Qna, com.web.shoppingmall.model.dto.QnaAnswer" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
-	int wish=(int)request.getAttribute("wish");
+	int wish=0;
+	if(request.getAttribute("wish")!=null) wish=(int)request.getAttribute("wish");
 	Product p=(Product)request.getAttribute("product");
 	String r=(String)request.getAttribute("r");
 	String pageBar=(String)request.getAttribute("pageBar");
@@ -327,6 +328,7 @@
 <script>
 	//찜버튼 기능 ^^
 	$(".heart").click(e=>{
+		<%if(loginUser!=null){%>
 		const heart=$(".heart>img").attr("name");
 		console.log(heart);
 		$.ajax({
@@ -348,11 +350,16 @@
 		}else{
 			$(".heart>img").attr("src","<%=request.getContextPath()%>/images/shoppingmall/redheart.png").attr("name","redheart");
 		}
+		<%}else{%>
+		//로그인 안 한 상태
+		$(".loginalertmodal").removeClass("loginalertmodalhidden");
+		<%}%>
 	});
 	
 	
 	//장바구니 담기^^
 	const insertCart=()=>{
+		<%if(loginUser!=null){%>
 		let color;
 		let size;
 		if ($('select[name="size"]').length > 0) {
@@ -375,6 +382,10 @@
 				}
 			}
 		});
+		<%}else{%>
+		//로그인 안 한 상태
+		$(".loginalertmodal").removeClass("loginalertmodalhidden");
+		<%}%>
 	}
 	
 	
@@ -432,7 +443,7 @@
 			form.appendTo("body").submit();
 		<%}else{%>
 			//로그인 안 한 상태
-			$(".loginalertmodal").remove("loginalertmodalhidden");
+			$(".loginalertmodal").removeClass("loginalertmodalhidden");
 		<%}%>
 	}	
 	
