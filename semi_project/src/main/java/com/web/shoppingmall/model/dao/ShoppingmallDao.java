@@ -538,7 +538,7 @@ public class ShoppingmallDao {
 			pstmt.setString(1, userId);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
-				
+				result=getOrders(rs, result);
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -547,6 +547,48 @@ public class ShoppingmallDao {
 			close(pstmt);
 		}return result;
 	}
+	
+	public Map<String, Product> selectProductById(Connection conn, String userId){
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		Map<String, Product>result= new HashMap<>();
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectProductById"));
+			pstmt.setString(1, userId);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result=getProductById(rs, result);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();		
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	
+	public List<Review> selectReviewById(Connection conn, String userId){
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<Review> result=new ArrayList<>();
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectReviewById"));
+			pstmt.setString(1, userId);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				result.add(getReview(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	
+	
+	
+	
 	
 	
 	/*
@@ -659,6 +701,63 @@ public class ShoppingmallDao {
 										.qnaAnswerContent(rs.getString("QNA_ANSWER_CONTENT"))
 										.qnaAnswerDate(rs.getDate("QNA_ANSWER_DATE"))
 										.build())
+				.build();
+	}
+	
+	private List<Orders> getOrders(ResultSet rs, List<Orders> result) throws SQLException{
+		int key=rs.getInt("ORDERS_KEY");
+		if(result.stream().anyMatch(e->e.getOrdersKey()==key)) {
+			result.stream().filter(e->e.getOrdersKey()==key).forEach(o->{
+				try {
+					o.getOrderDetails().add(getOrderDetail(rs));
+				}catch(SQLException s) {
+					s.printStackTrace();
+				}
+			});
+		}else {
+			Orders o=new Orders().builder()
+					.ordersKey(rs.getInt("ORDERS_KEY"))
+					.shippingStatus(rs.getString("SHIPPING_STATUS"))
+					.shippingPrice(rs.getInt("SHIPPING_PRICE"))
+					.purchaseStatus(rs.getString("PURCHASE_STATUS"))
+					.shippingDate(rs.getDate("SHIPPING_DATE"))
+					.impUid(rs.getString("IMP_UID"))
+					.usedPoint(rs.getInt("USED_POINT"))
+					.orderDetails(new ArrayList<>())
+					.build();
+			o.getOrderDetails().add(getOrderDetail(rs));
+			result.add(o);
+		}return result;
+	}
+	
+	private OrderDetail getOrderDetail(ResultSet rs) throws SQLException{
+		return OrderDetail.builder()
+				.orderColor(rs.getString("ORDER_COLOR"))
+				.orderSize(rs.getString("ORDER_SIZE"))
+				.productKey(rs.getInt("PRODUCT_KEY"))
+				.quantity(rs.getInt("QUANTITY"))
+				.build();
+	}
+	
+	private Map<String, Product> getProductById(ResultSet rs, Map<String, Product> result) throws SQLException{
+		int pk=rs.getInt("PRODUCT_KEY");
+		if(!result.containsKey(pk)) {
+			Product p=new Product().builder()
+					.productKey(rs.getInt("PRODUCT_KEY"))
+					.productName(rs.getString("PRODUCT_NAME"))
+					.productCategory(new ProductCategory().builder().productCategoryName(rs.getString("PRODUCT_CATEGORY_NAME")).build())
+					.productImgs(new HashMap<>())
+					.build();
+			p.getProductImgs().put("thumbnail", new ProductImg().builder().productImg(rs.getString("PRODUCT_IMG")).build());
+			result.put(String.valueOf(rs.getInt("PRODUCT_KEY")), p);
+		}
+		return result;
+	}
+	
+	private Review getReview(ResultSet rs) throws SQLException{
+		return new Review().builder()
+				.reviewKey(rs.getInt("REVIEW_KEY"))
+				.productKey(rs.getInt("PRODUCT_KEY"))
 				.build();
 	}
 }

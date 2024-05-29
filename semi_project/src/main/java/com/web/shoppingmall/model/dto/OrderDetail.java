@@ -22,5 +22,4 @@ public class OrderDetail {
 	private String orderColor;
 	private String orderSize;
 	
-	private String img;
 }

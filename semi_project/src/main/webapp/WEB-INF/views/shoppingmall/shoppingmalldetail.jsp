@@ -945,7 +945,7 @@
 	    });
 	    
 	//옵션 바꿨을때 구매개수 초기화하기
-	$(".option>select").change(e=>{
+	$(document).on("change", ".option>select", (e)=>{
 		$(".purchaseQuantity").text("1");
 		$(".stockalarm").text("");
 		$("#totalPrice").text("<%=p.getPrice()*(100-p.getRateDiscount())/100%>");
