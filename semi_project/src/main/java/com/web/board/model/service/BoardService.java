@@ -16,6 +16,7 @@ import com.web.board.model.dto.CusttomApply;
 import com.web.board.model.dto.MateApply;
 import com.web.board.model.dto.WalkingMate;
 import com.web.dog.model.dto.Dog;
+import com.web.mypage.model.dto.CusttomBoardList;
 public class BoardService {
 	private static BoardService service = new BoardService();
 	public static BoardService getService() {return service;};
@@ -31,9 +32,9 @@ public class BoardService {
 	}
 	
 	//로그인한 회원의 게시글 불러오기
-	public List<Bulletin> selectUserBoardAll(String id, int cPage, int numPerpage){
+	public List<CusttomBoardList> selectUserBoardAll(String id, int cPage, int numPerpage){
 		Connection conn = getConnection();
-		List<Bulletin> bulletins = getDao().selectUserBoardAll(conn, id, cPage, numPerpage);
+		List<CusttomBoardList> bulletins = getDao().selectUserBoardAll(conn, id, cPage, numPerpage);
 		close(conn);
 		return bulletins;
 	}
