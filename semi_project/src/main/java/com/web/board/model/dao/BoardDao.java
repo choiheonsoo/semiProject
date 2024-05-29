@@ -21,7 +21,7 @@ import com.web.board.model.dto.MateApply;
 import com.web.board.model.dto.WalkingMate;
 import com.web.dog.model.dao.DogDao;
 import com.web.dog.model.dto.Dog;
-import com.web.user.model.dto.User;
+import com.web.mypage.model.dto.CusttomBoardList;
 
 public class BoardDao {
 	//싱글톤 적용
@@ -67,15 +67,19 @@ public class BoardDao {
 	}
 	
 	//로그인한 회원이 작성한 게시글 가져오기
-	public List<Bulletin> selectUserBoardAll(Connection conn, String id, int cPage, int numPerpage){
+	public List<CusttomBoardList> selectUserBoardAll(Connection conn, String id, int cPage, int numPerpage){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<Bulletin> bulletins = new ArrayList<>();
+		List<CusttomBoardList> bulletins = new ArrayList<>();
 		try {
 			pstmt = conn.prepareStatement(sql.getProperty("selectUserBoardAll"));
 			pstmt.setString(1, id);
 			pstmt.setInt(2, (cPage-1)*numPerpage+1);
 			pstmt.setInt(3, numPerpage*cPage);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				bulletins.add(getCusttomBoardList(rs));
+			}
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -92,6 +96,11 @@ public class BoardDao {
 		int result = 0;
 		try {
 			pstmt = conn.prepareStatement(sql.getProperty("selectUserBoardCount"));
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -775,6 +784,17 @@ public class BoardDao {
 		return result;
 	}
 	
+	
+	//로그인한 유저의 게시글 조회하기
+	private static CusttomBoardList getCusttomBoardList(ResultSet rs) throws SQLException{
+		return CusttomBoardList.builder()
+								.cateNo(rs.getInt("CATEGORY_NO"))
+								.title(rs.getString("TITLE"))
+								.rDate(rs.getDate("R_DATE"))
+								.hits(rs.getInt("hits"))
+								.bullNo(rs.getInt("BULL_NO"))
+								.build();
+	}
 	
 	//유저 생성
 	private static CusttomApply getCusttomApply (ResultSet rs) throws SQLException{

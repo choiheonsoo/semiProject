@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.web.board.model.dto.Bulletin;
-import com.web.board.model.dto.BulletinImg;
+import com.web.mypage.model.dto.CusttomBoardList;
 
 /**
  * Servlet implementation class UserBoardListServlet
@@ -40,7 +39,7 @@ public class UserBoardListServlet extends HttpServlet {
 		}catch(NumberFormatException e) {
 		}
 		int numPerpage=10;
-		List<Bulletin> bulletins = getService().selectUserBoardAll(id,cPage,numPerpage);
+		List<CusttomBoardList> bulletins = getService().selectUserBoardAll(id,cPage,numPerpage);
 		int totalData = getService().selectUserBoardCount(id);
 		int totalPage = (int)Math.ceil((double)totalData/numPerpage);
 		int pageBarSize = 5;
@@ -73,7 +72,6 @@ public class UserBoardListServlet extends HttpServlet {
 		pageBar+="</div>";
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("bulletins",bulletins);
-		request.getRequestDispatcher("/WEB-INF/views/board/freeboard.jsp").forward(request, response);
 		request.getRequestDispatcher("/WEB-INF/views/mypage/boardlist.jsp").forward(request, response);
 	}
 

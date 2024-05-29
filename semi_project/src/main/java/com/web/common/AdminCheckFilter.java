@@ -1,7 +1,6 @@
 package com.web.common;
 
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,17 +15,17 @@ import javax.servlet.http.HttpSession;
 import com.web.user.model.dto.User;
 
 /**
- * Servlet Filter implementation class LoginCheckFilter
+ * Servlet Filter implementation class AdminCheckFilter
  */
 @WebFilter(servletNames= {
-	"loginCheckFilter"
-},urlPatterns= {"/board/*","/user/*"})
-public class LoginCheckFilter extends HttpFilter implements Filter {
+		"adminCheckFilter"
+	},urlPatterns= {"/admin/*"})
+public class AdminCheckFilter extends HttpFilter implements Filter {
        
     /**
      * @see HttpFilter#HttpFilter()
      */
-    public LoginCheckFilter() {
+    public AdminCheckFilter() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,20 +44,20 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 		HttpServletRequest req=(HttpServletRequest)request;
 		HttpSession session=req.getSession();
 		User loginUser=(User)session.getAttribute("loginUser");
-		String uri = req.getRequestURI();
-		
-		if(loginUser==null) {
-			if(uri.endsWith("/user/login.do")||uri.endsWith("/user/loginuser.do")) {
+		if(loginUser == null) {
+			request.setAttribute("msg","로그인 후 이용할 수 있습니다");
+			request.setAttribute("loc","/");
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp")
+			.forward(request, response);
+		}else {
+			if(loginUser.getUserId().equals("admin")){
 				chain.doFilter(request, response);
 			}else {
-				request.setAttribute("msg","로그인 후 이용할 수 있습니다");
+				request.setAttribute("msg","관리자만 이용할 수 있습니다");
 				request.setAttribute("loc","/");
 				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp")
 				.forward(request, response);
 			}
-		}else {
-			// pass the request along the filter chain
-			chain.doFilter(request, response);
 		}
 	}
 

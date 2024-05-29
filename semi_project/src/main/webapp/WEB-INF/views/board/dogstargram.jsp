@@ -77,18 +77,20 @@
 		   				<%} %>
 		 				<p class='post_like<%= b.getBullNo() %>'><%= b.getLikeC() %></p>
 		 				</div>
-		 				<img  onclick="board_view(event,<%=b.getBullNo()%>);" src="<%=request.getContextPath() %>/images/board/comment.png" alt="댓글">
-		 				<p>
-		 					<%
-		 						int size = 0;
-		 						for(BulletinComment c : bc){
-		 							if(b.getBullNo()==c.getBullNo()){
-		 								size++;
-		 							}
-		 						}
-		 						out.print(size);
-		 					%>
-		 				</p>
+		 				<div>
+			 				<img  onclick="board_view(event,<%=b.getBullNo()%>);" src="<%=request.getContextPath() %>/images/board/comment.png" alt="댓글">
+			 				<p>
+			 					<%
+			 						int size = 0;
+			 						for(BulletinComment c : bc){
+			 							if(b.getBullNo()==c.getBullNo()){
+			 								size++;
+			 							}
+			 						}
+			 						out.print(size);
+			 					%>
+			 				</p>
+		 				</div>
 		 				<img class="post-view"  onclick="board_view(event,<%=b.getBullNo()%>);" src="<%=request.getContextPath() %>/images/board/board.png" alt="클립보드">
 		 			</div>
 		 			<div>
@@ -195,6 +197,8 @@
         var reportContent = $('#report-textarea').val();
         
         if( $('#reported-id').text()!='admin'){
+        	console.log($('#reported-id').text());
+        	console.log($('#report-id').text());
         	if(selectedCategory!=''){
 	        	// 선택된 카테고리와 신고 내용을 서버로 전송
 		        $.ajax({
@@ -345,7 +349,7 @@
 						$('#post_delete').hide();
 						let userId = data.b.userId;
 						let bullNo = data.b.bullNo;
-						let loginUser = '<%=loginUser.getUserId()%>';loginUser
+						let loginUser = '<%=loginUser.getUserId()%>';
 						$('#post_report').on('click',function(){
 							report_container_show(userId,bullNo,loginUser);
 						});
@@ -395,9 +399,9 @@
 							    $("#post_comment").append(button);
 								 let reportbutton = $('<button>').text("신고하기");
 								 reportbutton.addClass('reply_'+value.mainComment);
-								 let userId = data.b.userId;
-								 let bullNo = data.b.bullNo;
-								 let loginUser = '<%=loginUser.getUserId()%>';loginUser
+								 let userId = value.userId;
+								 let bullNo = value.bullNo;
+								 let loginUser = '<%=loginUser.getUserId()%>';
 								 reportbutton.on('click',function(){
 								 	report_container_show(userId,bullNo,loginUser);
 								 });
@@ -445,9 +449,9 @@
 						  	    
 						  	  let reportbutton= $('<button>').text('신고하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
 							  	reportbutton.addClass('reply_'+value.mainComment);
-							  	let userId = data.b.userId;
-								let bullNo = data.b.bullNo;
-								let loginUser = '<%=loginUser.getUserId()%>';loginUser
+							  	let userId = value.userId;
+								let bullNo = value.bullNo;
+								let loginUser = '<%=loginUser.getUserId()%>';
 								reportbutton.on('click',function(){
 									report_container_show(userId,bullNo,loginUser);
 								});
@@ -570,7 +574,7 @@
 							    delbutton.addClass('reply_'+response.commentNo);
 							    let userId = data.b.userId;
 								let bullNo = data.b.bullNo;
-								let loginUser = '<%=loginUser.getUserId()%>';loginUser
+								let loginUser = '<%=loginUser.getUserId()%>';
 								$("#post_comment").append(delbutton);
 							    $("#post_comment").append(button);
 							}

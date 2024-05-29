@@ -13,7 +13,7 @@
 	color:white;
 }
 .table{
-	width:40%;
+	width:50%;
 	height:80vh;
 	display:flex;
 	background-color:white;
@@ -48,4 +48,22 @@
 	background-color:grey;
 	font-weight:600;
 	border-radius:5px;
+}
+
+#freeboardFooter2{
+   margin-top:1%;
+   margin-bottom:2%;
+   display:flex;
+   justify-content: center;
+   color:white;
+   align-items: center;
+}
+#freeboardFooter2 a{
+   text-decoration: none;
+   text-align: center;
+	font-weight: 400;
+	color:gray;
+}
+#freeboardFooter2 p{
+	text-align: center;
 }
