@@ -11,7 +11,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>해군3대장</title>
+<title>산책하개</title>
 <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/logo.png">
 <script src="<%=request.getContextPath()%>/js/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -85,31 +85,36 @@
     <div class="menubar">
 		<div class="menubar-container">
 			<ul>
-				<li>커뮤니티</li>
-				<a href="<%=request.getContextPath()%>/board/freeboard.do"><li>자유게시판</li></a>
-				<a href=""><li>정보게시판</li></a>
-				<a href=""><li>멍스타그램</li></a>
+				<li style="font-size:20px">커뮤니티</li>
+				<a style="font-size:15px" href="<%=request.getContextPath()%>/board/freeboard.do"><li>자유게시판</li></a>
+				<a style="font-size:15px" href="<%=request.getContextPath()%>/board/informationboard.do"><li>정보게시판</li></a>
+				<a style="font-size:15px" href="<%=request.getContextPath()%>/board/dogstargram.do"><li>멍스타그램</li></a>
 			</ul>
 			<ul>
-				<li>쇼핑하개</li>
-				<a href=""><li>신상품</li></a>
-				<a href=""><li>사료</li></a>
-				<a href=""><li>간식</li></a>
-				<a href=""><li>용품</li></a>
+				<li style="font-size:20px">쇼핑하개</li>
+				<a style="font-size:15px" href=""><li>신상품</li></a>
+				<a style="font-size:15px" href=""><li>사료</li></a>
+				<a style="font-size:15px" href=""><li>간식</li></a>
+				<a style="font-size:15px" href=""><li>용품</li></a>
 			</ul>
 			<ul>
-				<li>산책메이트</li>
-				<a href=""><li>모집하개</li></a>
-				<a href=""><li>참석하개</li></a>
+				<li style="font-size:20px">산책메이트</li>
+				<a style="font-size:15px" href=""><li>모집하개</li></a>
+				<a style="font-size:15px" href=""><li>참석하개</li></a>
 			</ul>
 			<ul>
-				<li>핫플레이스</li>
-				<a href=""><li>산책로 추천</li></a>
-				<a href=""><li>병원 추천</li></a>
+				<li style="font-size:20px">핫플레이스</li>
+				<a style="font-size:15px" href=""><li>산책로 추천</li></a>
+				<a style="font-size:15px" href=""><li>병원 추천</li></a>
 			</ul>
 		</div>
 	</div>
  <script>
+ 		//알람 기능 다음에..
+ 		$('#menu3>a:first-child').click(e=>{
+ 			alert('아 누르지마세요');
+ 		});
+ 		
         $('#menu1 span').click(e=>{
             let src=$('#menu1 span img').attr("src");
             if(src=="<%=request.getContextPath() %>/images/menu.png"){

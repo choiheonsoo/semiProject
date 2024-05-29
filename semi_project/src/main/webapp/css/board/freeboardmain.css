@@ -61,8 +61,8 @@
 .board-header{
 	background-color:rgb(255,237,164);
 	height:6.3%;
-	font-size:16px;
-	font-weight:600;
+	font-size:18px;
+	font-weight:900;
 	border-top: 2px solid lightgray;
 	border-bottom:2px solid lightgray;
 }
@@ -122,7 +122,6 @@
    text-decoration: none;
    color:black;
    text-align: center;
-	font-weight: 400;
 }
 #freeboardFooter2 p{
 	text-align: center;
@@ -137,7 +136,6 @@
 	color:white;
 	border:1px solid lightgray;
 	font-size:15px;
-	font-weight:400;
 }
 .page1{
    width:50px;

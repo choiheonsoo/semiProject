@@ -27,9 +27,9 @@
 		</ul>
 		<%for(Bulletin b : bulletins){ 
 			if(b.getCategoryNo()==2){%>
-				<ul class="board-body" style="background-color:black; color:red;">
+				<ul class="board-body" style="background-color:rgb(243, 229, 171,0.3);font-size:16px; font-weight:bold">
 					<%-- <li class="board-num"><%=count++%></li> --%>
-					<li class="board-body-title"><a style="color:red" href="<%=request.getContextPath()%>/board/boardview.do?no=<%=b.getBullNo() %>"><%=b.getTitle() %></a></li>
+					<li class="board-body-title"><a href="<%=request.getContextPath()%>/board/boardview.do?no=<%=b.getBullNo() %>"><%=b.getTitle() %></a></li>
 					<li class="board-writer"><%=b.getUserId() %></li>
 					<li class="board-date"><%=b.getRDate() %></li>
 					<li class="board-read"><%=b.getHits() %></li>

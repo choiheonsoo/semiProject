@@ -78,6 +78,10 @@
 	align-items:center;
 	width:100%;
 	height:10%;
+	background-color:#fffcf2;
+	box-sizing: border-box;
+	padding-left:1%;
+	padding-right:1%;
 }
 .mainview>.post>.postHeader *{
 	margin:0;
@@ -102,7 +106,7 @@
 	flex-direction: column;
 	height:20%;
 	font-size:12px;
-	background-color:lightgray;
+	background-color:#fffcf2;
 }
 .mainview>.post>.postFooter>div:first-child{
 	width:100%;
@@ -123,10 +127,11 @@
 .mainview>.post>.postFooter>div:last-child>p{
 	width:100%;
 	height:100%;
-	padding-left:8px;
 	font-weight:900;
+	padding-left: 5%;
 }
 .mainview>.post>.postFooter *{
+	align-items: center;
 	margin:0;
 }
 .postFooter img:last-child{
@@ -138,17 +143,6 @@
    width:100%;
    justify-content: center;
       height:5%;
-}
-#freeboardSearch{
-   position:relative;
-   left:1.5%;
-   display: flex;
-   justify-content: center;
-   border:1px solid gray;
-   border-radius: 5px;
-}
-#freeboardSearch *{
-   border: 0px;
 }
 #freeboardInsert{
    position: relative;
