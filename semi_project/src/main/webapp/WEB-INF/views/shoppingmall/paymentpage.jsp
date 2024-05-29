@@ -129,9 +129,6 @@
 							<label>
 								<input type="radio" name="payment" value="kakao">카카오페이
 							</label>
-							<label>
-								<input type="radio" name="payment" value="card">
-							</label>
 						</div>
 					</div>
 				</div>
@@ -139,7 +136,6 @@
 		</div>
 		<div class="btnContainer">
 			<button class="paymentBtn" onclick="pay()">결제하기</button>
-			<button onclick="insertOrder('kakao','imp_123124')">확인^^</button>
 		</div>
 	</div>
 </section>

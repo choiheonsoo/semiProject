@@ -7,7 +7,7 @@
 				 com.web.shoppingmall.model.dto.Qna, com.web.shoppingmall.model.dto.QnaAnswer" %>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
-	/* DecimalFormat df=new DecimalFormat("#,###"); */
+	int wish=(int)request.getAttribute("wish");
 	Product p=(Product)request.getAttribute("product");
 	String r=(String)request.getAttribute("r");
 	String pageBar=(String)request.getAttribute("pageBar");
@@ -57,6 +57,13 @@
 					<div class="name">
 						<span><%=p.getProductName() %></span>
 					</div>
+					<div class="heart">
+						<%if(wish>0){ %>
+							<img src="<%=request.getContextPath()%>/images/shoppingmall/redheart.png" name="redheart">
+						<%}else{ %>
+							<img src="<%=request.getContextPath()%>/images/shoppingmall/normalheart.png" name="binheart">
+						<%} %>
+					</div>
 					<div class="price">
 						<span class="discountRate"><%=p.getRateDiscount() %></span>
 						<span class="cost"><%=p.getPrice() %></span>
@@ -73,7 +80,7 @@
 					</div>
 					<div class="purchaseButton">
 						<button onclick="movePaypage()">구매</button> <!-- 구매버튼 누르면 구매 페이지로 가야함 -->
-						<button onclick="">장바구니 담기</button>
+						<button onclick="insertCart()">장바구니 담기</button>
 					</div>
 				</div>
 			</div>
@@ -318,6 +325,58 @@
 		</div>
 	</div>
 <script>
+	//찜버튼 기능 ^^
+	$(".heart").click(e=>{
+		const heart=$(".heart>img").attr("name");
+		console.log(heart);
+		$.ajax({
+			url:"<%=request.getContextPath()%>/shoppingmall/clickHeart.do",
+			type:"POST",
+			data:{"heart":heart, "productKey":<%=p.getProductKey()%>},
+			dataType: 'json',
+			success:(response)=>{
+				console.log(response);
+				if(response){
+					alert("찜 성공!");
+				}else{
+					alert("찜 실패!");
+				}
+			}
+		});
+		if(heart=="redheart"){
+			$(".heart>img").attr("src","<%=request.getContextPath()%>/images/shoppingmall/normalheart.png").attr("name","binheart");
+		}else{
+			$(".heart>img").attr("src","<%=request.getContextPath()%>/images/shoppingmall/redheart.png").attr("name","redheart");
+		}
+	});
+	
+	
+	//장바구니 담기^^
+	const insertCart=()=>{
+		let color;
+		let size;
+		if ($('select[name="size"]').length > 0) {
+			size=$("select[name=size]").val();
+		}
+		if ($('select[name="color"]').length > 0) {
+			color=$("select[name=color]").val();
+		}
+		$.ajax({
+			url:"<%=request.getContextPath()%>/shoppingmall/insertCart.do",
+			type:"POST",
+			data:{"productKey":<%=p.getProductKey()%>,"userId":'<%=loginUser.getUserId()%>',"color":color,"size":size},
+			dataType: 'json',
+			success:(response)=>{
+				console.log(response);
+				if(response){
+					alert("장바구니담기 성공!");
+				}else{
+					alert("장바구니담기 실패!");
+				}
+			}
+		});
+	}
+	
 	
 	//구매버튼 누르기
 	const movePaypage=()=>{

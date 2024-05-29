@@ -16,4 +16,6 @@ public class Cart {
 	private int cart;
 	private int productKey;
 	private String userId;
+	private String productColor;
+	private String productSize;
 }
