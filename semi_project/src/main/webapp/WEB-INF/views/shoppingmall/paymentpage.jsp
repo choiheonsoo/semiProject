@@ -239,7 +239,7 @@
 
 //결제테스트 코드
 function kakaopay(){
-	const endPrice=parseInt($(".totalpay").text());
+	const endPrice=<%=totalPrice%>-parseInt($("#usePoint").val());
 	const payment="kakao";
 	IMP.init("imp74680205");
 	IMP.request_pay({ //카카오 결제 보내기
@@ -297,7 +297,7 @@ function insertOrder(p,i){
 	const orders={
 		"userId":"<%=loginUser.getUserId()%>",
 		"shippingAddress":$("#sample6_address").val()+$("#sample6_detailAddress").val(),
-		"shippingPrice":parseInt($(".totalpay").text()),
+		"shippingPrice":<%=totalPrice%>-parseInt($("#usePoint").val()),
 		"payment":p,
 		"req":$("input[name=receiverRequest]").val(),
 		"impUid":i,

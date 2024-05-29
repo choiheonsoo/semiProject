@@ -258,6 +258,11 @@ public class ShoppingmallService {
 		return result;
 	}
 	
+	/*
+	 * 	위시리스트 insert 메소드
+	 * 	매개변수 : 상품고유키, 유저아이디
+	 * 	반환 : 결과 result;
+	 */
 	public int insertWish(int productKey, String userId) {
 		Connection conn=getConnection();
 		int result=getDao().insertWish(conn, productKey, userId);
@@ -267,6 +272,11 @@ public class ShoppingmallService {
 		return result;
 	}
 	
+	/*
+	 * 	위시리스트 삭제 메소드
+	 * 	매개변수 : 상품고유키, 유저아이디
+	 * 	반환 : 결과 result
+	 */
 	public int deleteWish(int productKey, String userId) {
 		Connection conn=getConnection();
 		int result=getDao().deleteWish(conn, productKey, userId);

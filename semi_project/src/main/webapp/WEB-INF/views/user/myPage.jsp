@@ -97,7 +97,7 @@
 				<img src="<%=request.getContextPath() %>/images/member/board.png" alt="내가 쓴 글" width="40" height="40">
 				<p>내가 쓴 글</p>
 			</div>
-			<div style="cursor: pointer;" >
+			<div style="cursor: pointer;" onclick="location.assign('<%=request.getContextPath()%>/mypage/oderlist.do')">
 				<img src="<%=request.getContextPath() %>/images/member/receipt.png" alt="주문 내역" width="40" height="40">
 				<p>주문 내역</p>
 			</div>

@@ -336,11 +336,11 @@
 			dataType: 'json',
 			success:(response)=>{
 				console.log(response);
-				if(response){
+/* 				if(response){
 					alert("찜 성공!");
 				}else{
 					alert("찜 실패!");
-				}
+				} */
 			}
 		});
 		if(heart=="redheart"){
