@@ -82,6 +82,8 @@
 	   $(".visible-box").hide();
 	   $("#freeboardSearch input").eq(0).attr("value","닉네임");
    });
+   
+   //만약 검색 input창에 글자가 쓰인다면 검색 조건 고르는 박스에 value를 가져와서 조건 처리
    $("#freeboardSearch input[type='text']").keyup(function(e) {
 	   let type = $("#freeboardSearch input[name='type']").val();
 	   let keyword = $(this).val();
