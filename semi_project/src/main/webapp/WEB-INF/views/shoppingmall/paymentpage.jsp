@@ -129,9 +129,6 @@
 							<label>
 								<input type="radio" name="payment" value="kakao">카카오페이
 							</label>
-							<label>
-								<input type="radio" name="payment" value="card">
-							</label>
 						</div>
 					</div>
 				</div>
@@ -139,7 +136,6 @@
 		</div>
 		<div class="btnContainer">
 			<button class="paymentBtn" onclick="pay()">결제하기</button>
-			<button onclick="insertOrder('kakao','imp_123124')">확인^^</button>
 		</div>
 	</div>
 </section>
@@ -243,7 +239,7 @@
 
 //결제테스트 코드
 function kakaopay(){
-	const endPrice=parseInt($(".totalpay").text());
+	const endPrice=<%=totalPrice%>-parseInt($("#usePoint").val());
 	const payment="kakao";
 	IMP.init("imp74680205");
 	IMP.request_pay({ //카카오 결제 보내기
@@ -301,7 +297,7 @@ function insertOrder(p,i){
 	const orders={
 		"userId":"<%=loginUser.getUserId()%>",
 		"shippingAddress":$("#sample6_address").val()+$("#sample6_detailAddress").val(),
-		"shippingPrice":parseInt($(".totalpay").text()),
+		"shippingPrice":<%=totalPrice%>-parseInt($("#usePoint").val()),
 		"payment":p,
 		"req":$("input[name=receiverRequest]").val(),
 		"impUid":i,

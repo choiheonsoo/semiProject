@@ -2,14 +2,14 @@ package com.web.shoppingmall.model.service;
 
 import static com.web.common.JDBCTemplate.close;
 import static com.web.common.JDBCTemplate.commit;
-import static com.web.common.JDBCTemplate.rollback;
-
 import static com.web.common.JDBCTemplate.getConnection;
+import static com.web.common.JDBCTemplate.rollback;
 import static com.web.shoppingmall.model.dao.ShoppingmallDao.getDao;
 
 import java.sql.Connection;
 import java.util.List;
 
+import com.web.shoppingmall.model.dto.Cart;
 import com.web.shoppingmall.model.dto.Orders;
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductOption;
@@ -205,7 +205,7 @@ public class ShoppingmallService {
 		if(ordersResult>0) {
 			int[] orderDetailResult=getDao().insertOrderDetail(conn, orders.getOrderDetails());
 			for(int i:orderDetailResult) {
-				if(!(i>0)) {
+				if(i!=-2) {
 					rollback(conn);
 					close(conn);
 					return 0;
@@ -218,6 +218,70 @@ public class ShoppingmallService {
 			close(conn);
 			return 0;
 		}
+		int pointUpdateResult=getDao().updatePoint(conn,orders);
+		if(pointUpdateResult>0)commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	장바구니 담기 메솓
+	 * 	매개변수 : Cart 객체
+	 * 	반환 : 결과 result
+	 */
+	public int insertCart(Cart c) {
+		Connection conn=getConnection();
+		int exist=0;
+		exist=getDao().isCartExist(conn, c);
+		if(exist>0) {
+			close(conn);
+			return 1;
+		}else {		
+			int result=getDao().insertCart(conn, c);
+			if(result>0)commit(conn);
+			else rollback(conn);
+			close(conn);
+			return result;
+		}
+	}
+	
+	/*
+	 * 	위시리스트 존재 확인 메소드
+	 * 	매개변수 : 유저아이디
+	 * 	반환 : 결과 result
+	 */
+	public int isExistWish(int productKey, String userId) {
+		Connection conn=getConnection();
+		int result=getDao().isExistWish(conn, productKey, userId);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	위시리스트 insert 메소드
+	 * 	매개변수 : 상품고유키, 유저아이디
+	 * 	반환 : 결과 result;
+	 */
+	public int insertWish(int productKey, String userId) {
+		Connection conn=getConnection();
+		int result=getDao().insertWish(conn, productKey, userId);
+		if(result>0)commit(conn);
+		else rollback(conn);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	위시리스트 삭제 메소드
+	 * 	매개변수 : 상품고유키, 유저아이디
+	 * 	반환 : 결과 result
+	 */
+	public int deleteWish(int productKey, String userId) {
+		Connection conn=getConnection();
+		int result=getDao().deleteWish(conn, productKey, userId);
+		if(result>0)commit(conn);
+		else rollback(conn);
 		close(conn);
 		return result;
 	}

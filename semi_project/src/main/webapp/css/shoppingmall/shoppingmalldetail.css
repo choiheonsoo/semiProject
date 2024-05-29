@@ -877,3 +877,19 @@ textarea:focus {
     width: 70px;
     color: white;
 }
+
+/* 찜 이미지~ */
+.heart{
+	width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid darkgrey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor:pointer;
+}
+.heart>img{
+	width:30px;
+	height:30px;
+}

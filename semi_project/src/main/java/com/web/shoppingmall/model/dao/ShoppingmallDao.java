@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.web.dog.model.dto.Dog;
+import com.web.shoppingmall.model.dto.Cart;
 import com.web.shoppingmall.model.dto.Color;
 import com.web.shoppingmall.model.dto.OrderDetail;
 import com.web.shoppingmall.model.dto.Orders;
@@ -383,6 +384,7 @@ public class ShoppingmallDao {
 		try {
 			pstmt=conn.prepareStatement(sql.getProperty("insertOrderDetail"));
 			for(OrderDetail od:orderDetail) {
+//				pstmt.setInt(1, ordersKey);
 				pstmt.setInt(1, od.getProductKey());
 				pstmt.setInt(2, od.getQuantity());
 				pstmt.setInt(3, od.getPrice());
@@ -394,15 +396,133 @@ public class ShoppingmallDao {
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.err.println("Batch update failed: " + e.getMessage());
-	        for (Throwable t : e) {
-	            System.err.println("Cause: " + t);
-	        }
+		    for (Throwable t : e) {
+		        System.err.println("Cause: " + t);
+		    }
 		}finally {
 			close(pstmt);
 		}return result;
 	}
 	
+	public int updatePoint(Connection conn, Orders orders) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("updatePoint"));
+			pstmt.setInt(1, orders.getUsedPoint());
+			pstmt.setString(2, orders.getUserId());
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
 	
+	public int isCartExist(Connection conn, Cart c) {
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String newSql;
+		if(c.getProductColor()!=null&&c.getProductSize()!=null) {
+			//옵션이 모두 있음
+			newSql=sql.getProperty("isExistCartWithAllOption");
+		}else if(c.getProductColor()!=null&&c.getProductSize()==null){
+			//색상옵션만 있음
+			newSql=sql.getProperty("isExistCartWithColorOption");
+		}else if(c.getProductColor()!=null&&c.getProductSize()==null){
+			//사이즈 옵션만 있음
+			newSql=sql.getProperty("isExistCartWithSizeOption");
+		}else {
+			//옵션 없음
+			newSql=sql.getProperty("isExistCartWithNoOption");
+		}
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(newSql);
+			pstmt.setInt(1, c.getProductKey());
+			pstmt.setString(2, c.getUserId());
+			if(c.getProductColor()!=null) {
+				pstmt.setString(3, c.getProductColor());
+			}else if(c.getProductColor()==null&&c.getProductSize()!=null) {
+				pstmt.setString(3, c.getProductSize());
+			}
+			if(c.getProductColor()!=null&&c.getProductSize()!=null) {
+				pstmt.setString(4, c.getProductSize());
+			}
+			rs=pstmt.executeQuery();
+			if(rs.next())result=rs.getInt(1);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	
+	public int insertCart(Connection conn, Cart c) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("insertCart"));
+			pstmt.setInt(1, c.getProductKey());
+			pstmt.setString(2, c.getUserId());
+			pstmt.setString(3, c.getProductColor());
+			pstmt.setString(4, c.getProductSize());
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	public int isExistWish(Connection conn, int productKey, String userId) {
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("isExistWish"));
+			pstmt.setInt(1, productKey);
+			pstmt.setString(2, userId);
+			rs=pstmt.executeQuery();
+			if(rs.next())result=rs.getInt(1);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	
+	public int insertWish(Connection conn, int productKey, String userId) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("insertWish"));
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, productKey);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	public int deleteWish(Connection conn, int productKey, String userId) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("deleteWish"));
+			pstmt.setInt(1, productKey);
+			pstmt.setString(2, userId);
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
 	
 	
 	

@@ -95,7 +95,7 @@ public class ManageBoardServlet extends HttpServlet {
 		pageBar.append("</ul>");
 		
 		List<Bulletin> bulletins = AdminService.getAdminService().searchBulletins(type, cPage, numPerpage); 
-		System.out.println(bulletins);
+		
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("bulletins", bulletins);
 		request.getRequestDispatcher("/WEB-INF/views/admin/manageboard.jsp").forward(request, response);
