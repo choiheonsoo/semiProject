@@ -42,7 +42,7 @@ public class UserDao {
 			pstmt.setString(2, password);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
-				user=getUser(rs, user);
+				user=getUser(rs);
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -171,7 +171,7 @@ public class UserDao {
 			pstmt.setString(1, id);
 			pstmt.setString(2, email);
 			rs = pstmt.executeQuery();
-			if(rs.next()) user=getUser(rs, user);
+			if(rs.next()) user=getUser(rs);
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {

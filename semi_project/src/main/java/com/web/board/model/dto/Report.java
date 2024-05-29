@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Report {
 	private int reportKey;
+	private String reportType;
 	private int reportTypeKey;
 	private int bullNo;
 	private String reportedId;

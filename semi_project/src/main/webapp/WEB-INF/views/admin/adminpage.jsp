@@ -191,7 +191,7 @@ li {
 	display: none;
 }
 
-.resign-btn, .delete-board-btn{
+.resign-btn, .delete-board-btn, .report-btn{
 	padding: 5px 10px;
 	font-size: 12px;
 	color: #fff;
@@ -200,8 +200,85 @@ li {
 	border-radius: 5px;
 	cursor: pointer;
 }
+
+.check-board, .insert-board-btn{
+	padding: 5px 10px;
+	font-size: 12px;
+	color: #fff;
+	background-color: #00c46b;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
 .page-link{
 	cursor: pointer;
+}
+//
+.insert-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+#form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+div.form-group {
+    margin-bottom: 15px;
+}
+
+div.form-group>label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+div.form-group>input[type="text"],
+div.form-group>textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+div.form-group>textarea {
+    resize: vertical;
+}
+
+div.form-group>button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+div.form-group>button:hover {
+    background-color: #555;
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-link>a {
+    color: #333;
+    text-decoration: none;
+}
+
+.back-link>a:hover {
+    text-decoration: underline;
 }
 </style>
 <body>
@@ -244,7 +321,7 @@ li {
                 </ul>
             </li>
         </ul>
-        <button>로그아웃</button>
+        <button onclick="location.assign('<%=request.getContextPath()%>/')">산책하개 이동</button>
     </div>
     <div class="content">
         <img id="adminMainPage" src="<%=request.getContextPath() %>/images/admin/adminpage.jpg" style="width:100%; height:93vh; opacity:0.2;">
@@ -277,15 +354,40 @@ li {
       	printLoading('div.content');
 	})
 	
-	
-	// 신고내역 조회 → 헌수 Dto 수정 끝나면 다시 시작
-	$("reportDetails").click(e=>{
+	// 신고내역 전체 조회
+	$("#reportDetails").click(e=>{
 		$.get("<%=request.getContextPath()%>/admin/searchreport.do")
 		.done(data=>{
 			$("div.content").html(data);
 		});
 		printLoading('div.content');
 	})
+	// 신고 대상자 아이디 검색 기능
+	$(document).on("click", ".search-reported-btn", function(e){
+		$.get("<%=request.getContextPath()%>/admin/searchreportbyid.do?userid="+$('#search-reported-id').val())
+		.done(data=>{
+			$("div.content").html(data);
+		});
+		printLoading('div.content');
+	})
+	// 신고 대상자 탈퇴 처리 기능
+	$(document).on("click", ".report-btn", function(e){    	
+    	const deleteTargetUserId = $(this).val();
+    	$.get("<%=request.getContextPath()%>/admin/deleteuserbyid.do?userId="+deleteTargetUserId+"&status=N")
+    	.done(data=>{
+    		alert('회원 상태 변경에 성공했습니다.');
+    		adminMain();
+    	})
+    	.fail(error=>{
+    		alert('회원 상태 변경에 실패했습니다.');
+    	})
+    })
+    
+    // 신고 게시글 보러가기
+    $(document).on("click",".check-board", function(e){
+    	const bullNo = $(this).val();
+    	window.open("<%=request.getContextPath()%>/board/boardview.do?no="+bullNo);
+    })
 	
 	// 게시판 기능	
 	// 자유 게시판 관리 기능 - 게시글 전체 조회 및 페이징 처리
@@ -340,7 +442,6 @@ li {
     	let status = $(p.target).data("status"); // 회원 상태(탈퇴 or 실사용 중)
     	let pageValue = $(p.target).data("page");
     	let url=$(p.target).data("url");
-    	console.log(status);
     	
     	if(typeof status!='undefined' && typeof type == 'undefined'){
 	        $.get(url+"?cPage="+pageValue+"&status="+status)
@@ -352,10 +453,15 @@ li {
     		.done(data=>{
     			$("div.content").html(data);
     		})
+    	} else {
+    		$.get(url+"?cPage="+pageValue)
+    		.done(data=>{
+    			$("div.content").html(data);
+    		})
     	}
     });
 
-    let currentButton = null;
+	let currentButton = null;
     // 회원 정보 <tr> 클릭 시 회원 강퇴 버튼 등장
     $(document).on("click", ".user-info", function(e) {
     	const status = $("#search-user-status").val();
@@ -427,6 +533,50 @@ li {
     		alert('게시글 삭제에 실패했습니다.')
     	})
     })
+    
+    // 공지사항, 이벤트 게시글 등록버튼 기능
+    $(document).on("click", '.insert-board-btn', function(e){
+    	const type=$(this).val();
+    	$.get("<%=request.getContextPath()%>/board/insertboard.do?type="+type)
+    	.done(data=>{
+    		// 요청 보낸 HTML 문서 띄우기
+    		$('div.content').html(data);
+    		 const type = document.querySelector("input#type").value;
+             const formTitle = document.getElementById("form-title");
+             if (type == "1") {
+                 formTitle.innerText = "공지사항 등록";
+             } else if (type == "2") {
+                 formTitle.innerText = "이벤트 등록";
+             }
+         
+    	})
+    	
+    })
+    // 게시글 등록 창에서 입력받은 값 입력하기
+    $(document).on("click","#write-board-btn", function(e){
+    	const title = $("#title").val();
+    	const description = $("#description").val();
+		const type = $("#type").val();
+		$.ajax({ 
+			url : "<%=request.getContextPath()%>/admin/writeboard.do",
+			type : "post",
+			data : {
+					 "type" : type,
+					 "title" : title,
+					 "description" : description	
+				 },
+			success : e=>{
+					switch(e){
+						case "1": alert("공지사항 등록 성공"); adminMain(); break;
+						case "2": alert("이벤트 등록 성공"); adminMain(); break;
+						default: alert("등록 실패"); adminMain(); break;
+					}
+				},
+			error:(r,e)=>{
+				console.log(r);
+			}
+		})
+	})
     
     	// 로딩 표현 by BootStrap
 	function printLoading(target){
