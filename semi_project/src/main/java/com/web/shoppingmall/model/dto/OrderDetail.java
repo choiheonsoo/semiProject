@@ -21,4 +21,6 @@ public class OrderDetail {
 	private int price;
 	private String orderColor;
 	private String orderSize;
+	
+	private String img;
 }

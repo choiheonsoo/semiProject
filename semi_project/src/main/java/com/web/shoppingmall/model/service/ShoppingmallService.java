@@ -285,4 +285,16 @@ public class ShoppingmallService {
 		close(conn);
 		return result;
 	}
+	
+	/*
+	 * 	마이페이지 주문내역에 출력할 주문객체 가져오기
+	 * 	매개변수 : 유저아이디
+	 * 	반환 : 주문 객체 리스트
+	 */
+	public List<Orders> selectOrdersById(String userId){
+		Connection conn=getConnection();
+		List<Orders> result=getDao().selectOrdersById(userId);
+		close(conn);
+		return result;
+	}
 }

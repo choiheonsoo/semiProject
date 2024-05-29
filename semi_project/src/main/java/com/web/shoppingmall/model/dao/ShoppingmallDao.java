@@ -525,6 +525,30 @@ public class ShoppingmallDao {
 	}
 	
 	
+	/*
+	 * 	마이페이지 주문내역에 필요한 주문 객체 리스트 가져오기
+	 * 	매개변수 : 유저아이디
+	 * 	반환 : 주문 객체 리스트
+	 */
+	public List<Orders> selectOrdersById(Connection conn, String userId){
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		List<Orders> result=new ArrayList<>();
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("selectOrdersById"));
+			pstmt.setString(1, userId);
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}return result;
+	}
+	
 	
 	/*
 	 * 	쇼핑몰 리스트 페이지에 필요한 상품의 정보만 담아서 Product 객체를 반환하는 메소드

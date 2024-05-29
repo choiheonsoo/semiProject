@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-<section class="orderlistSection">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/mypage/orderlist.css">
+<section class="orderlistSection content">
 	<div class="orderlist">
 		<div class="orderContainer">
 			<div class="orderDate">
@@ -14,10 +15,10 @@
 					</div>
 					<div class="productcontent">
 						<div class="pimg">
-							<img src="<%=request.getContextPath()%>/shoppingmall">
+							<img src="<%=request.getContextPath()%>/upload/shoppingmall/product/feed/gungang.jpg">
 						</div>
-						<div class="pcontent">
-							<div class="pname">상품이름ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ</div>
+						<div>
+							<div class="pname">상품이름ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ,<span class="quantity">5</span>개</div>
 							<div class="pprice">900원</div>
 						</div>
 					</div>
