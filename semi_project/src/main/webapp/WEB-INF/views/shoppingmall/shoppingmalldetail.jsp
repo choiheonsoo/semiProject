@@ -186,7 +186,7 @@
 							<%for(Review re:u.getReviews()){ %>
 								<%for(ReviewImg ri:re.getReviewImgs()){ %>
 									<%if(ri.getReviewImg()!=null){ %>
-										<img src="<%=request.getContextPath() %>/upload/shoppingmall/review/<%=ri.getReviewImg() %>" alt="리뷰이미지">
+										<img src="<%=request.getContextPath() %>/upload/shoppingmall/review/<%=ri.getReviewImg() %>" alt="<%=ri.getReviewImg()%>">
 									<%} %>
 								<%} %>
 							<%} %>
@@ -504,10 +504,18 @@
 		}else{
 			//리뷰 삭제일 때
 			const reviewKey=$("#rk").val();
+			let names=[];
+			names.push(reviewKey);
+			const imgNames = $(".reviewImgs img");
+			imgNames.each(function(index, element) {
+			    const alt = $(element).attr('alt');
+			    names.push(alt);
+			});
 			$.ajax({
 				url:"<%=request.getContextPath()%>/shoppingmall/deletereview.do",
 				type:"POST",
-				data:{"reviewKey":reviewKey},
+				contentType: "application/json",
+				data:JSON.stringify(names),
 				success:(response)=>{
 					if(response.result!=0){
 						//삭제 성공
