@@ -853,7 +853,7 @@
 					$("#purchaseQuantity").text(count);
 					$("#totalPrice").text(count*<%=p.getPrice()*(100-p.getRateDiscount())/100%>);
 				}else{
-					$(".stockalarm").text("재고가 "+stock+"개 남았습니다.");
+					$(".stockalarm").text("이 상품의 재고가 "+stock+"개 남아 있어 최대 "+stock+"개까지 주문 가능합니다.");
 				}
     		}
 		});

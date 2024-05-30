@@ -6,8 +6,8 @@
 	List<Product> products=(List<Product>)request.getAttribute("products");
 	List<Integer> quantitys=(List<Integer>)request.getAttribute("quantitys");
 	int totalPrice=0;
-	for(Product p:products){
-		totalPrice+=p.getPrice()*(100-p.getRateDiscount())/100;
+	for(int i=0;i<products.size();i++){
+		totalPrice+=products.get(i).getPrice()*(100-products.get(i).getRateDiscount())/100*quantitys.get(i);
 	}
 %>
 	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
@@ -89,8 +89,8 @@
 							<%=products.get(i).getProductName() %>
 						</div>
 						<div class="productOption">
-							<%=products.get(i).getProductOption().get(0).getColor().getColor().equals('n')?"":products.get(i).getProductOption().get(0).getColor().getColor() %>, 
-							<%=products.get(i).getProductOption().get(0).getProductSize().getPSize().equals('n')?"":products.get(i).getProductOption().get(0).getProductSize().getPSize() %>
+							<%=products.get(i).getProductOption().get(0).getColor().getColor().equals("n")?"":products.get(i).getProductOption().get(0).getColor().getColor() %>
+							<%=products.get(i).getProductOption().get(0).getProductSize().getPSize().equals("n")?"":" "+products.get(i).getProductOption().get(0).getProductSize().getPSize() %>
 						</div>
 						<div class="productQuantity">
 							수량 <%=quantitys.get(i) %>개
