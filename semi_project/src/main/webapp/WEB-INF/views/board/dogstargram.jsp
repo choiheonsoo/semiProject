@@ -382,9 +382,7 @@
 					//<!--ajax로 댓글 조회 하는 ...-->
 					$.each(data.b.comments,function(i,value){
 						if(value.commentLevel==1){
-							//만약 댓글의 레벨이 1이라면 메인 댓글
 					   		var mainComment=value.mainComment;
-							//대댓글 작성 시 메인 댓글 아래 추가하기 위해 class에 mainComment값 넣음
 							let $div = $('<div id="main_comment" class="'+value.mainComment+'">');
 							$div.addClass('reply_'+value.mainComment);
 							$div.addClass('main_comment_'+mainComment);
@@ -400,13 +398,10 @@
 					   		$div.append($('<p>').addClass('main_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
 						   	let button = $('<button>').text('댓글달기');
-						   	//댓글 달기 버튼에 댓글의 고유번호를 담은 클래스 생성
-						   	//sub_comment라는 함수 매개변수에 댓글의 고유번호를 넘겨줌
 						    button.addClass('reply_'+value.mainComment);
 						      button.on('click', function(event) {
 						          sub_comment(event, mainComment);
 						      });
-						    //로그인 한 유저와 댓글 쓴 유저가 같다면 삭제하기 넣기
 						    if(value.userId=='<%=loginUser.getUserId()%>'){
 							    let delbutton = $('<button>').text("삭제하기");
 							    delbutton.addClass('reply_'+value.mainComment);
@@ -416,7 +411,6 @@
 							    $("#post_comment").append(delbutton);
 								 $("#post_comment").append(button);
 						    }else{
-						    	//다른 유저라면 정보보기와 신고하기 넣기
 						    	let button = $('<button>').text('댓글달기');
 						    button.addClass('reply_'+value.mainComment);
 						      button.on('click', function(event) {
@@ -434,9 +428,7 @@
 								 $("#post_comment").append(reportbutton);
 						    }
 					   		
-						    //만약 레벨이 2라면
 						}else if(value.commentLevel==2){
-							//div의 클래스를 자기 고유번호가 담기게 생성
 							let $div = $('<div id="sub_comment">');
 							$div.addClass('reply_'+value.mainComment);
 							$div.addClass('main_comment_'+mainComment);
@@ -457,8 +449,6 @@
 					   		$div.append($('<p>').addClass('sub_comment_id').text(value.userId));
 					   		$div.append($('<p>').addClass('sub_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
-					   		
-					   		//로그인한 유저와 댓글 유저가 같다면 삭제하기
 					   		if(value.userId=='<%=loginUser.getUserId()%>'){
 					   			let delbutton = $('<button>').text('삭제하기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
 						   		delbutton.addClass('reply_'+value.mainComment);
@@ -467,7 +457,6 @@
 						   		});
 						  	    $('#post_comment').append(delbutton);
 					   		}else{
-					  	    	//아니라면 유저 정보보기 신고하기
 					   			let infobutton = $('<button>').text('정보보기').css({'margin-left':"35px","position":"relative","bottom":"5px"});
 					   			infobutton.addClass('reply_'+value.mainComment);
 					   			infobutton.on('click',function(event){
@@ -489,27 +478,20 @@
 						}
 						
 					});
-					//레벨이 1인 댓글들에 있는 댓글 달기 버튼을 누르면 실행하는 함수
-					//대댓글 ajax로
-					//댓글폼이 여러개 생기지 않게 구성
 					const sub_comment = (event, mainComment) => {
 				    var commentForm = $("#post_footer_insert_comment1");
-				    // 댓글 폼이 있는지 확인
 				    if (commentForm.length === 0) {
 				        var msg = `<div id="post_footer_insert_comment1">
 				                        <form id="comment_form">
 				                            <input type="hidden" name="user_id" value="<%=loginUser.getUserId()%>">
 				                            <input type="hidden" name="comment_level" value="2"> 
-				                            //대댓글이기 때문에 level을 2로 설정
 				                            <input type="text" id="post_comment_reply" name="content" placeholder="댓글 달기">
 				                            <input type="submit" style="display:none">
 				                        </form>
 				                    </div>`;
 				        var newElement = $(msg);
-						//버튼을 누르면 실행되는 함수이기에 매개변수로 받은 event로 이벤트가 발생한 지점 다음에 생성
 				        $(event.target).after(newElement);
 				
-				        //대댓글 댓글 폼이 추가되면 이벤트 주기
 				        newElement.find('form').submit(e => {
 				            var replyContent = newElement.find('#post_comment_reply').val();
 				            $.ajax({  
@@ -524,11 +506,13 @@
 				                	type:'mungstargram'   
 				                },
 				                success: function(response) {
-				                    $("#post_footer_insert_comment1").remove(); //댓글이 달렸다면 댓글폼 숨김
+				                	//댓글이 달렸다면 댓글폼 숨김
+				                    $("#post_footer_insert_comment1").remove();
 				                    alert("댓글 등록 성공");
 				                    newElement.find('#post_comment_reply').val('');
 				                    let $div = $('<div id="sub_comment">');
-				                    $div.addClass('reply_'+response.commentNo); //클래스에 댓글의 고유번호 생성
+				                  //클래스에 댓글의 고유번호 생성
+				                    $div.addClass('reply_'+response.commentNo); 
 				                    let $img = $('<img>').attr("src","<%=request.getContextPath()%>/images/user/user.png").addClass('sub_comment_img');
 				                    $.each(data.dog,function(i,value1){
 				                        if('<%=loginUser.getUserId()%>'==value1.userId){
@@ -564,14 +548,16 @@
 					
 					//메인댓글 동록
 					$('#post_footer_insert_comment>form').submit(e=>{
-						e.preventDefault(); //기본 form전송을 막음
+						//기본 form전송을 막음
+						e.preventDefault(); 
 						var replyContent = $('#post_comment_reply').val();
-						$.ajax({  //댓글 등록 ajax
+						//댓글 등록 ajax
+						$.ajax({  
 							type:"POST",
 							url:"<%=request.getContextPath() %>/board/insertboardcomment.do",
 							data:{
 								user_id:'<%=loginUser.getUserId()%>',
-								comment_level:1, //메인 댓글이기에 레벨 1로 설정
+								comment_level:1, 
 								bull_no:data.b.bullNo,
 								sub_comment:'0',
 								content:replyContent,
@@ -601,6 +587,9 @@
 							          sub_comment(event, response.commentNo);
 							      });
 							    let delbutton = $('<button>').text("삭제하기");
+							    delbutton.on('click',function(event){
+							    	del_comment(event, response.commentNo, data.b.bullNo);
+							    });
 							    delbutton.addClass('reply_'+response.commentNo);
 							    let userId = data.b.userId;
 								let bullNo = data.b.bullNo;
