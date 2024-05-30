@@ -8,12 +8,14 @@ import static com.web.shoppingmall.model.dao.ShoppingmallDao.getDao;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import com.web.shoppingmall.model.dto.Cart;
 import com.web.shoppingmall.model.dto.Orders;
 import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.Qna;
+import com.web.shoppingmall.model.dto.Review;
 import com.web.user.model.dto.User;
 /*
  * 	쇼핑몰 관련 서비스 클래스
@@ -284,5 +286,68 @@ public class ShoppingmallService {
 		else rollback(conn);
 		close(conn);
 		return result;
+	}
+	
+	/*
+	 * 	마이페이지 주문내역에 출력할 주문객체 가져오기
+	 * 	매개변수 : 유저아이디
+	 * 	반환 : 주문 객체 리스트
+	 */
+	public List<Orders> selectOrdersById(String userId){
+		Connection conn=getConnection();
+		List<Orders> result=getDao().selectOrdersById(conn, userId);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	마이페이지 주문내역에 필요한 상품들의 정보를 가져오는 기능
+	 * 	매개변수 : 유저아이디
+	 * 	반환 : 상품 객체 맵
+	 */
+	public Map<String, Product> selectProductById(String userId){
+		Connection conn=getConnection();
+		Map<String, Product> result=getDao().selectProductById(conn, userId);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	마이페이지 주문내역에 필요한 리뷰 정보들을 가져오는 기능
+	 * 	매개변수 : 유저아이디
+	 * 	반환 : 리뷰 객체 리스트
+	 */
+	public List<Review> selectReviewById(String userId){
+		Connection conn=getConnection();
+		List<Review> result=getDao().selectReviewById(conn, userId);
+		close(conn);
+		return result;
+	}
+	
+	/*
+	 * 	리뷰 등록 기능
+	 * 	매개변수 : 리뷰객체, 리뷰이미지 이름 리스트
+	 * 	반환 : 결과 result
+	 */
+	public int insertReview(Review r, List<String> fileNames) {
+		Connection conn=getConnection();
+		int result=getDao().insertReview(conn, r);
+		if(result>0) {
+			int[] imgInsertResult=getDao().insertReviewImgs(conn, fileNames);
+			for(int i: imgInsertResult) {
+				if(i!=-2) {
+					rollback(conn);
+					close(conn);
+					return i;
+				}
+			}
+			commit(conn);
+			close(conn);
+			return result;
+		}else {
+			rollback(conn);
+			close(conn);
+			return result;
+		}
 	}
 }

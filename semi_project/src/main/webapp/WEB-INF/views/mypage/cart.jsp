@@ -270,6 +270,11 @@ h1 {
 	
 	const movePurchasePage=()=>{
 		//상품 키, 이름, 옵션, 구매수량, 할인율, 가격을 form태그로 넘기기
+		let sum=0;
+		for(let i=0;i<$(".quantity").length;i++){
+			sum+=parseInt($(".quantity").eq(i).text());
+		}
+		if(sum>0){
 		let color;
 		let size;
 		<%if(list!=null && list.size()>0) {%>
@@ -321,6 +326,9 @@ h1 {
 			<%}%>
 			form.appendTo("body").submit();
 		<%}%>
+		}else{
+			alert("최소 1개이상의 상품을 사야합니다!");
+		}
 	};
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

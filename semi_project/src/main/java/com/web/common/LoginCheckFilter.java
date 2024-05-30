@@ -48,7 +48,11 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 		String uri = req.getRequestURI();
 		
 		if(loginUser==null) {
-			if(uri.endsWith("/user/login.do")||uri.endsWith("/user/loginuser.do")) {
+			if(uri.endsWith("/user/login.do")||uri.endsWith("/user/loginuser.do")||
+				uri.endsWith("/user/enrollbykakao.do")||uri.endsWith("/user/enroll.do")||
+				uri.endsWith("/user/searchId.do")||uri.endsWith("/user/new_user.do")|| 
+				uri.endsWith("/user/finduserid.do")||uri.endsWith("/user/sendemail.do")||
+				uri.endsWith("/user/verifyemail.do")){
 				chain.doFilter(request, response);
 			}else {
 				request.setAttribute("msg","로그인 후 이용할 수 있습니다");

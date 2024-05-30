@@ -2,7 +2,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-
+<%
+	User user = (User)request.getAttribute("user");
+%>
 <style>
 	section.myPage{
 		background-color: rgba(230,230,250,0.65);
@@ -77,7 +79,7 @@
                	<%} else { %>
                		<img src="<%=request.getContextPath() %>/images/user.png" alt="유저" width="30" height="30">
                	<%} %> 
-				&nbsp;<strong> <%=loginUser.getUserId() %>님</strong>
+				&nbsp;<strong> <%=user.getUserId() %>님</strong>
 			</div>
 			<div>
 				<button id="updateUser" onclick="updateInfo();">회원 수정</button>
@@ -105,16 +107,16 @@
 		<div class="userInfo">
 			<div>
 				<img src="<%=request.getContextPath()%>/images/member/dollar.png" alt="산책하개 적립금" width="25" height="25"> 내 적립금
-				<p><%=loginUser.getPoint()%>원</p>
+				<p><%=user.getPoint()%>원</p>
 			</div>
 			<div>
 				<img src="<%=request.getContextPath()%>/images/member/address.png" alt="내 주소" width="25" height="25"> 주소 확인
-				<p><%=loginUser.getAddress()%></p>
+				<p><%=user.getAddress()%></p>
 			</div>
 		</div>
 		<div class="userInfo">
 			<span><img src="<%=request.getContextPath()%>/images/member/mate.png" alt="산책메이트" width="25" height="25">&nbsp; 산책메이트 참여횟수</span> 
-			<span><%=loginUser.getMateCount() %>&nbsp;회</span>
+			<span><%=user.getMateCount() %>&nbsp;회</span>
 		</div>
 		<div id="lastInfo" class="userInfo">
 			<div>

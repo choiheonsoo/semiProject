@@ -31,5 +31,7 @@ public class Orders {
 	private String zipcode;
 	private int usedPoint;
 	
+	//주문 상세 클래스
 	private List<OrderDetail> orderDetails;
+
 }

@@ -75,7 +75,9 @@ h6{
 .btn-container>input[type="file"]{
 	width:auto;
 	margin-left:10px;
+	height:auto;
 }
+
 .btn-container>input:first-child{
 	margin-left:88%;
 	margin-right:0.3%;

@@ -33,7 +33,7 @@ public class InformationServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type") == null ? "title" : request.getParameter("type");
-		String keyword = request.getParameter("keyword") == null ? "" : request.getParameter("keyword");
+		String keyword = request.getParameter("keyword") == null ? "%" : request.getParameter("keyword");
 		System.out.println(type+keyword);
 		int cPage=1;
 		try {
@@ -75,6 +75,7 @@ public class InformationServlet extends HttpServlet {
 		pageBar+="</div>";
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("bulletins",bulletins);
+		System.out.println(bulletins);
 		request.getRequestDispatcher("/WEB-INF/views/board/informationBoard.jsp").forward(request, response);
 	}
 

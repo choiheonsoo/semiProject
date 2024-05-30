@@ -50,14 +50,14 @@ public class PurchaseServlet extends HttpServlet {
 		    int discount = Integer.parseInt(request.getParameter("products[" + i + "].discount"));
 		    int price = Integer.parseInt(request.getParameter("products[" + i + "].price"));
 		    if(quantity!=0) {
-		    Product p=new Product().builder().productKey(productKey).productName(productName).rateDiscount(discount).price(price).build();
-		    ProductOption po=new ProductOption().builder().color(new Color().builder().color(color).build())
-		    		.productSize(new ProductSize().builder().pSize(size).build()).build();
-		    List<ProductOption> pos=new ArrayList<>();
-		    pos.add(po);
-		    p.setProductOption(pos);
-		    products.add(p);
-		    quantitys.add(quantity);
+			    Product p=new Product().builder().productKey(productKey).productName(productName).rateDiscount(discount).price(price).build();
+			    ProductOption po=new ProductOption().builder().color(new Color().builder().color(color).build())
+			    		.productSize(new ProductSize().builder().pSize(size).build()).build();
+			    List<ProductOption> pos=new ArrayList<>();
+			    pos.add(po);
+			    p.setProductOption(pos);
+			    products.add(p);
+			    quantitys.add(quantity);
 		    }
 		}
 		
