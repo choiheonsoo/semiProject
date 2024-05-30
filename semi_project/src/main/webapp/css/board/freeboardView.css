@@ -226,10 +226,11 @@ h3:hover{
        		resize: none;
        	}
        	#editForm_button_container{
-       		position: absolute;
-       		display:none;
-       		right:15%;
-       		top:17%;
+		    position: absolute;
+		    display: none;
+		    left: 15%;
+		    top: 13.5%;
+		    z-index: 3;
        	}
        	#editForm_button_container>button{
        		margin: 5px;

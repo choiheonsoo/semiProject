@@ -42,10 +42,16 @@ const checkForm=function(){
 	let content = $('#content').val();
 	let place = $("input[type=hidden]").eq(1).val();
 	let date = $('input[type=datetime-local]').val();
+	let dateObj = new Date(date);
+    let now = new Date();
 	if(title.trim()=='' ||content.trim()==''||place.trim()=='' || date.trim()==''){
 		alert("제목 - 내용 - 장소를 한 번 더 확인해주세요.");
 		return false;
 	}
+	if (dateObj  < now) {
+        alert("현재 날짜보다 이전 날짜를 선택할 수 없습니다.");
+        return false;
+    }
 }
   const daumPostcode = () => {
     new daum.Postcode({

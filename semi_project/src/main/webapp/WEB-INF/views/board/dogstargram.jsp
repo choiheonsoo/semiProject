@@ -52,7 +52,7 @@
 							<%
 							}else{%>
 								<!-- 아니라면 기본 이미지 넣어줌 -->
-								<img src="<%=request.getContextPath()%>/upload/user/user.png" width="30" height="30">
+								<img src="<%=request.getContextPath()%>/images/user.png" width="30" height="30">
 							<%}%>
 	   					<p><%=b.getUserId()%></p>
 	   				</div>
@@ -348,7 +348,7 @@
 		   			
 					//헤더 정보 넣기
 					$.each(data.dog,function(i,value){
-						$('#post_view_header img').attr("src","<%=request.getContextPath()%>/upload/user/user.png");
+						$('#post_view_header img').attr("src","<%=request.getContextPath()%>/images/user.png");
 						if(data.b.userId==value.userId){
 							$('#post_view_header img').attr("src","<%=request.getContextPath()%>/upload/user/"+value.dogImg);
 						}
