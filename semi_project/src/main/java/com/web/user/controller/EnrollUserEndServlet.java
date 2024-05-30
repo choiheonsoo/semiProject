@@ -64,14 +64,35 @@ public class EnrollUserEndServlet extends HttpServlet {
 			}
 		}catch(ParseException e) { }
 		
+		
 		String[] address = mr.getParameterValues("address");
+		//추가 내용들
+		String detailAddress = mr.getParameter("detailAddress");
+		String extraAddress = mr.getParameter("extraAddress");
+		
+		// 주소 결합 로직
+		StringBuilder addressBuilder = new StringBuilder();
+		if (address != null && address.length > 0) {
+		    addressBuilder.append(address[0]);
+		    if (address.length > 1) {
+		        addressBuilder.append(", ").append(address[1]);
+		    }
+		}
+		if (detailAddress != null && !detailAddress.trim().isEmpty()) {
+		    addressBuilder.append(", ").append(detailAddress);
+		}
+		if (extraAddress != null && !extraAddress.trim().isEmpty()) {
+		    addressBuilder.append(", ").append(extraAddress);
+		}
+		String addressString = addressBuilder.toString();
 		
 		User user = User.builder().userId(mr.getParameter("userId"))
 								  .userName(mr.getParameter("name"))
 								  .phone(mr.getParameter("phone"))
 								  .email(mr.getParameter("email"))
 								  .password(mr.getParameter("password"))
-								  .address(mr.getParameterValues("address")[1]==null?address[0]:address[0]+","+address[1])
+								  //.address(mr.getParameterValues("address")[1]==null?address[0]:address[0]+","+address[1])
+								  .address(addressString) //추가 내용
 								  .mateCount(0)	// default값 설정
 								  .point(0) // default값 설정
 								  .status("N") // default값 설정

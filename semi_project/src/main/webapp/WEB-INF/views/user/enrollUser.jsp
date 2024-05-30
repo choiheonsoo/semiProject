@@ -143,7 +143,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 	 <div class="container">
         <h1>회원가입</h1>
         <p> * 표시는 필수 입력 값 입니다.</p>
-        <form id="signupForm" onsubmit="return checkInfo();" action="<%=request.getContextPath() %>/user/enrollend.do" method="POST" enctype="multipart/form-data">
+        <form id="signupForm"  action="<%=request.getContextPath() %>/user/enrollend.do" method="POST" enctype="multipart/form-data">
         	<div class="enrollTab">
 	        	<div id="personInfo">
 		            <label for="userId">회원 아이디 *</label>
@@ -212,7 +212,8 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 	            </div>
             </div>
             <div class="enrollTab">
-           		<button type="submit">가입하기</button>
+            	<input type="submit" value="가입하기">
+           		<!-- <button type="submit">가입하기</button> -->
             </div>
         </form>
     </div>
@@ -258,6 +259,15 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 				});
 			}
 		 document.getElementById("verifyBtn").onclick = verify;
+		 
+			//추가한 로직
+			 const form = document.getElementById('signupForm');
+	
+			    form.addEventListener('submit', (event) => {
+			        if (!checkInfo()) {
+			            event.preventDefault(); // checkInfo 함수의 리턴 값으로 false일 경우 전송 막음.
+			        }
+			    });
         });
 		
 		const $dogImg = document.querySelector("#dogImg");
@@ -289,7 +299,7 @@ String[] breeds = new String[]{"그레이하운드","닥스훈트","달마시안
 				})
 			}
 		});	
-		
+
 		// submit 전 유효 검사
 		const checkInfo=()=>{
 			const pw = document.getElementById("password").value;

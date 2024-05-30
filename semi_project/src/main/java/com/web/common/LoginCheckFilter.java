@@ -52,7 +52,7 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 				uri.endsWith("/user/enrollbykakao.do")||uri.endsWith("/user/enroll.do")||
 				uri.endsWith("/user/searchId.do")||uri.endsWith("/user/new_user.do")|| 
 				uri.endsWith("/user/finduserid.do")||uri.endsWith("/user/sendemail.do")||
-				uri.endsWith("/user/verifyemail.do")){
+				uri.endsWith("/user/verifyemail.do")||uri.endsWith("/user/enrollend.do")){
 				chain.doFilter(request, response);
 			}else {
 				request.setAttribute("msg","로그인 후 이용할 수 있습니다");
