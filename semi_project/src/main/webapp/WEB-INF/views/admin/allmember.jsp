@@ -6,7 +6,7 @@
 	List<User> users = (List<User>)request.getAttribute("users");
 %>
 <h2>산책하개 회원관리</h2>
-<div class="adminpage-container">
+<div class="adminpage-container user-container">
 	<table>
 		<tr>
 			<th>아이디</th>
@@ -51,7 +51,8 @@
 	</table>
 	<div class="search-container">
 		<input id="search-user-id" type="text" placeholder="회원 아이디">
-		<button class="search-user-btn">검색</button>
+		<!-- <button class="search-user-btn">검색</button> -->
+		<button class="search-user-btn" value='<%=((List<User>)request.getAttribute("users")).get(0).getStatus()%>'>검색</button>
 	</div>
 	<div>
 		<%=request.getAttribute("pageBar") %>

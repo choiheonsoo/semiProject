@@ -514,8 +514,8 @@ li {
 
     // 회원 아이디 검색 기능
     $(document).on("click", ".search-user-btn", function(e){
-    	 const userid = $("#search-user-id").val();
-    	 const status = $("#search-user-status").val();
+    	const userid = $("#search-user-id").val();
+        const status = e.target.value;
          $.get("<%=request.getContextPath()%>/admin/searchuserbyid.do?userId="+userid+"&status="+status)
          .done(data => {
              $("tr.user-info").remove();
