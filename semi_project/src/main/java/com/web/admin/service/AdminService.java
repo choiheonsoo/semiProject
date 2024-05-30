@@ -1,11 +1,16 @@
 package com.web.admin.service;
 
-import static com.web.common.JDBCTemplate.*;
+import static com.web.admin.dao.AdminDao.getAdminDao;
+import static com.web.common.JDBCTemplate.close;
+import static com.web.common.JDBCTemplate.commit;
+import static com.web.common.JDBCTemplate.getConnection;
+import static com.web.common.JDBCTemplate.rollback;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.web.admin.dao.AdminDao.getAdminDao;
+import com.web.admin.product.dto.AddProduct;
 import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.Report;
 
@@ -58,6 +63,41 @@ public class AdminService {
 		} else {
 			rollback(con);
 		}
+		close(con);
+		return result;
+	}
+	// 상품 등록
+	public int addProduct(AddProduct product) {
+		Connection con = getConnection();
+		int result = getAdminDao().addProduct(con, product);
+		if(result>0) {
+			commit(con);
+		} else {
+			rollback(con);
+		}
+		close(con);
+		return result;
+	}
+	// 상품 전체 가져오기
+	public List<AddProduct> searchProduct(int category){
+		Connection con = getConnection();
+		List<AddProduct> products = getAdminDao().searchProduct(con, category);
+		close(con);
+		return products;
+	}
+	
+	public List<AddProduct> searchProduct(int category, int cPage, int numPerpage ){
+		Connection con = getConnection();
+		List<AddProduct> products = getAdminDao().searchProduct(con, category, cPage, numPerpage);
+		close(con);
+		return products;
+	}
+	
+	public int deleteProduct(int productKey) {
+		Connection con = getConnection();
+		int result = getAdminDao().deleteProduct(con, productKey);
+		if(result>0) commit(con);
+		else rollback(con);
 		close(con);
 		return result;
 	}

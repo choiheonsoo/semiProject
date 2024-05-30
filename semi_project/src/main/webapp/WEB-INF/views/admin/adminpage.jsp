@@ -11,11 +11,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <style>
+@font-face {
+    font-family: 'MangoDdobak-B';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoDdobak-B.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+* {
+	font-family:'MangoDdobak-B';
+}
 body {
-	font-family: Arial, sans-serif;
 	margin: 0;
 	padding: 0;
 	display: flex;
@@ -214,71 +221,122 @@ li {
 .page-link{
 	cursor: pointer;
 }
-//
-.insert-container {
-    background-color: #fff;
+ 
+ 
+/*  상품 */
+.product-container {
+    background: #fff;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 900px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#product-entry {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
 }
 
-#form-title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #555;
-}
-
-div.form-group {
+.product-group {
     margin-bottom: 15px;
 }
 
-div.form-group>label {
+.product-group label {
     display: block;
     margin-bottom: 5px;
-    color: #555;
+    font-weight: bold;
 }
 
-div.form-group>input[type="text"],
-div.form-group>textarea {
+.product-group input,
+.product-group select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 8px;
     box-sizing: border-box;
 }
 
-div.form-group>textarea {
-    resize: vertical;
-}
-
-div.form-group>button {
+#product-submit {
     width: 100%;
     padding: 10px;
-    background-color: #333;
-    color: #fff;
+    background: #007bff;
     border: none;
-    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
     cursor: pointer;
+}
+
+#product-submit:hover {
+    background: #0056b3;
+}
+
+.product-left, .product-right {
+    width: 48%;
+}
+#product-div{
+	display: flex;
+	justify-content: space-between;
+}
+
+//
+.product-delete-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-delete-category-select {
+    margin-bottom: 20px;
+}
+
+.product-delete-category-select label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.product-delete-list {
+    list-style: none;
+    padding: 0;
+}
+
+.product-delete-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.product-delete-item:last-child {
+    border-bottom: none;
+}
+
+.product-delete-item span {
     font-size: 16px;
 }
 
-div.form-group>button:hover {
+.product-delete-item button {
     background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-.back-link {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.back-link>a {
-    color: #333;
-    text-decoration: none;
-}
-
-.back-link>a:hover {
-    text-decoration: underline;
+.product-delete-item button:hover {
+    background-color: #333;
 }
 </style>
 <body>
@@ -294,12 +352,10 @@ div.form-group>button:hover {
                 </ul>
             </li>
             <li>
-                <p>상품관리</p>
+                <p>쇼핑몰 관리</p>
                 <ul class="sub-nav">
                     <li><p id="insertProduct">상품 등록</p></li>
-                    <li><p id="updateProduct">상품 수정</p></li>
                     <li><p id="deleteProduct">상품 삭제</p></li>
-                    <li><p id="manageQnA">QnA 관리</p></li>
                 </ul>
             </li>
             <li>
@@ -316,8 +372,8 @@ div.form-group>button:hover {
             <li>
                 <p>주문관리</p>
                 <ul class="sub-nav">
-                    <li><p>배송상태 변경</p></li>
-                    <li><p>환불/취소 관리</p></li>
+                    <li><p onclick="alert('추후 업데이트 예정')">배송상태 변경</p></li>
+                    <li><p onclick="alert('추후 업데이트 예정')">환불/취소 관리</p></li>
                 </ul>
             </li>
         </ul>
@@ -435,31 +491,6 @@ div.form-group>button:hover {
 	$(document).on("click", "#hotPlaceBoard", function(e){
 		alert("추후 업데이트 예정");
 	})
-	
-	// 비동기적 절차에 따른 페이징 처리
-    $(document).on("click",".page-link", function(p) {
-    	let type = $(p.target).data("type"); // 게시글 관리에 관한 타입 설정
-    	let status = $(p.target).data("status"); // 회원 상태(탈퇴 or 실사용 중)
-    	let pageValue = $(p.target).data("page");
-    	let url=$(p.target).data("url");
-    	
-    	if(typeof status!='undefined' && typeof type == 'undefined'){
-	        $.get(url+"?cPage="+pageValue+"&status="+status)
-	        .done(data => {
-	            $("div.content").html(data);
-	        })
-    	} else if(typeof status =='undefined' && typeof type != 'undefined'){
-    		$.get(url+"?cPage="+pageValue+"&type="+type)
-    		.done(data=>{
-    			$("div.content").html(data);
-    		})
-    	} else {
-    		$.get(url+"?cPage="+pageValue)
-    		.done(data=>{
-    			$("div.content").html(data);
-    		})
-    	}
-    });
 
 	let currentButton = null;
     // 회원 정보 <tr> 클릭 시 회원 강퇴 버튼 등장
@@ -532,6 +563,7 @@ div.form-group>button:hover {
     	.fail(error=>{
     		alert('게시글 삭제에 실패했습니다.')
     	})
+    	printLoading('.user-container>table>tbody');
     })
     
     // 공지사항, 이벤트 게시글 등록버튼 기능
@@ -550,6 +582,7 @@ div.form-group>button:hover {
              }
          
     	})
+    	printLoading('.user-container>table>tbody');
     	
     })
     // 게시글 등록 창에서 입력받은 값 입력하기
@@ -576,9 +609,149 @@ div.form-group>button:hover {
 				console.log(r);
 			}
 		})
+		printLoading('.user-container>table>tbody');
 	})
-    
-    	// 로딩 표현 by BootStrap
+	
+	// 상품 등록
+    $(document).on("click", "#insertProduct", function(e){
+    	$.get("<%=request.getContextPath()%>/admin/productdata.do")
+    	.done(data =>{
+    		$("div.content").html(data);
+    	})
+    })
+    // 색상 옵션 있는지 없는지 확인
+	$(document).on("change", "#colorOption", function(e) {
+	    if ($(this).prop("checked")) {
+	        $("#colorGroup").css("display", "block");
+	    } else {
+	        $("#colorGroup").css("display", "none");
+	    }
+	});
+ 	// 사이즈 옵션 있는지 없는지 확인
+	$(document).on("change", "#sizeOption", function(e) {
+	    if ($(this).prop("checked")) {
+	        $("#sizeGroup").css("display", "block");
+	    } else {
+	        $("#sizeGroup").css("display", "none");
+	    }
+	});
+	
+ 	// 상품 정보 입력 후 상품등록 클릭 시 DB에 상품 저장
+ 	$(document).on("click", "#product-submit", function(e){
+ 		const formData = new FormData();
+ 		const product = {
+ 			category: $("#category").val(),
+ 		    productName: $("#productName").val(),
+			price: $("#price").val(),
+			brand: $("#brand").val(),
+			discount: $("#discount").val(),
+			//mainImage: $("#mainImage")[0].files[0].name,
+			//descriptionImages: Array.from($("#descriptionImage")[0].files).map(file => file.name),
+			color: $("#colorOption").prop("checked") ? $("#color").val() : null,
+			size: $("#sizeOption").prop("checked") ? $("#size").val() : null,
+			stock: $("#stock").val(),
+			
+ 		}
+ 		const productJson = JSON.stringify(product);
+ 		formData.append("productJson", productJson);	// JSON 데이터를 문자열로 변환 후 FormData에 추가
+ 		
+ 		// 파일을 FormData에 추가 → form태그를 쓰지 않고 비동기식으로 파일을 업로드하기 위해 FormData 객체를 이용한다.
+ 		 formData.append('mainImage', $("#mainImage")[0].files[0]);
+ 		 formData.append('descriptionImage', $("#descriptionImage")[0].files[0]);
+         
+         $.ajax({ 
+        	 url: '<%=request.getContextPath()%>/admin/addproduct.do',
+        	 type: 'POST',
+        	 data: formData,
+        	 contentType: false,
+        	 processData: false,
+        	 success: function(data) {
+        		 console.log(data)
+        		 if(data){
+        			 alert("상품 등록이 성공했습니다.");
+        			 adminMain();
+        		 } else {
+        			 alert("상품 등록에 실패했습니다");
+        		 }
+        	 }, 
+        	 error: function(e){
+        		 console.error("Error:",e),
+        		 alert("상품 등록 중 에러가 발생했습니다.");
+        	 }
+         });
+ 	});
+ 	
+ 	// 상품 전체 조회 페이지로 이동
+ 	$(document).on("click", "#deleteProduct", function(e){
+    	$("div.content").html("");
+ 		$.get("<%=request.getContextPath()%>/admin/everyproduct.do?")
+    	.done(data =>{
+	    	$("div.content").html(data);
+    	})
+ 	})
+ 	
+ 	$(document).on("change", "#product-delete-category", function(e){
+ 		$.get("<%=request.getContextPath()%>/admin/everyproduct.do?category="+e.target.value)
+ 		.done(data=>{
+ 			const $value = $("#product-delete-category").val()
+ 			$("div.content").html(data);
+ 			const $options = document.getElementById("product-delete-category").options;
+  			for(let i=0; i<$options.length; i++){
+ 				if($options[i].value== $value){
+ 					$options[i].selected=true;
+ 					break;
+ 				}
+ 			}
+ 		})
+ 	})
+ 	
+ 	// 비동기적 절차에 따른 페이징 처리
+    $(document).on("click",".page-link", function(p) {
+    	let type = $(p.target).data("type"); // 게시글 관리에 관한 타입 설정
+    	let status = $(p.target).data("status"); // 회원 상태(탈퇴 or 실사용 중)
+    	let category = $(p.target).data("category"); // 상품 카데고리 저장
+    	let pageValue = $(p.target).data("page");
+    	let url=$(p.target).data("url");
+    	
+    	if(typeof status!='undefined' && typeof type == 'undefined' && typeof category=='undefined'){
+	        $.get(url+"?cPage="+pageValue+"&status="+status)
+	        .done(data => {
+	            $("div.content").html(data);
+	        })
+    	} else if(typeof status =='undefined' && typeof type != 'undefined'  && typeof category=='undefined'){
+    		$.get(url+"?cPage="+pageValue+"&type="+type)
+    		.done(data=>{
+    			$("div.content").html(data);
+    		})
+    	} else if(typeof status =='undefined' && typeof type == 'undefined'  && typeof category!='undefined') {
+    		$.get(url+"?cPage="+pageValue+"&category="+category)
+    		.done(data=>{
+    			$("div.content").html(data);
+    		})
+    	} else {
+    		$.get(url+"?cPage="+pageValue)
+    		.done(data=>{
+    			$("div.content").html(data);
+    		})
+    	}
+    });
+ 	
+ 	// 버튼 클릭 시 등록된 상품 삭제
+ 	$(document).on("click", ".deleteProductBtn", function(e){
+ 		$.get("<%=request.getContextPath()%>/admin/deleteproduct.do?value="+e.target.value)
+ 		.done(data=>{
+ 			console.log(data);
+ 			if(data>0) {
+ 				alert('삭제 성공');
+ 				location.reload();
+ 			}
+ 			else alert('삭제 실패');
+ 		})
+ 	})
+ 	
+ 	
+ 	
+    // 로딩 표현 by BootStrap
 	function printLoading(target){
 		  const $container=$("<div>").attr({"class":"spinner-border text-primary","role":"status"});
 	        $(target).html("");
