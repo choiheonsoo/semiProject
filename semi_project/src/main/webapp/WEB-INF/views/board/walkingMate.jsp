@@ -37,6 +37,7 @@
 		}
 		
 		//리스트 출력
+		//로그인 한 유저의 아이디로 처리
 		const apply_list_button = function(e, userId){
 			$('.apply-list').show();
 			$.ajax({
@@ -151,6 +152,7 @@
 	   		 <%if(!b.getUserId().equals(loginUser.getUserId())){ %>
 				<div class="theader">
 					<div>
+						<!-- 주소 api로 DB에 저장된 상세주소 값에서 ..도 전까지만 출력 //경기, 강원, 등.. -->
 						<p><%=b.getPlace().substring(0,2) %></p>
 						<p><%=b.getUserId() %></p>
 					</div>
@@ -159,6 +161,7 @@
 							<p><%=b.getTitle() %></p>
 							<p><img alt="" src="<%=request.getContextPath()%>/images/board/time.png">
 							<%
+								//시,분,초까지 받아야해서 FORM태그 안에 input[type='timestamp']로 해야함.
 								Timestamp timestamp = b.getPlaceTime();
 								SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분");
 								String formattedDate = dateFormat.format(timestamp);
@@ -274,7 +277,6 @@
 	// 사용자의 위치 좌표
 	let userLat = 0;
 	let userLon = 0;
-	
 	// 사용자의 위치 좌표 가져오기
 	navigator.geolocation.getCurrentPosition(function(position) {
 	    userLat = position.coords.latitude;

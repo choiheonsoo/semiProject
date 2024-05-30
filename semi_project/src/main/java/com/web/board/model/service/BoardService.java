@@ -142,6 +142,7 @@ public class BoardService {
 	public boolean boardLike(int no,String id) {
 		Connection conn = getConnection();
 		boolean result = getDao().selectBoardLike(conn,no,id);
+		//만약에 해당 게시글에 좋아요가 존재한다면 LikeCount를 -1 그리고 Like를 Delete해줌. 아니라면 반대
 		if(result) {
 			getDao().boardLikeCount(conn,no,result);
 			getDao().deleteBoardLike(conn,no,id);

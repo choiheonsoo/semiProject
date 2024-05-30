@@ -19,7 +19,7 @@
 				<div class="btn-container">
 					<input type="hidden" name="id" value="<%=loginUser.getUserId()%>">
 					<input type="submit" value="등록">
-					<input type="button" value="취소">
+					<input onclick="goBack();" type="button" value="취소">
 					<input type="datetime-local" name="placeTime" placeholder="산책 일시">
 					<label for="mateC">산책 인원</label><input type="number" name="mateC" min="1" max="10" value="1">
 					<input onclick="daumPostcode();" type="button" value="장소">
@@ -34,7 +34,9 @@
 	</div>
 </section>
 <script>
-
+function goBack() {
+    window.history.back();
+}
 const checkForm=function(){
 	let title = $('.menu1>input[name=title]').val();
 	let content = $('#content').val();
