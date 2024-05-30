@@ -2,16 +2,16 @@ package com.web.user.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.web.user.model.dto.User;
 
 /**
  * Servlet implementation class EnrollByKakaoServlet
@@ -39,20 +39,22 @@ public class EnrollByKakaoServlet extends HttpServlet {
 			sb.append(line);
 		}		
 		Gson gson = new Gson();
-		//System.out.println(sb);
-		//json형식으로 문자열로 담긴 객체 id, emaill, num을 파싱
-		//Pattern pattern = Pattern.compile("\"([^\"]+)\":\"([^\"]+)\"");
-	    //Matcher matcher = pattern.matcher(sb);
-	    //System.out.println();
-	    //while (matcher.find()) {
-	    //    String key = matcher.group(1);
-	    //    String value = matcher.group(2).replaceAll("\\\\", ""); // 역슬래시 제거
-	    //    System.out.println(key + ": " + value);
-	    //}
+		KakaoUser user = gson.fromJson(sb.toString(),KakaoUser.class);
+		 
+		User login = User.builder()
+						.userId(user.id)
+						.email(user.email)
+						.userName("kakao_"+user.id)
+						.build();
+		HttpSession session = request.getSession();
+		session.setAttribute("loginUser", login);
 		gson.toJson(sb, response.getWriter());
 		
 	}
-
+	private class KakaoUser{
+		private String id;
+		private String email;
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

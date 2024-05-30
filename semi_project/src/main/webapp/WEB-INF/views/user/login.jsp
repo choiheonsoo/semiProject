@@ -271,15 +271,15 @@
                         })
                         .then(response=>response.json())
                         .then(data=>{
-                        	console.log(data);
-                        	<%-- $.post("<%=request.getContextPath()%>/user/loginuser.do", 
-                        			{"username":data.id},
-                        			{"num":data.num}) --%>
+                        	location.assign("<%=request.getContextPath()%>/");
+                        })
+                        <%-- .then(data=>{
                          	$.post("<%=request.getContextPath()%>/user/new_user.do", 
                         			{"kakaoInfo":data})
-                        	.done(
-                        			)
-                        })
+                        	.done(()=>{
+                        			
+                        	})
+                        }) --%>
                         .catch(error =>{
                         	console.error("Error-", error);
                         });
