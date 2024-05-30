@@ -42,16 +42,20 @@
 	<div class="detailContainer">
 		<div>
 			<div class="productImg">
-				<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("thumbnail").getProductImg()%>">
-				<%for (Map.Entry<String, ProductImg> entry : p.getProductImgs().entrySet()) {
-					if(!entry.getKey().equals("description")){
-						imgName=entry.getValue().getProductImg();%>
-						<div class="imgbordercontainer">
-							<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=imgName%>">
-							<i class="iborder"></i>
-						</div>
-					<%} %>
-				<% }%>
+				<%if(p.getProductImgs().containsKey("thumbnail")){ %>
+					<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=p.getProductImgs().get("thumbnail").getProductImg()%>">
+						<%for (Map.Entry<String, ProductImg> entry : p.getProductImgs().entrySet()) {
+							if(!entry.getKey().equals("description")){
+								imgName=entry.getValue().getProductImg();%>
+								<div class="imgbordercontainer">
+									<img class="productImgs" alt="" src="<%=request.getContextPath()%>/upload/shoppingmall/product/<%=p.getProductCategory().getProductCategoryName() %>/<%=imgName%>">
+									<i class="iborder"></i>
+								</div>
+							<%} %>
+						<%} %>
+				<%}else{ %>
+					<img class="mainProductImg" alt="" src="<%=request.getContextPath()%>/images/shoppingmall/defaultimage.png">
+				<%} %>
 			</div>
 			<div class="purchase">
 				<div>
@@ -66,9 +70,13 @@
 						<%} %>
 					</div>
 					<div class="price">
+					<%if(p.getRateDiscount()>0){ %>
 						<span class="discountRate"><%=p.getRateDiscount() %></span>
 						<span class="cost"><%=p.getPrice() %></span>
 						<span class="salePrices"><%=p.getPrice()*(100-p.getRateDiscount())/100 %>원</span>
+					<%}else{ %>
+						<span class="salePrices"><%=p.getPrice() %>원</span>
+					<%} %>
 					</div>
 					<div class="quantity">
 						<button onclick='minus()'>-</button>
@@ -330,11 +338,13 @@
 	$(".heart").click(e=>{
 		<%if(loginUser!=null){%>
 		const heart=$(".heart>img").attr("name");
+		const color=$("select[name=color]").val();
+		const size=$("select[name=size]").val();
 		console.log(heart);
 		$.ajax({
 			url:"<%=request.getContextPath()%>/shoppingmall/clickHeart.do",
 			type:"POST",
-			data:{"heart":heart, "productKey":<%=p.getProductKey()%>},
+			data:{"heart":heart, "productKey":<%=p.getProductKey()%>, "color":color,"size":size},
 			dataType: 'json',
 			success:(response)=>{
 				console.log(response);

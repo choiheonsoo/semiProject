@@ -16,6 +16,7 @@ import com.web.shoppingmall.model.dto.Product;
 import com.web.shoppingmall.model.dto.ProductOption;
 import com.web.shoppingmall.model.dto.Qna;
 import com.web.shoppingmall.model.dto.Review;
+import com.web.shoppingmall.model.dto.Wishlist;
 import com.web.user.model.dto.User;
 /*
  * 	쇼핑몰 관련 서비스 클래스
@@ -262,12 +263,12 @@ public class ShoppingmallService {
 	
 	/*
 	 * 	위시리스트 insert 메소드
-	 * 	매개변수 : 상품고유키, 유저아이디
+	 * 	매개변수 : 찜 객체
 	 * 	반환 : 결과 result;
 	 */
-	public int insertWish(int productKey, String userId) {
+	public int insertWish(Wishlist w) {
 		Connection conn=getConnection();
-		int result=getDao().insertWish(conn, productKey, userId);
+		int result=getDao().insertWish(conn, w);
 		if(result>0)commit(conn);
 		else rollback(conn);
 		close(conn);

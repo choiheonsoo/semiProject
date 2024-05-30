@@ -28,6 +28,7 @@ import com.web.shoppingmall.model.dto.Qna;
 import com.web.shoppingmall.model.dto.QnaAnswer;
 import com.web.shoppingmall.model.dto.Review;
 import com.web.shoppingmall.model.dto.ReviewImg;
+import com.web.shoppingmall.model.dto.Wishlist;
 import com.web.user.model.dto.User;
 
 /*
@@ -493,13 +494,15 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
-	public int insertWish(Connection conn, int productKey, String userId) {
+	public int insertWish(Connection conn, Wishlist w) {
 		PreparedStatement pstmt=null;
 		int result=0;
 		try {
 			pstmt=conn.prepareStatement(sql.getProperty("insertWish"));
-			pstmt.setString(1, userId);
-			pstmt.setInt(2, productKey);
+			pstmt.setString(1, w.getUserId());
+			pstmt.setInt(2, w.getProductKey());
+			pstmt.setString(3, w.getProductColor());
+			pstmt.setString(4, w.getProductSize());
 			result=pstmt.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();

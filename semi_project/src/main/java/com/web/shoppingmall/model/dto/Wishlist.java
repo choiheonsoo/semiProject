@@ -16,4 +16,6 @@ public class Wishlist {
 	private int wishlistKey;
 	private int productKey;
 	private String userId;
+	private String ProductColor;
+	private String ProductSize;	
 }

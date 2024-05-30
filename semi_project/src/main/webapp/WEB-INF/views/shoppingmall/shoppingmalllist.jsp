@@ -61,9 +61,13 @@
 										<a href="<%=request.getContextPath()%>/shoppingmall/shoppingmalldetail.do?productKey=<%=p.getProductKey()%>"><span><%=p.getProductName() %></span></a>
 									</div>
 									<div class="price">
-										<span class="discountRate"><%=p.getRateDiscount() %>%</span>
-										<span class="cost"><%=p.getPrice() %></span>
-										<span class="salePrices"><%=p.getPrice()*(100-p.getRateDiscount())/100 %></span>
+										<%if(p.getRateDiscount()!=0){ %>
+											<span class="discountRate"><%=p.getRateDiscount() %>%</span>
+											<span class="cost"><%=p.getPrice() %></span>
+											<span class="salePrices"><%=p.getPrice()*(100-p.getRateDiscount())/100 %>원</span>
+										<%}else{ %>
+											<span class="salePrices"><%=p.getPrice() %>원</span>
+										<%} %>
 									</div>
 									<div class="starReview">
 										<div class="star"><img src="<%=request.getContextPath()%>/images/shoppingmall/star.png" alt="star"></div>
@@ -85,6 +89,20 @@
 	</div>
 </section>
 <script>
+	//defaultimage 넣기
+	$(document).ready(function() {
+	    const img = $(".imagearea>a>img");
+	    const defaultImg = "<%=request.getContextPath()%>/images/shoppingmall/defaultimage.png";  // 기본 이미지 경로
+	
+	    if (!img.attr("src")) {
+	        img.attr("src", defaultImg);
+	    }
+	    
+	    img.on("error", function() {
+	        $(this).attr("src", defaultImg);
+	    });
+	});
+	
 	// 카테고리 메뉴 스타일, 정렬메뉴 스타일 입히는 함수
 	(()=>{
 	    <%for(int i=0;i<8;i++){ %>
