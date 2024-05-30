@@ -184,11 +184,11 @@ h1 {
                 <div class="product-details">
                     <h2><%=c.getProductName() %></h2>
                     <input type="hidden" value="<%=c.getOptionKey() %>">
-                    <%if((c.getProductSize()==null && c.getProductColor()==null)||(c.getProductSize().equals("null") &&c.getProductColor().equals("null"))) {%>
+                    <%if((c.getProductSize()==null && c.getProductColor()==null)||(c.getProductSize()==null && c.getProductColor()==null)) {%>
                     	<p>옵션 없음</p>
                     <%} else { %>
-                    <p><%=c.getProductColor()!=null && !c.getProductColor().equals("null")? "색상 : "+c.getProductColor():"" %></p>
-                    <p><%=c.getProductSize()!=null && !c.getProductSize().equals("null")? "사이즈 : "+c.getProductSize():"" %></p>
+                    <p><%=c.getProductColor()!=null && c.getProductColor()!=null? "색상 : "+c.getProductColor():"" %></p>
+                    <p><%=c.getProductSize()!=null && c.getProductSize()!=null? "사이즈 : "+c.getProductSize():"" %></p>
                     <%} %>
                     <div class="price">
                     <%if(c.getStock()>0){ %>
