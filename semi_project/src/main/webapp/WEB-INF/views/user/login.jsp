@@ -272,7 +272,10 @@
                         .then(response=>response.json())
                         .then(data=>{
                         	console.log(data);
-                        	$.post("<%=request.getContextPath()%>/user/new_user.do",
+                        	<%-- $.post("<%=request.getContextPath()%>/user/loginuser.do", 
+                        			{"username":data.id},
+                        			{"num":data.num}) --%>
+                         	$.post("<%=request.getContextPath()%>/user/new_user.do", 
                         			{"kakaoInfo":data})
                         	.done(
                         			)

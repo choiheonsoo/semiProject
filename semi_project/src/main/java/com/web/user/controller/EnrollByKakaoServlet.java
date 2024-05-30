@@ -2,6 +2,8 @@ package com.web.user.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,8 +39,17 @@ public class EnrollByKakaoServlet extends HttpServlet {
 			sb.append(line);
 		}		
 		Gson gson = new Gson();
+		//System.out.println(sb);
+		//json형식으로 문자열로 담긴 객체 id, emaill, num을 파싱
+		//Pattern pattern = Pattern.compile("\"([^\"]+)\":\"([^\"]+)\"");
+	    //Matcher matcher = pattern.matcher(sb);
+	    //System.out.println();
+	    //while (matcher.find()) {
+	    //    String key = matcher.group(1);
+	    //    String value = matcher.group(2).replaceAll("\\\\", ""); // 역슬래시 제거
+	    //    System.out.println(key + ": " + value);
+	    //}
 		gson.toJson(sb, response.getWriter());
-		
 		
 	}
 

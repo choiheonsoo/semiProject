@@ -6,7 +6,6 @@
     <title>404 Error</title>
    <style>
     	body{
-	    	background-image:url("https://i.namu.wiki/i/2v1DcCLskboCuex0fKwt482U7F1dJ5LQnw68McjP02WAFQ7f9dek1hWcbY8_RtKtdOzyneHncZ88wktJGqorwQ.webp");
 	    	background-size:50%;
 	    	display: flex;
 	    	flex-direction:column;

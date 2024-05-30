@@ -44,11 +44,14 @@
 	   		<div class="post">
 	   			<div class="postHeader">
 	   				<div>
+	   				<!-- 먼저 anyMatch 먼저 확인// 이렇게하면 filter를 한 번 더 안해도 되게 떄문에 효율적임 -->
 	   					<%if(dogs.stream().anyMatch(e->b.getUserId().equals(e.getUserId()))){
 								String img=dogs.stream().filter(e->b.getUserId().equals(e.getUserId())).map(e->e.getDogImg()).toList().get(0);%>
+								<!-- 있다면 유저의 이미지를 넣어줌 -->
 								<img src="<%=request.getContextPath()%>/upload/user/<%=img %>" width="30" height="30">
 							<%
 							}else{%>
+								<!-- 아니라면 기본 이미지 넣어줌 -->
 								<img src="<%=request.getContextPath()%>/upload/user/user.png" width="30" height="30">
 							<%}%>
 	   					<p><%=b.getUserId()%></p>
@@ -69,6 +72,8 @@
 	   			<div class="postFooter">
 	   				<div>
 	   					<div>
+	   					<!-- 만약 좋아요 테이블에있는 게시글번호와 게시글 테이블의 PK값 게시글 번호가 같고 좋아요 테이블의 회원과 로그인한 유저의 ID가 같다면 빨간 하트를 출력 : 아니면 기본 하트로 출력
+	   						anyMatch는 불리안을 반환하기때문에 불리안 변수에 담아주고 조건문 처리 -->
 	   					<%boolean likeByUser = bk.stream().anyMatch(e->e.getBullNo()==b.getBullNo() && e.getUserId().equals(loginUser!=null?loginUser.getUserId():""));
 						if(likeByUser){%> 					
 		   					<img onclick="post_like(event,<%=b.getBullNo() %>);" src="<%=request.getContextPath() %>/images/board/redheart.png" alt="좋아요">
@@ -81,6 +86,7 @@
 			 				<img  onclick="board_view(event,<%=b.getBullNo()%>);" src="<%=request.getContextPath() %>/images/board/comment.png" alt="댓글">
 			 				<p>
 			 					<%
+			 						//DB접근 안하고 가져왔던 객체들로 for문으로 댓글 수 구하기
 			 						int size = 0;
 			 						for(BulletinComment c : bc){
 			 							if(b.getBullNo()==c.getBullNo()){
@@ -99,6 +105,7 @@
 	   			</div>
 	   		</div>
 	   <%} %>
+	   <!-- 각 게시글마다 모달창에 대한 onclick 함수에 매개변수로 PK값인 BULL_NO를 넣어줌. BULL_NO로 AJAX를 요청해 해당 게시글 정보 출력 -->
 	  <div class="popup" id="popup">
       <img id="close_popup" src="<%=request.getContextPath()%>/images/x.png">
       <div id="post_view_info">
@@ -158,6 +165,7 @@
 	<%=request.getAttribute("pageBar") %>
 </section>
 <script>
+
 	//신고버튼 누를 때 신고 폼 나오게하기
 	const report_container_show= function(reportedId,no,id){
 		$('#report-container').css('display','block');
@@ -171,6 +179,7 @@
 	//신고버튼 모달창 닫기
 	$('.close-modal').click(e=>{
 		$('#report-container').css('display','none');
+		//모찰당을 닫으면 hidden 값들 초기화
 		$('#report-id').text('');
 		$('#report-no').text('');
 		$('#reported-id').text('');
@@ -205,22 +214,20 @@
 		            url: '<%=request.getContextPath()%>/board/boardreport.do',
 		            type: 'POST',
 		            data: {
-		                category: selectedCategory,
-		                content: reportContent,
-		                id: $('#report-id').text(),
-		                reportedId:$('#reported-id').text(),
-		                no: $('#report-no').text()
+		                category: selectedCategory, //신고 카테고리
+		                content: reportContent, //신고 내용
+		                id: $('#report-id').text(), //신고한 회원
+		                reportedId:$('#reported-id').text(), //신고당한 회원
+		                no: $('#report-no').text() //신고한 게시글 번호
 		            },
 		            success: function(response) {
 		                // 성공 시 처리
 		                alert('신고가 성공적으로 전송되었습니다.');
-				        $('#report-container').css('display','none');
-		                // 추가로 원하는 처리 가능
+				        $('#report-container').css('display','none'); //신고 모달창 없애기
 		            },
 		            error: function(xhr, status, error) {
 		                // 실패 시 처리
 		                alert('신고 전송 중 오류 발생:');
-		                // 추가로 원하는 처리 가능
 		            }
 		        });
 	        }else{
@@ -233,7 +240,7 @@
 
 	//모달 창 닫기
 	$('#close_popup').click(e=>{
-	   location.reload();
+	   location.reload(); //댓글 수와 좋아요 확인 하기 어려워서 reload줬음.
        $('.popup').hide();
        currentAjaxRequest = null; // Ajax 요청 변수 초기화
    });
@@ -241,12 +248,14 @@
 	const post_like=function(event,$no){
 		 $.ajax({
 		        type: 'get',
-		        url: '<%=request.getContextPath()%>/board/boardlike.do?no='+$no+'&id=<%=loginUser.getUserId()%>',
-		        contentType: 'application/json',
+		        //DogStargramLikeServlet으로 이동
+		        //get방식으로 queryString으로 해당 게시글의 번호와 로그인한 유저의 아이디를 보냄
+		        url: '<%=request.getContextPath()%>/board/boardlike.do?no='+$no+'&id=<%=loginUser.getUserId()%>', 
+		        contentType: 'application/json', //서버에게 전달되는 값이  json 방식이다라는 것. header에 따로 설정하지 않아도 자동으로 설정됌
 		        success: function(response) {
-		            let boolValue = response.boolValue;
+		            let boolValue = response.boolValue; //좋아요 여부를 불리안으로 받음. false이면 새로 생성하기 때문에 빨간 하트
 		            let intValue = response.intValue;
-		            $(event.target).next().text(intValue);
+		            $(event.target).next().text(intValue); // 좋아요 갯수 출력
 		            if(!boolValue){
 			            $(event.target).attr("src","<%=request.getContextPath()%>/images/board/redheart.png");
 		            }else{
@@ -260,10 +269,12 @@
 	const del_comment = function(event,no,bNo){
 		$.ajax({
 			type:"get",
+			//get방식으로 게시글의 번호와 댓글 번호를 보냄
 			url:"<%=request.getContextPath()%>/board/deletecomment.do?bcNo="+no+"&bNo="+bNo,
 			constentType : "application/json",
 			success:function(data){
 				alert("댓글 삭제 성공하였습니다.");
+				//.reply_+no로 댓글이 생성될 때 class에 no을 더해줘서 구별 가능. 해당 번호의 댓글을 가림
 				$('.reply_'+no).hide();
 			},
 			error:function(){
@@ -273,10 +284,15 @@
 	}
 	
 	
+			//해당 게시글을 ajax로 처리했지만 jsp 불러오는 servlet에서 request.setAttribute로 객체를 다 담아줬기 때문에
+			//List를 출력할 때 모달을 먼저 만들어줘도 됐었음. // 하지만 모달을 미리 만들었던 결과 사진을 불러오는 속도가 느림.
+			
 			//게시글 클릭시 모달창 로직
 			const board_view=function(event,no){
  			$.ajax({
 				type:'get',
+				//get방식으로 게시글 List를 출력할 때 해당 함수의 매개변수에 각 게시글의 번호를 넣어줘서
+				//queryString으로 해당 게시글의 번호를 넘김
 				url:'<%=request.getContextPath()%>/board/dogstargramview.do?no='+no,
 				contentType : 'application/json',
 				success:function(data){
@@ -297,7 +313,9 @@
 					//게시글 수정 버튼 눌렀을 때
 					$("#post_update").click(e=>{
 						alert("개발중");
-						<%-- if(data.b.userId=="<%=loginUser.getUserId()%>"){
+						<%-- 
+						사진의 업데이트 문제로 미룸...
+						if(data.b.userId=="<%=loginUser.getUserId()%>"){
 							location.assign("<%=request.getContextPath()%>/board/updatemungstargram.do?no="+data.b.bullNo);
 						}else{ 
 							alert("작성자만 가능합니다.");
@@ -305,14 +323,17 @@
 					});
 					
 					/* 메인 사진 슬라이드 */
+					//불리안을 담아주는 변수를 생성 처음에는 false로 설정함.
 					var activeExists = false;
+					//게시판의 이미지를 for문 돌려 게시글 이미지에 있는 게시글 번호와 게시글 번호가 일치하다면 부트스트랩 생성
+					//여기서 첫번 째 이미지에 반드시 active를 지정해줘야함. 이를 구분하기위해 불리안을 담아주는 변수를 지정해준 것
 					$.each(data.boardImg, function(i, value) {
 				        if (value.bullNo == data.b.bullNo) {
 				            var $carouselItem = $('<div id="post_view_left" class="carousel-item active"></div>').css({"width":"100%","height":"100%"});
 				            var $image = $('<img class="d-block w-100">').css({"width":"100%","height":"100%"}).attr("src", "<%=request.getContextPath()%>/upload/board/"+value.bullImg);
 				            $carouselItem.append($image);
 				            $('.carousel-inner').append($carouselItem);
-				            // activeExists가 false이고 현재 이미지가 조건을 만족하면 active 클래스 추가
+				            // activeExites가 false이고 게시글의 번호와 게시글 이미지의 게시글번호가 일치하다면 불리안 값을 true로 변경
 				            if (activeExists && value.bullNo == data.b.bullNo) {
 				                activeExists = true;
 				                $carouselItem.removeClass('active');
@@ -341,6 +362,8 @@
 							$('#post_footer_icon>img').eq(0).attr("src","<%=request.getContextPath()%>/images/board/redheart.png");
 						}
 					});
+					//만약 게시글을 쓴 유저의 ID와 로그인한 유저의 ID가 같다면 수정과 삭제 버튼 출력
+					//아니라면 신고와 정보보기를 출력
 					if(data.b.userId=='<%=loginUser.getUserId()%>'){
 						$('#post_report').hide();
 						$('#post_info').hide();
@@ -359,6 +382,7 @@
 					//<!--ajax로 댓글 조회 하는 ...-->
 					$.each(data.b.comments,function(i,value){
 						if(value.commentLevel==1){
+							//만약 댓글의 레벨이 1이라면 메인 댓글
 					   		var mainComment=value.mainComment;
 							//대댓글 작성 시 메인 댓글 아래 추가하기 위해 class에 mainComment값 넣음
 							let $div = $('<div id="main_comment" class="'+value.mainComment+'">');
@@ -376,6 +400,8 @@
 					   		$div.append($('<p>').addClass('main_comment_content').text(value.content));
 					   		$("#post_comment").append($div);
 						   	let button = $('<button>').text('댓글달기');
+						   	//댓글 달기 버튼에 댓글의 고유번호를 담은 클래스 생성
+						   	//sub_comment라는 함수 매개변수에 댓글의 고유번호를 넘겨줌
 						    button.addClass('reply_'+value.mainComment);
 						      button.on('click', function(event) {
 						          sub_comment(event, mainComment);
@@ -408,7 +434,9 @@
 								 $("#post_comment").append(reportbutton);
 						    }
 					   		
+						    //만약 레벨이 2라면
 						}else if(value.commentLevel==2){
+							//div의 클래스를 자기 고유번호가 담기게 생성
 							let $div = $('<div id="sub_comment">');
 							$div.addClass('reply_'+value.mainComment);
 							$div.addClass('main_comment_'+mainComment);
@@ -461,8 +489,9 @@
 						}
 						
 					});
-					
+					//레벨이 1인 댓글들에 있는 댓글 달기 버튼을 누르면 실행하는 함수
 					//대댓글 ajax로
+					//댓글폼이 여러개 생기지 않게 구성
 					const sub_comment = (event, mainComment) => {
 				    var commentForm = $("#post_footer_insert_comment1");
 				    // 댓글 폼이 있는지 확인
@@ -471,12 +500,13 @@
 				                        <form id="comment_form">
 				                            <input type="hidden" name="user_id" value="<%=loginUser.getUserId()%>">
 				                            <input type="hidden" name="comment_level" value="2"> 
+				                            //대댓글이기 때문에 level을 2로 설정
 				                            <input type="text" id="post_comment_reply" name="content" placeholder="댓글 달기">
 				                            <input type="submit" style="display:none">
 				                        </form>
 				                    </div>`;
 				        var newElement = $(msg);
-				
+						//버튼을 누르면 실행되는 함수이기에 매개변수로 받은 event로 이벤트가 발생한 지점 다음에 생성
 				        $(event.target).after(newElement);
 				
 				        //대댓글 댓글 폼이 추가되면 이벤트 주기
@@ -491,14 +521,14 @@
 				                    bull_no: data.b.bullNo,
 				                    sub_comment: mainComment,
 				                    content: replyContent,
-				                	type:'mungstargram'    
+				                	type:'mungstargram'   
 				                },
 				                success: function(response) {
-				                    $("#post_footer_insert_comment1").remove();
+				                    $("#post_footer_insert_comment1").remove(); //댓글이 달렸다면 댓글폼 숨김
 				                    alert("댓글 등록 성공");
 				                    newElement.find('#post_comment_reply').val('');
 				                    let $div = $('<div id="sub_comment">');
-				                    $div.addClass('reply_'+response.commentNo);
+				                    $div.addClass('reply_'+response.commentNo); //클래스에 댓글의 고유번호 생성
 				                    let $img = $('<img>').attr("src","<%=request.getContextPath()%>/images/user/user.png").addClass('sub_comment_img');
 				                    $.each(data.dog,function(i,value1){
 				                        if('<%=loginUser.getUserId()%>'==value1.userId){
@@ -532,16 +562,16 @@
 				}
 
 					
-					//댓글 동록
+					//메인댓글 동록
 					$('#post_footer_insert_comment>form').submit(e=>{
-						e.preventDefault();
+						e.preventDefault(); //기본 form전송을 막음
 						var replyContent = $('#post_comment_reply').val();
 						$.ajax({  //댓글 등록 ajax
 							type:"POST",
 							url:"<%=request.getContextPath() %>/board/insertboardcomment.do",
 							data:{
 								user_id:'<%=loginUser.getUserId()%>',
-								comment_level:1,
+								comment_level:1, //메인 댓글이기에 레벨 1로 설정
 								bull_no:data.b.bullNo,
 								sub_comment:'0',
 								content:replyContent,

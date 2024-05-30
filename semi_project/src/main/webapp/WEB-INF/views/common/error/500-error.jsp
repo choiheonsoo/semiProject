@@ -6,16 +6,17 @@
     <title>500 Error</title>
     <style>
     	body{
-	    	background-image:url("https://i.namu.wiki/i/2v1DcCLskboCuex0fKwt482U7F1dJ5LQnw68McjP02WAFQ7f9dek1hWcbY8_RtKtdOzyneHncZ88wktJGqorwQ.webp");
 	    	background-size:50%;
 	    	display: flex;
+	    	flex-direction:column;
 		    justify-content: center;
 		    align-items: center;
 		    height: 100vh;
 		    margin: 0;
     	}
     	#countdown {
-   			 background-color: white; /* 박스 배경색 지정 */
+   			 background-color: black; /* 박스 배경색 지정 */
+   			 color:white;
   			 padding: 20px;
    			 border-radius: 10px; /* 박스 모서리 둥글게 만듦 */
  	 	}
