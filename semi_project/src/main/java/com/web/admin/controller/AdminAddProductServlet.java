@@ -98,8 +98,6 @@ public class AdminAddProductServlet extends HttpServlet {
         
         // ajax 요청에 대한 응답 보내주기
         response.getWriter().write(String.valueOf(flag));
-        
-        	
 	}
 
 	/**

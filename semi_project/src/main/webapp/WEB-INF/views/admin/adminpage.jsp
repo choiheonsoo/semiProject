@@ -285,6 +285,59 @@ li {
 	display: flex;
 	justify-content: space-between;
 }
+
+//
+.product-delete-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-delete-category-select {
+    margin-bottom: 20px;
+}
+
+.product-delete-category-select label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.product-delete-list {
+    list-style: none;
+    padding: 0;
+}
+
+.product-delete-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.product-delete-item:last-child {
+    border-bottom: none;
+}
+
+.product-delete-item span {
+    font-size: 16px;
+}
+
+.product-delete-item button {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.product-delete-item button:hover {
+    background-color: #333;
+}
 </style>
 <body>
     <div class="sidebar">
@@ -302,7 +355,7 @@ li {
                 <p>쇼핑몰 관리</p>
                 <ul class="sub-nav">
                     <li><p id="insertProduct">상품 등록</p></li>
-                    <li><p id="manageQnA">QnA 관리</p></li>
+                    <li><p id="deleteProduct">상품 삭제</p></li>
                 </ul>
             </li>
             <li>
@@ -438,31 +491,6 @@ li {
 	$(document).on("click", "#hotPlaceBoard", function(e){
 		alert("추후 업데이트 예정");
 	})
-	
-	// 비동기적 절차에 따른 페이징 처리
-    $(document).on("click",".page-link", function(p) {
-    	let type = $(p.target).data("type"); // 게시글 관리에 관한 타입 설정
-    	let status = $(p.target).data("status"); // 회원 상태(탈퇴 or 실사용 중)
-    	let pageValue = $(p.target).data("page");
-    	let url=$(p.target).data("url");
-    	
-    	if(typeof status!='undefined' && typeof type == 'undefined'){
-	        $.get(url+"?cPage="+pageValue+"&status="+status)
-	        .done(data => {
-	            $("div.content").html(data);
-	        })
-    	} else if(typeof status =='undefined' && typeof type != 'undefined'){
-    		$.get(url+"?cPage="+pageValue+"&type="+type)
-    		.done(data=>{
-    			$("div.content").html(data);
-    		})
-    	} else {
-    		$.get(url+"?cPage="+pageValue)
-    		.done(data=>{
-    			$("div.content").html(data);
-    		})
-    	}
-    });
 
 	let currentButton = null;
     // 회원 정보 <tr> 클릭 시 회원 강퇴 버튼 등장
@@ -629,7 +657,7 @@ li {
  		
  		// 파일을 FormData에 추가 → form태그를 쓰지 않고 비동기식으로 파일을 업로드하기 위해 FormData 객체를 이용한다.
  		 formData.append('mainImage', $("#mainImage")[0].files[0]);
- 		 formData.append('descriptionImage', $("#descriptionImage").files[0]);
+ 		 formData.append('descriptionImage', $("#descriptionImage")[0].files[0]);
          
          $.ajax({ 
         	 url: '<%=request.getContextPath()%>/admin/addproduct.do',
@@ -638,9 +666,10 @@ li {
         	 contentType: false,
         	 processData: false,
         	 success: function(data) {
-        		 console.log(data);
-        		 if(data.sucess){
+        		 console.log(data)
+        		 if(data){
         			 alert("상품 등록이 성공했습니다.");
+        			 adminMain();
         		 } else {
         			 alert("상품 등록에 실패했습니다");
         		 }
@@ -652,7 +681,76 @@ li {
          });
  	});
  	
-	
+ 	// 상품 전체 조회 페이지로 이동
+ 	$(document).on("click", "#deleteProduct", function(e){
+    	$("div.content").html("");
+ 		$.get("<%=request.getContextPath()%>/admin/everyproduct.do?")
+    	.done(data =>{
+	    	$("div.content").html(data);
+    	})
+ 	})
+ 	
+ 	$(document).on("change", "#product-delete-category", function(e){
+ 		$.get("<%=request.getContextPath()%>/admin/everyproduct.do?category="+e.target.value)
+ 		.done(data=>{
+ 			const $value = $("#product-delete-category").val()
+ 			$("div.content").html(data);
+ 			const $options = document.getElementById("product-delete-category").options;
+  			for(let i=0; i<$options.length; i++){
+ 				if($options[i].value== $value){
+ 					$options[i].selected=true;
+ 					break;
+ 				}
+ 			}
+ 		})
+ 	})
+ 	
+ 	// 비동기적 절차에 따른 페이징 처리
+    $(document).on("click",".page-link", function(p) {
+    	let type = $(p.target).data("type"); // 게시글 관리에 관한 타입 설정
+    	let status = $(p.target).data("status"); // 회원 상태(탈퇴 or 실사용 중)
+    	let category = $(p.target).data("category"); // 상품 카데고리 저장
+    	let pageValue = $(p.target).data("page");
+    	let url=$(p.target).data("url");
+    	
+    	if(typeof status!='undefined' && typeof type == 'undefined' && typeof category=='undefined'){
+	        $.get(url+"?cPage="+pageValue+"&status="+status)
+	        .done(data => {
+	            $("div.content").html(data);
+	        })
+    	} else if(typeof status =='undefined' && typeof type != 'undefined'  && typeof category=='undefined'){
+    		$.get(url+"?cPage="+pageValue+"&type="+type)
+    		.done(data=>{
+    			$("div.content").html(data);
+    		})
+    	} else if(typeof status =='undefined' && typeof type == 'undefined'  && typeof category!='undefined') {
+    		$.get(url+"?cPage="+pageValue+"&category="+category)
+    		.done(data=>{
+    			$("div.content").html(data);
+    		})
+    	} else {
+    		$.get(url+"?cPage="+pageValue)
+    		.done(data=>{
+    			$("div.content").html(data);
+    		})
+    	}
+    });
+ 	
+ 	// 버튼 클릭 시 등록된 상품 삭제
+ 	$(document).on("click", ".deleteProductBtn", function(e){
+ 		$.get("<%=request.getContextPath()%>/admin/deleteproduct.do?value="+e.target.value)
+ 		.done(data=>{
+ 			console.log(data);
+ 			if(data>0) {
+ 				alert('삭제 성공');
+ 				location.reload();
+ 			}
+ 			else alert('삭제 실패');
+ 		})
+ 	})
+ 	
+ 	
+ 	
     // 로딩 표현 by BootStrap
 	function printLoading(target){
 		  const $container=$("<div>").attr({"class":"spinner-border text-primary","role":"status"});

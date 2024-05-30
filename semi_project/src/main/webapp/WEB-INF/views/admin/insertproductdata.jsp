@@ -42,7 +42,7 @@
 	                </div>
 	                <div class="product-group">
 	                    <label for="descriptionImage">설명사진:</label>
-	                    <input type="file" id="descriptionImage" name="descriptionImage" accept="image/*" multiple required>
+	                    <input type="file" id="descriptionImage" name="descriptionImage" accept="image/*" required>
 	                </div>
 	                <div class="product-group">
 	                    <label>

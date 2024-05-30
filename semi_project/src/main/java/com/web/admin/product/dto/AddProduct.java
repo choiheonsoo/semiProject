@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddProduct {
+	private int productKey;
 	private int category;
 	private String productName;
 	private int price;

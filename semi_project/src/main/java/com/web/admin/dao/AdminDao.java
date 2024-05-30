@@ -146,18 +146,20 @@ public class AdminDao {
 	public int addProduct(Connection con, AddProduct product) {
 		PreparedStatement pstmt = null;
 		int result = 0;
+		
 		try {
-			pstmt = con.prepareStatement(sql.getProperty("addProduct"));
+			pstmt = con.prepareStatement(sql.getProperty("insertProduct"));
 			pstmt.setInt(1, product.getCategory());
 			pstmt.setString(2, product.getProductName());
 			pstmt.setInt(3, product.getPrice());
 			pstmt.setString(4, product.getBrand());
 			pstmt.setInt(5, product.getDiscount());
 			result = pstmt.executeUpdate();
+			System.out.println(result);
 			int mainResult = insertProductMainImg(con, product.getMainImage(), result);
 			int descResult = insertProductDescImg(con, product.getDescriptionImages(), mainResult);
 			int optionResult = insertProductOption(con, product, descResult);
-			if(!(result <=0 || mainResult <=0 || descResult <=0 || optionResult <= 0)) {
+			if(!(result >0 || mainResult >0 || descResult >0 || optionResult > 0)) {
 				return 0;
 			}
 		}catch(SQLException e) {
@@ -193,13 +195,71 @@ public class AdminDao {
 		int optionResult = 0;
 		if(result > 0) {
 			pstmt = con.prepareStatement(sql.getProperty("insertProductOption"));
-			pstmt.setInt(1,Integer.parseInt(product.getColor()));
-			pstmt.setInt(2, Integer.parseInt(product.getSize()));
-			pstmt.setInt(3, product.getStock());
-			optionResult = pstmt.executeUpdate();
+			pstmt.setString(1,product.getColor()==null?null:String.valueOf(product.getColor()));
+			pstmt.setString(2, product.getSize()==null?null:String.valueOf(product.getSize()));
+			// pstmt.setInt(3, product.getStock());
+			 optionResult = pstmt.executeUpdate();	
 		}
 		return optionResult;
 	}
+	
+	public List<AddProduct> searchProduct(Connection con, int category){
+		List<AddProduct> products = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt= con.prepareStatement(sql.getProperty("searchProduct"));
+			pstmt.setInt(1, category);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				products.add(getProduct(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return products;
+	}
+	
+	public List<AddProduct> searchProduct(Connection con, int category, int cPage, int numPerpage){
+		List<AddProduct> products = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt= con.prepareStatement(sql.getProperty("searchProductPaging"));
+			pstmt.setInt(1, category);
+			pstmt.setInt(2, (cPage-1)*numPerpage+1);
+			pstmt.setInt(3, cPage*numPerpage);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				products.add(getProduct(rs));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return products;
+	}
+	
+	public int deleteProduct(Connection con, int key) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("deleteProduct"));
+			pstmt.setInt(1, key);
+			result = pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		} return result;
+	}
+	
 	
 	private Bulletin getBulletin(ResultSet rs) throws SQLException{
 		return Bulletin.builder().bullNo(rs.getInt("BULL_NO"))
@@ -224,5 +284,14 @@ public class AdminDao {
 							   .build();
 	}
 	
+	private AddProduct getProduct(ResultSet rs) throws SQLException {
+		return AddProduct.builder().category(rs.getInt("PRODUCT_CATEGORY_KEY"))
+								   .productKey(rs.getInt("PRODUCT_KEY"))
+								   .productName(rs.getString("PRODUCT_NAME"))
+								   .price(rs.getInt("PRICE"))
+								   .brand(rs.getString("BRAND"))
+								   .discount(rs.getInt("RATE_DISCOUNT"))
+								   .build();
+	}
 	
 }
