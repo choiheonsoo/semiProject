@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.web.admin.product.dto.AddProduct;
 import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.Report;
 
@@ -142,6 +143,64 @@ public class AdminDao {
 		} return result;
 	}
 	
+	public int addProduct(Connection con, AddProduct product) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = con.prepareStatement(sql.getProperty("addProduct"));
+			pstmt.setInt(1, product.getCategory());
+			pstmt.setString(2, product.getProductName());
+			pstmt.setInt(3, product.getPrice());
+			pstmt.setString(4, product.getBrand());
+			pstmt.setInt(5, product.getDiscount());
+			result = pstmt.executeUpdate();
+			int mainResult = insertProductMainImg(con, product.getMainImage(), result);
+			int descResult = insertProductDescImg(con, product.getDescriptionImages(), mainResult);
+			int optionResult = insertProductOption(con, product, descResult);
+			if(!(result <=0 || mainResult <=0 || descResult <=0 || optionResult <= 0)) {
+				return 0;
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		} finally{
+			close(pstmt);
+		} return result;
+	}
+	//String descriptionImage = product.getDescriptionImages();
+	
+	public int insertProductMainImg(Connection con, String img, int result) throws SQLException{
+		PreparedStatement pstmt = null;
+		int mainResult = 0;
+		if(result > 0) {
+			pstmt = con.prepareStatement(sql.getProperty("insertProductMainImg"));
+			pstmt.setString(1, img);
+			mainResult = pstmt.executeUpdate();
+		}
+		return mainResult;
+	}
+	public int insertProductDescImg(Connection con, String img, int result) throws SQLException{
+		PreparedStatement pstmt = null;
+		int descResult = 0;
+		if(result > 0) {
+			pstmt = con.prepareStatement(sql.getProperty("insertProductDescImg"));
+			pstmt.setString(1, img);
+			descResult = pstmt.executeUpdate();
+		}
+		return descResult;
+	}
+	public int insertProductOption(Connection con, AddProduct product, int result) throws SQLException {
+		PreparedStatement pstmt = null;
+		int optionResult = 0;
+		if(result > 0) {
+			pstmt = con.prepareStatement(sql.getProperty("insertProductOption"));
+			pstmt.setInt(1,Integer.parseInt(product.getColor()));
+			pstmt.setInt(2, Integer.parseInt(product.getSize()));
+			pstmt.setInt(3, product.getStock());
+			optionResult = pstmt.executeUpdate();
+		}
+		return optionResult;
+	}
+	
 	private Bulletin getBulletin(ResultSet rs) throws SQLException{
 		return Bulletin.builder().bullNo(rs.getInt("BULL_NO"))
 								 .categoryNo(rs.getInt("CATEGORY_NO"))
@@ -164,4 +223,6 @@ public class AdminDao {
 							   .reportContent(rs.getString("REPORT_CONTENT"))
 							   .build();
 	}
+	
+	
 }

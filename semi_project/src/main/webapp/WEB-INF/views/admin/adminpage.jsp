@@ -11,11 +11,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <style>
+@font-face {
+    font-family: 'MangoDdobak-B';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoDdobak-B.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+* {
+	font-family:'MangoDdobak-B';
+}
 body {
-	font-family: Arial, sans-serif;
 	margin: 0;
 	padding: 0;
 	display: flex;
@@ -214,71 +221,69 @@ li {
 .page-link{
 	cursor: pointer;
 }
-//
-.insert-container {
-    background-color: #fff;
+ 
+ 
+/*  상품 */
+.product-container {
+    background: #fff;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 900px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#product-entry {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
 }
 
-#form-title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #555;
-}
-
-div.form-group {
+.product-group {
     margin-bottom: 15px;
 }
 
-div.form-group>label {
+.product-group label {
     display: block;
     margin-bottom: 5px;
-    color: #555;
+    font-weight: bold;
 }
 
-div.form-group>input[type="text"],
-div.form-group>textarea {
+.product-group input,
+.product-group select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 8px;
     box-sizing: border-box;
 }
 
-div.form-group>textarea {
-    resize: vertical;
-}
-
-div.form-group>button {
+#product-submit {
     width: 100%;
     padding: 10px;
-    background-color: #333;
-    color: #fff;
+    background: #007bff;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    color: white;
     font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-div.form-group>button:hover {
-    background-color: #555;
+#product-submit:hover {
+    background: #0056b3;
 }
 
-.back-link {
-    text-align: center;
-    margin-top: 20px;
+.product-left, .product-right {
+    width: 48%;
 }
-
-.back-link>a {
-    color: #333;
-    text-decoration: none;
-}
-
-.back-link>a:hover {
-    text-decoration: underline;
+#product-div{
+	display: flex;
+	justify-content: space-between;
 }
 </style>
 <body>
@@ -294,11 +299,9 @@ div.form-group>button:hover {
                 </ul>
             </li>
             <li>
-                <p>상품관리</p>
+                <p>쇼핑몰 관리</p>
                 <ul class="sub-nav">
                     <li><p id="insertProduct">상품 등록</p></li>
-                    <li><p id="updateProduct">상품 수정</p></li>
-                    <li><p id="deleteProduct">상품 삭제</p></li>
                     <li><p id="manageQnA">QnA 관리</p></li>
                 </ul>
             </li>
@@ -316,8 +319,8 @@ div.form-group>button:hover {
             <li>
                 <p>주문관리</p>
                 <ul class="sub-nav">
-                    <li><p>배송상태 변경</p></li>
-                    <li><p>환불/취소 관리</p></li>
+                    <li><p onclick="alert('추후 업데이트 예정')">배송상태 변경</p></li>
+                    <li><p onclick="alert('추후 업데이트 예정')">환불/취소 관리</p></li>
                 </ul>
             </li>
         </ul>
@@ -532,6 +535,7 @@ div.form-group>button:hover {
     	.fail(error=>{
     		alert('게시글 삭제에 실패했습니다.')
     	})
+    	printLoading('.user-container>table>tbody');
     })
     
     // 공지사항, 이벤트 게시글 등록버튼 기능
@@ -550,6 +554,7 @@ div.form-group>button:hover {
              }
          
     	})
+    	printLoading('.user-container>table>tbody');
     	
     })
     // 게시글 등록 창에서 입력받은 값 입력하기
@@ -576,9 +581,79 @@ div.form-group>button:hover {
 				console.log(r);
 			}
 		})
+		printLoading('.user-container>table>tbody');
 	})
-    
-    	// 로딩 표현 by BootStrap
+	
+	// 상품 등록
+    $(document).on("click", "#insertProduct", function(e){
+    	$.get("<%=request.getContextPath()%>/admin/productdata.do")
+    	.done(data =>{
+    		$("div.content").html(data);
+    	})
+    })
+    // 색상 옵션 있는지 없는지 확인
+	$(document).on("change", "#colorOption", function(e) {
+	    if ($(this).prop("checked")) {
+	        $("#colorGroup").css("display", "block");
+	    } else {
+	        $("#colorGroup").css("display", "none");
+	    }
+	});
+ 	// 사이즈 옵션 있는지 없는지 확인
+	$(document).on("change", "#sizeOption", function(e) {
+	    if ($(this).prop("checked")) {
+	        $("#sizeGroup").css("display", "block");
+	    } else {
+	        $("#sizeGroup").css("display", "none");
+	    }
+	});
+	
+ 	// 상품 정보 입력 후 상품등록 클릭 시 DB에 상품 저장
+ 	$(document).on("click", "#product-submit", function(e){
+ 		const formData = new FormData();
+ 		const product = {
+ 			category: $("#category").val(),
+ 		    productName: $("#productName").val(),
+			price: $("#price").val(),
+			brand: $("#brand").val(),
+			discount: $("#discount").val(),
+			//mainImage: $("#mainImage")[0].files[0].name,
+			//descriptionImages: Array.from($("#descriptionImage")[0].files).map(file => file.name),
+			color: $("#colorOption").prop("checked") ? $("#color").val() : null,
+			size: $("#sizeOption").prop("checked") ? $("#size").val() : null,
+			stock: $("#stock").val(),
+			
+ 		}
+ 		const productJson = JSON.stringify(product);
+ 		formData.append("productJson", productJson);	// JSON 데이터를 문자열로 변환 후 FormData에 추가
+ 		
+ 		// 파일을 FormData에 추가 → form태그를 쓰지 않고 비동기식으로 파일을 업로드하기 위해 FormData 객체를 이용한다.
+ 		 formData.append('mainImage', $("#mainImage")[0].files[0]);
+ 		 formData.append('descriptionImage', $("#descriptionImage").files[0]);
+         
+         $.ajax({ 
+        	 url: '<%=request.getContextPath()%>/admin/addproduct.do',
+        	 type: 'POST',
+        	 data: formData,
+        	 contentType: false,
+        	 processData: false,
+        	 success: function(data) {
+        		 console.log(data);
+        		 if(data.sucess){
+        			 alert("상품 등록이 성공했습니다.");
+        		 } else {
+        			 alert("상품 등록에 실패했습니다");
+        		 }
+        	 }, 
+        	 error: function(e){
+        		 console.error("Error:",e),
+        		 alert("상품 등록 중 에러가 발생했습니다.");
+        	 }
+         });
+ 	});
+ 	
+	
+    // 로딩 표현 by BootStrap
 	function printLoading(target){
 		  const $container=$("<div>").attr({"class":"spinner-border text-primary","role":"status"});
 	        $(target).html("");

@@ -1,11 +1,15 @@
 package com.web.admin.service;
 
-import static com.web.common.JDBCTemplate.*;
+import static com.web.admin.dao.AdminDao.getAdminDao;
+import static com.web.common.JDBCTemplate.close;
+import static com.web.common.JDBCTemplate.commit;
+import static com.web.common.JDBCTemplate.getConnection;
+import static com.web.common.JDBCTemplate.rollback;
 
 import java.sql.Connection;
 import java.util.List;
 
-import static com.web.admin.dao.AdminDao.getAdminDao;
+import com.web.admin.product.dto.AddProduct;
 import com.web.board.model.dto.Bulletin;
 import com.web.board.model.dto.Report;
 
@@ -54,6 +58,18 @@ public class AdminService {
 		Connection con = getConnection();
 		int result = getAdminDao().writeBoard(con, type, title, description);
 		if(result>0) {
+			commit(con);
+		} else {
+			rollback(con);
+		}
+		close(con);
+		return result;
+	}
+	
+	public int addProduct(AddProduct product) {
+		Connection con = getConnection();
+		int result = getAdminDao().addProduct(con, product);
+		if(result==-2) {
 			commit(con);
 		} else {
 			rollback(con);
