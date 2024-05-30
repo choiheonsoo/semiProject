@@ -15,6 +15,7 @@
     height: 200px;
     border: 1px solid #cecece;
     border-radius: 5px;
+    margin-bottom:20px;
 }
 .orderDate{
 	font-size: 30px;
@@ -51,4 +52,100 @@
     border: 1px solid #346aff;
     width: 150px;
     height: 40px;
+}
+
+.reviewmodalContainer{
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	display:flex;
+	flex-direction:row;
+	justify-content:center;
+	align-items:center;
+	background-color:rgba(0,0,0,0.87);
+	z-index:1100;
+	text-align:center;
+}
+.modalhidden{
+	display:none;
+}
+.reviewheaddiv{
+	background-color: white;
+    width: 40%;
+    height: 45%;
+    display: flex;
+    flex-direction: column;
+}
+.modalhead{
+	display: flex;
+    justify-content: space-between;
+    background-color:#eee;
+    align-items: center;
+    height: 20%;
+}
+.rtext{
+	font-size: 27px;
+    margin-left: 4%;
+    margin-top: 2%;
+    height: 35px;
+}
+.reviewmodalclosebtn{
+	margin-right: 3%;
+    margin-top: 2%;
+    height: 34px;
+    width: 40px;
+    font-weight: 900;
+    cursor: pointer;
+    font-size: 27px;
+}
+.reviewcontentdiv{
+	display: flex;
+    height: 60%;
+    margin-top: 20px;
+}
+.contenthead{
+	width: 25%;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.reviewtextdiv{
+	width: 75%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.reviewtextarea{
+	width: 95%;
+    height: 95%;
+}
+textarea:focus{
+	outline: none;
+}
+.reviewbtndiv{
+	height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.reviewEnrollbtn{
+	border: 1px solid #346aff;
+    border-radius: 5px;
+    width: 25%;
+    height: 70%;
+    background-color:#346aff;
+	color:white;
+}
+.filediv{
+	display: flex;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+#enrollReview{
+	height:80%;
 }
