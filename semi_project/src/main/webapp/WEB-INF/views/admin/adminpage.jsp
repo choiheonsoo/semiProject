@@ -526,7 +526,6 @@ li {
              const $searchUserTr = $targetTbody.append($("<tr class='user-info'>").append($("<td>").text(data.userId)).append($("<td>").text(data.userName)).append($("<td>").text(data.phone)).append($("<td>").text(data.email))
              .append($("<td>").text(data.birthDay)).append($("<td>").text(data.zipCode)).append($("<td>").text(data.address)).append($("<td>").text(data.mateCount))
              .append($("<td>").text(data.point)));
-             
              $("div.spinner-border").remove();
     	})
     	printLoading('.user-container>table>tbody');        
