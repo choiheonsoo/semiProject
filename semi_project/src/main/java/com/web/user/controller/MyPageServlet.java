@@ -1,7 +1,7 @@
 package com.web.user.controller;
 
 import java.io.IOException;
-
+import static com.web.user.model.service.UserService.getUserService;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +28,12 @@ public class MyPageServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		User loginUser = (User)session.getAttribute("loginUser");
+		String userId = loginUser.getUserId();
+		String password = loginUser.getPassword();
+		User user = getUserService().loginUser(userId, password);
+		request.setAttribute("user",user);
 		request.getRequestDispatcher("/WEB-INF/views/user/myPage.jsp").forward(request, response);
 	}
 
