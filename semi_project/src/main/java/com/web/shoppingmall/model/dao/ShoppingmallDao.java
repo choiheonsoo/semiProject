@@ -586,6 +586,40 @@ public class ShoppingmallDao {
 		}return result;
 	}
 	
+	public int insertReview(Connection conn, Review r) {
+		PreparedStatement pstmt=null;
+		int result=0;
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("insertReview"));
+			pstmt.setInt(1, r.getProductKey());
+			pstmt.setString(2, r.getUserId());
+			pstmt.setInt(3, r.getRating());
+			pstmt.setString(4, r.getReviewContent());
+			result=pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
+	public int[] insertReviewImgs(Connection conn, List<String> fileNames) {
+		PreparedStatement pstmt=null;
+		int[] result=new int[fileNames.size()];
+		try {
+			pstmt=conn.prepareStatement(sql.getProperty("insertReviewImgs"));
+			for(String fn:fileNames) {
+				pstmt.setString(1, fn);
+				pstmt.addBatch();
+			}
+			result=pstmt.executeBatch();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}return result;
+	}
+	
 	
 	
 	
@@ -652,6 +686,12 @@ public class ShoppingmallDao {
 			}else {
 				if(!p.getProductOption().stream().anyMatch(e->e.equals(po))) {
 					p.getProductOption().add(po);
+				}else {
+					p.getProductOption().stream().forEach(e->{
+						if(e.getColorKey()==po.getColorKey()&&e.getSizeKey()==po.getSizeKey()) {
+							e.setStock(e.getStock()+po.getStock());
+						}
+					});
 				}
 			}
 		}while(rs.next());

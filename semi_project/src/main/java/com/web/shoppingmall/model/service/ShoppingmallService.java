@@ -323,4 +323,31 @@ public class ShoppingmallService {
 		close(conn);
 		return result;
 	}
+	
+	/*
+	 * 	리뷰 등록 기능
+	 * 	매개변수 : 리뷰객체, 리뷰이미지 이름 리스트
+	 * 	반환 : 결과 result
+	 */
+	public int insertReview(Review r, List<String> fileNames) {
+		Connection conn=getConnection();
+		int result=getDao().insertReview(conn, r);
+		if(result>0) {
+			int[] imgInsertResult=getDao().insertReviewImgs(conn, fileNames);
+			for(int i: imgInsertResult) {
+				if(i!=-2) {
+					rollback(conn);
+					close(conn);
+					return i;
+				}
+			}
+			commit(conn);
+			close(conn);
+			return result;
+		}else {
+			rollback(conn);
+			close(conn);
+			return result;
+		}
+	}
 }
