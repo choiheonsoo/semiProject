@@ -89,7 +89,8 @@
 							<%=products.get(i).getProductName() %>
 						</div>
 						<div class="productOption">
-							<%=products.get(i).getProductOption().get(0).getColor().getColor() %>, <%=products.get(i).getProductOption().get(0).getProductSize().getPSize() %>
+							<%=products.get(i).getProductOption().get(0).getColor().getColor().equals('n')?"":products.get(i).getProductOption().get(0).getColor().getColor() %>, 
+							<%=products.get(i).getProductOption().get(0).getProductSize().getPSize().equals('n')?"":products.get(i).getProductOption().get(0).getProductSize().getPSize() %>
 						</div>
 						<div class="productQuantity">
 							수량 <%=quantitys.get(i) %>개

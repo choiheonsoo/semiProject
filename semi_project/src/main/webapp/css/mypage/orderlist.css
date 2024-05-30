@@ -1,2 +1,54 @@
 @charset "UTF-8";
 
+.orderlistSection{
+	display: flex;
+    justify-content: center;
+}
+.orderlist{
+	width: 50%;
+    height: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.orderContainer{
+	width: 100%;
+    height: 200px;
+    border: 1px solid #cecece;
+    border-radius: 5px;
+}
+.orderDate{
+	font-size: 30px;
+    margin-left: 5px;
+}
+.pcontent{
+	display: flex;
+    justify-content: space-between;
+}
+.productDiv{
+	margin-left: 5px;
+}
+.productcontent{
+	display:flex;
+}
+.pimg{
+	width: 100px;
+    height: 100px;
+    margin-right: 5px;
+}
+.pimg>img{
+	width:100%;
+	height:100%;
+}
+.btnDiv{
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 25px;
+}
+.reviewBtn{
+	background: none;
+    border-radius: 5px;
+    border: 1px solid #346aff;
+    width: 150px;
+    height: 40px;
+}
